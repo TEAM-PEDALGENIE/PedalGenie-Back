@@ -14,5 +14,19 @@ spring:
       format_sql: true
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  security:
+    oauth2:
+      client:
+        client-id: ${KAKAO_CLIENT_ID}
+        redirect-uri: ${KAKAO_REDIRECT_URI}
+      provider:
+        token-uri: https://kauth.kakao.com/oauth/token
+        user-info-uri: https://kapi.kakao.com/v2/user/me
+
 jwt:
   secret: ${JWT}
+
+redis:
+  host: ${REDIS_HOST}
+  port: ${REDIS_PORT}
+
