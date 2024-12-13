@@ -9,14 +9,21 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
     // 400
     BAD_REQUEST(HttpStatus.BAD_REQUEST, 400, "잘못된 요청입니다."),
+    PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, 400, "비밀번호가 일치하지 않습니다."),
+
+    KAKAO_LOGIN_FAILED(HttpStatus.BAD_REQUEST, 400, "카카오 로그인에 실패했습니다."),
+    KAKAO_ACCESS_TOKEN_ERROR(HttpStatus.BAD_REQUEST, 400, "카카오 액세스 토큰을 가져오는데 실패했습니다."),
+    KAKAO_USER_INFO_ERROR(HttpStatus.BAD_REQUEST, 400, "카카오 사용자 정보를 가져오는데 실패했습니다."),
+    KAKAO_INVALID_CODE(HttpStatus.BAD_REQUEST, 400, "유효하지 않은 카카오 인가 코드입니다."),
 
     // 401
+    AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, 401, "인증에 실패했습니다."),
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, 401, "토큰이 만료되었습니다."),
-    NOT_VALID_TOKEN(HttpStatus.UNAUTHORIZED, 401, "해당 토큰은 유효하지 않습니다."),
+    NOT_VALID_TOKEN(HttpStatus.UNAUTHORIZED, 401, "토큰이 유효하지 않습니다."),
     NOT_EXISTS_AUTHORIZATION(HttpStatus.UNAUTHORIZED, 401, "Authorization 헤더가 비어 있습니다."),
     NOT_VALID_BEARER_GRANT_TYPE(HttpStatus.UNAUTHORIZED, 401, "인증 타입이 Bearer 타입이 아닙니다."),
-    REFRESH_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, 401, "해당 refresh token은 존재하지 않습니다."),
-    REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, 401, "해당 refresh token은 만료되었습니다."),
+    REFRESH_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, 401, "refresh token이 존재하지 않습니다."),
+    REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, 401, "refresh token이 만료되었습니다."),
     NOT_ACCESS_TOKEN_TYPE(HttpStatus.UNAUTHORIZED, 401, "해당 토큰은 ACCESS TOKEN이 아닙니다."),
 
     // 403
