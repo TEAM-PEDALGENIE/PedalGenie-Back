@@ -35,8 +35,8 @@ public class TokenProvider {
     // 엑세스 토큰 생성 메서드
     public String createAccessToken(Long memberId, String role) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + 30000); // 테스트용 30초
-//        Date expiryDate = new Date(now.getTime() + 3600000); // 1시간
+//        Date expiryDate = new Date(now.getTime() + 30000); // 테스트용 30초
+        Date expiryDate = new Date(now.getTime() + 3600000); // 1시간
 
         return Jwts.builder()
                 .setSubject(String.valueOf(memberId))
