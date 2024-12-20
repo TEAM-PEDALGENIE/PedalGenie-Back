@@ -6,7 +6,6 @@ import com.pedalgenie.pedalgenieback.domain.member.repository.MemberRepository;
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
 import com.pedalgenie.pedalgenieback.global.exception.CustomException;
 import com.pedalgenie.pedalgenieback.global.exception.ErrorCode;
-import com.pedalgenie.pedalgenieback.global.jwt.refresh.RefreshToken;
 import com.pedalgenie.pedalgenieback.global.jwt.refresh.RefreshTokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
