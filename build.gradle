@@ -57,7 +57,8 @@ dependencies {
 	// 테스트 검증
 	testImplementation 'org.assertj:assertj-core:3.23.1'
 	testImplementation 'com.h2database:h2'
-	
+
+
 }
 
 tasks.named('test') {

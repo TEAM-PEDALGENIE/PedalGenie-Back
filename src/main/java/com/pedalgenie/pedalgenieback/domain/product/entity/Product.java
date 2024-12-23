@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 @Entity
 @NoArgsConstructor
 @Getter
@@ -23,30 +24,41 @@ public class Product extends BaseTimeEntity {
     private String name;
 
     @NotNull
-    private String description;
+    private Double rentPricePerDay;
 
     @NotNull
-    private double rentPricePerDay;
+    private Integer rentQuantityPerDay;
 
     @NotNull
-    private int rentQuantityPerDay;
+    private Double price;
+
+    private Boolean isRentable;
+
+    private Boolean isPurchasable;
+
+    private Boolean isDemoable;
 
     @ManyToOne
+    @JoinColumn(name = "shop_id")
     private Shop shop;
 
     @ManyToOne
-    @JoinColumn(name = "subcategory_id") // 외래키 컬럼명. 변경할까?
+    @JoinColumn(name = "subCategory_id")
     private SubCategory subCategory;
 
     @Builder
-    public Product(Long id, String name, String description, double rentPricePerDay, int
-            rentQuantityPerDay, Shop shop, SubCategory subCategory){
+    public Product(Long id, String name, Double rentPricePerDay,
+                   Integer rentQuantityPerDay, Double price, Shop shop, SubCategory subCategory,
+                   Boolean isRentable, Boolean isPurchasable, Boolean isDemoable){
         this.id=id;
         this.name=name;
-        this.description=description;
         this.rentPricePerDay=rentPricePerDay;
         this.rentQuantityPerDay=rentQuantityPerDay;
+        this.price=price;
         this.shop=shop;
         this.subCategory=subCategory;
+        this.isRentable=isRentable;
+        this.isPurchasable=isPurchasable;
+        this.isDemoable=isDemoable;
     }
 }

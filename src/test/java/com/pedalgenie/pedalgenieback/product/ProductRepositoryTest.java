@@ -56,31 +56,32 @@ public class ProductRepositoryTest {
                 .address("address")
                 .contactNumber("01021254947")
                 .demoQuantityPerDay(10)
+                .businessHours("9:00am-18:00pm")
                 .build();
 
         product1 = Product.builder()
                 .name("name1")
-                .description("description1")
                 .rentPricePerDay(1000.0)
                 .rentQuantityPerDay(5)
+                .price(10000.0)
                 .subCategory(subCategory)
                 .shop(shop)
                 .build();
 
         product2 = Product.builder()
                 .name("name2")
-                .description("description2")
                 .rentPricePerDay(1000.0)
                 .rentQuantityPerDay(5)
+                .price(10000.0)
                 .subCategory(subCategory)
                 .shop(shop)
                 .build();
 
         product3 = Product.builder()
                 .name("name3")
-                .description("description3")
                 .rentPricePerDay(1000.0)
                 .rentQuantityPerDay(5)
+                .price(10000.0)
                 .subCategory(subCategory)
                 .shop(shop)
                 .build();

@@ -4,19 +4,21 @@ import com.pedalgenie.pedalgenieback.global.BaseTimeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
+@Getter
 public class Shop extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "shop_id")
-    private Long shopId;
+    private Long id;
 
     @NotNull
-    private String name;
+    private String shopname;
 
     @NotNull
     private String address;
@@ -25,16 +27,19 @@ public class Shop extends BaseTimeEntity {
     private String contactNumber;
 
     @NotNull
-    private int demoQuantityPerDay;
+    private Integer demoQuantityPerDay;
 
-    // businessHours
+    @NotNull
+    private String businessHours;
 
     @Builder
-    public Shop(Long shopId, String name, String address, String contactNumber, int demoQuantityPerDay){
-        this.shopId=shopId;
-        this.name=name;
+    public Shop(Long id, String name, String address,
+                String contactNumber, Integer demoQuantityPerDay, String businessHours){
+        this.id= id;
+        this.shopname =name;
         this.address=address;
         this.contactNumber=contactNumber;
         this.demoQuantityPerDay=demoQuantityPerDay;
+        this.businessHours=businessHours;
     }
 }
