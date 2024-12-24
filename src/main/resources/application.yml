@@ -14,6 +14,7 @@ spring:
       format_sql: true
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    dialect: org.hibernate.dialect.MySQL8Dialect  # 이 항목 추가
   security:
     oauth2:
       client:

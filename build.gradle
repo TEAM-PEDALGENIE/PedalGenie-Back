@@ -52,6 +52,13 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+
+	// 테스트 검증
+	testImplementation 'org.assertj:assertj-core:3.23.1'
+	testImplementation 'com.h2database:h2'
+
+
 }
 
 tasks.named('test') {
