@@ -2,8 +2,8 @@ package com.pedalgenie.pedalgenieback.domain.member.service;
 
 import com.pedalgenie.pedalgenieback.domain.member.dto.MemberLoginRequestDto;
 import com.pedalgenie.pedalgenieback.domain.member.dto.MemberLoginResponseDto;
-import com.pedalgenie.pedalgenieback.domain.member.dto.MemberResponseDto;
 import com.pedalgenie.pedalgenieback.domain.member.dto.MemberRegisterRequestDto;
+import com.pedalgenie.pedalgenieback.domain.member.dto.MemberResponseDto;
 import com.pedalgenie.pedalgenieback.domain.member.entity.Member;
 import com.pedalgenie.pedalgenieback.domain.member.entity.MemberRole;
 import com.pedalgenie.pedalgenieback.domain.member.repository.MemberRepository;
@@ -21,8 +21,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
