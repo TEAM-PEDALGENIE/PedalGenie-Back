@@ -1,9 +1,13 @@
-package com.pedalgenie.pedalgenieback.domain.product.entity;
+package com.pedalgenie.pedalgenieback.domain.productImage;
 
+import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,11 +20,11 @@ public class ProductImage {
     private Long id;
 
     @Column(nullable = false)
-    private String url;
-
-    private String name;
+    private String imageUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "product_id")
     private Product product;
+
+
 }

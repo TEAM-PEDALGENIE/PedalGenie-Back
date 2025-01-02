@@ -1,10 +1,16 @@
 package com.pedalgenie.pedalgenieback.domain.product.dto.response;
 
-public record GetProductQueryResponse( // 쿼리 결과 전용
+// 쿼리 결과 전용
+public record GetProductQueryResponse(
 
+        Long id,
         String name,
         String shopName,
-        Double rentPricePerDay
+        Double rentPricePerDay,
+        Boolean isRentable,
+        Boolean isPurchasable,
+        Boolean isDemoable
+
 ) {
     public GetProductQueryResponse{
 

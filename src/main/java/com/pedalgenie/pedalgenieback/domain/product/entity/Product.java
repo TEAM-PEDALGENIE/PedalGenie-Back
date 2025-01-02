@@ -38,6 +38,8 @@ public class Product extends BaseTimeEntity {
 
     private Boolean isDemoable;
 
+    private String thumbnailImageUrl; // 썸네일 이미지
+
     @ManyToOne
     @JoinColumn(name = "shop_id")
     private Shop shop;
