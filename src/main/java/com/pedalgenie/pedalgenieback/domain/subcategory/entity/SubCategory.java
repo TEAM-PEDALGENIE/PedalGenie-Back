@@ -21,8 +21,7 @@ public class SubCategory extends BaseTimeEntity {
     @NotNull
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
+    @Enumerated(EnumType.STRING)
     private Category category;
 
     @Builder

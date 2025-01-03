@@ -1,5 +1,7 @@
 package com.pedalgenie.pedalgenieback.domain.product.dto.response;
 
+import com.querydsl.core.annotations.QueryProjection;
+
 // 쿼리 결과 전용
 public record GetProductQueryResponse(
 
@@ -12,6 +14,7 @@ public record GetProductQueryResponse(
         Boolean isDemoable
 
 ) {
+    @QueryProjection
     public GetProductQueryResponse{
 
     }
