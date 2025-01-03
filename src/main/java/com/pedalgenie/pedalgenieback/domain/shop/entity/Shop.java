@@ -8,8 +8,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Entity
 @NoArgsConstructor
 @Getter
@@ -37,14 +35,19 @@ public class Shop extends BaseTimeEntity {
 
     private String imageUrl;
 
-    // 매장 당 보유 악기 개수
+
+    private String detailAddress;
 
 
-//    private List<Product> products; // 단방향 연관관계이므로 shop에서는 제거
+    private String description;
+
+
+    private String instrumentCount;
+
 
     @Builder
-    public Shop(Long id, String name, String address, String contactNumber, Integer demoQuantityPerDay,
-                String businessHours, String imageUrl){
+    public Shop(Long id, String name, String address, String contactNumber, Integer demoQuantityPerDay, String businessHours,
+                String imageUrl, String detailAddress, String description, String instrumentCount){
         this.id= id;
         this.shopname =name;
         this.address=address;
@@ -52,5 +55,8 @@ public class Shop extends BaseTimeEntity {
         this.demoQuantityPerDay=demoQuantityPerDay;
         this.businessHours=businessHours;
         this.imageUrl=imageUrl;
+        this.detailAddress=detailAddress;
+        this.description=description;
+        this.instrumentCount=instrumentCount;
     }
 }

@@ -5,6 +5,8 @@ import com.pedalgenie.pedalgenieback.global.exception.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.List;
+
 @Getter
 @AllArgsConstructor
 public enum SortBy {
@@ -24,6 +26,10 @@ public enum SortBy {
             }
         }
         throw new CustomException(ErrorCode.NOT_FOUND_SORT_BY);
+    }
+
+    public static List<SortBy> getAllSortOptions() {
+        return List.of(SortBy.values());
     }
 
 }

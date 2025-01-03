@@ -1,16 +1,13 @@
 package com.pedalgenie.pedalgenieback.domain.product.service;
 
-import com.pedalgenie.pedalgenieback.domain.category.dto.CategoryProductsRequest;
-import com.pedalgenie.pedalgenieback.domain.category.dto.CategoryProductsResponse;
 import com.pedalgenie.pedalgenieback.domain.category.entity.Category;
-import com.pedalgenie.pedalgenieback.domain.category.repository.CategoryRepository;
 import com.pedalgenie.pedalgenieback.domain.product.dto.request.FilterRequest;
 import com.pedalgenie.pedalgenieback.domain.product.dto.response.*;
 import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 import com.pedalgenie.pedalgenieback.domain.product.repository.ProductQueryRepositoryCustom;
 import com.pedalgenie.pedalgenieback.domain.product.repository.ProductRepository;
-import com.pedalgenie.pedalgenieback.domain.productImage.applicatioin.dto.ProductImageDto;
-import com.pedalgenie.pedalgenieback.domain.productImage.applicatioin.ProductImageQueryService;
+import com.pedalgenie.pedalgenieback.domain.productImage.service.dto.ProductImageDto;
+import com.pedalgenie.pedalgenieback.domain.productImage.service.ProductImageQueryService;
 import com.pedalgenie.pedalgenieback.domain.shop.repository.ShopRepository;
 import com.pedalgenie.pedalgenieback.domain.subcategory.dto.FilterSubCategoryResponse;
 import com.pedalgenie.pedalgenieback.domain.subcategory.entity.SubCategory;
@@ -31,59 +28,33 @@ public class ProductQueryService {
     private final ProductRepository productRepository;
     private final SubcategoryRepository subcategoryRepository;
     private final ProductQueryRepositoryCustom productQueryRepository;
-    private final CategoryRepository categoryRepository;
     private final ProductImageQueryService productImageQueryService;
     private final ShopRepository shopRepository;
 
-    // 특정 상위 카테고리의 상품 조회
-    public List<CategoryProductsResponse> getProductByCategory(final CategoryProductsRequest request){
-        final Category findCategory = getCategory(request.categoryId());
 
-        final List<Product> products = productRepository.findAllBySubCategoryCategoryId(findCategory.getId());
+    // 전체, 상위 카테고리별 목록 조회(필터, 정렬, 서브 카테고리 옵션)
+    public List<GetProductQueryResponse> getProductsByCategory(
+            Category category,
+            FilterRequest request){
 
-        return products.stream()
-                .map(CategoryProductsResponse::from)
-                .toList();
-    }
-
-    private Category getCategory(final Long categoryId){
-        return categoryRepository.findById(categoryId)
-                .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND_CATEGORY));
-    }
-
-    // 필터 조건에 따른 상품 조회
-    public GetProductsResponse getProductsByFilters(FilterRequest filterDto){
-        List<GetProductQueryResponse> products = getPagingProducts(filterDto);
-
-        List<ProductResponse> productResponses = products.stream()
-                .map(product -> ProductResponse.from(
-                        product,
-                        productImageQueryService.getFirstProductImage(product.id())
-                ))
-                .toList();
-
-        return GetProductsResponse.from(productResponses);
+        return productQueryRepository.findPagingProducts(category, request);
 
     }
 
-    public List<GetProductQueryResponse> getPagingProducts(FilterRequest filterDto){
-        return productQueryRepository.findPagingProducts(
-                filterDto.isRentable(),
-                filterDto.isPurchasable(),
-                filterDto.isDemoable(),
-                filterDto.subCategoryIds()
-        );
-    }
-
-    // 필터 옵션 조회
+    // 이용 범위 옵션 조회
     public FilterResponse getMetadataForFilter(){
         return FilterResponse.of();
     }
 
-    // 카테고리 옵션 조회
-    public FilterSubCategoryResponse getMetaForSubCategory(){
-        List<SubCategory> subCategories = subcategoryRepository.findAll();
+    // 서브 카테고리 옵션 조회
+    public FilterSubCategoryResponse getMetaForSubCategory(Category category){
+        List<SubCategory> subCategories = subcategoryRepository.findByCategory(category);
         return FilterSubCategoryResponse.of(subCategories);
+    }
+
+    // 정렬 옵션 조회
+    public List<SortBy> getSortOptions() {
+        return SortBy.getAllSortOptions();
     }
 
     // 상품 상세 조회

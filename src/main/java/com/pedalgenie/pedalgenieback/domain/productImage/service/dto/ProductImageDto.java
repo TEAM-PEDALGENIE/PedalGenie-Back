@@ -1,4 +1,4 @@
-package com.pedalgenie.pedalgenieback.domain.productImage.applicatioin.dto;
+package com.pedalgenie.pedalgenieback.domain.productImage.service.dto;
 
 import com.pedalgenie.pedalgenieback.domain.productImage.ProductImage;
 

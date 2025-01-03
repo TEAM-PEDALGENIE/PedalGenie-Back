@@ -1,5 +1,6 @@
 package com.pedalgenie.pedalgenieback.domain.product.repository;
 
+import com.pedalgenie.pedalgenieback.domain.category.entity.Category;
 import com.pedalgenie.pedalgenieback.domain.product.dto.request.FilterRequest;
 import com.pedalgenie.pedalgenieback.domain.product.dto.response.GetProductQueryResponse;
 import com.pedalgenie.pedalgenieback.domain.product.dto.response.QGetProductQueryResponse;
@@ -21,7 +22,10 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<GetProductQueryResponse> findPagingProducts(FilterRequest request){
+    public List<GetProductQueryResponse> findPagingProducts(
+            Category category,
+            FilterRequest request){
+
         Boolean isRentable = request.isRentable();
         Boolean isPurchasable = request.isPurchasable();
         Boolean isDemoable = request.isDemoable();
@@ -38,6 +42,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
                 ))
                 .from(product)
                 .where(
+                        inCategories(category),
                         isRentalbeFilter(isRentable),
                         isPurchasableFilter(isPurchasable),
                         isDemoableFilter(isDemoable),
@@ -47,6 +52,12 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
                 .fetch();
 
     }
+
+    private BooleanExpression inCategories(Category category){
+
+        return product.subCategory.category.eq(category);
+    }
+
 
     private BooleanExpression isRentalbeFilter(Boolean isRentable){
         if(isRentable == null){

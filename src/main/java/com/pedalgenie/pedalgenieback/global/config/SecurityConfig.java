@@ -94,7 +94,8 @@ public class SecurityConfig {
                             "/v3/api-docs/**",
                             "/webjars/**",
                             "/auth/**",
-                            "/shops/**"
+                            "/shops/**",
+                            "/products/**"
                     );
         };
     }

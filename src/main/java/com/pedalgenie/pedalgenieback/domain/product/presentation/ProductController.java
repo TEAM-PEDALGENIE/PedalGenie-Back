@@ -2,12 +2,11 @@ package com.pedalgenie.pedalgenieback.domain.product.presentation;
 
 import com.pedalgenie.pedalgenieback.domain.category.dto.CategoryProductsRequest;
 import com.pedalgenie.pedalgenieback.domain.category.dto.CategoryProductsResponse;
+import com.pedalgenie.pedalgenieback.domain.category.entity.Category;
 import com.pedalgenie.pedalgenieback.domain.product.dto.request.FilterRequest;
-import com.pedalgenie.pedalgenieback.domain.product.dto.response.FilterMetadataResponse;
-import com.pedalgenie.pedalgenieback.domain.product.dto.response.FilterResponse;
-import com.pedalgenie.pedalgenieback.domain.product.dto.response.GetProductResponse;
-import com.pedalgenie.pedalgenieback.domain.product.dto.response.GetProductsResponse;
+import com.pedalgenie.pedalgenieback.domain.product.dto.response.*;
 import com.pedalgenie.pedalgenieback.domain.product.service.ProductQueryService;
+import com.pedalgenie.pedalgenieback.domain.product.service.SortBy;
 import com.pedalgenie.pedalgenieback.domain.subcategory.dto.FilterSubCategoryResponse;
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,38 +24,46 @@ public class ProductController {
 
     private final ProductQueryService productQueryService;
 
-    @Operation(summary = "옵션 따라 모든 상품 조회")
-    @GetMapping
-    public ResponseEntity<GetProductsResponse> getProducts(
-            @RequestParam(required = false) Boolean isRentable,
-            @RequestParam(required = false) Boolean isPurchasable,
-            @RequestParam(required = false) Boolean isDemoable,
-            @RequestParam(required = false) List<Long> subCategoryIds
-    ){
-        FilterRequest filterRequest = FilterRequest.of(
-                isRentable,
-                isPurchasable,
-                isDemoable,
-                subCategoryIds);
+    // 요청 파라미터와 바디 값에 따라 전체 조회, 상위 카테고리 조회 가능, 옵션 설정 가능
+    @Operation(summary = "옵션에 따른 상품 목록 조회")
+    @PostMapping("/search")
+    public ResponseEntity<ResponseTemplate<List<GetProductQueryResponse>>> searchProducts(
+            @RequestParam(required = false) Category category,
+            @RequestBody(required = false) FilterRequest request
 
-        return ResponseEntity.ok(productQueryService.getProductsByFilters(filterRequest));
+    ){
+        List<GetProductQueryResponse> response = productQueryService.getProductsByCategory(category,request);
+
+        return ResponseTemplate.createTemplate(HttpStatus.OK, true,
+                "옵션에 따른 상품 목록 조회 성공", response);
     }
 
-    @Operation(summary = "필터 옵션 조회")
+    @Operation(summary = "이용 범위 옵션 조회")
     @GetMapping("/filters")
     public ResponseEntity<ResponseTemplate<FilterMetadataResponse>> getFilterMetadata(){
         FilterResponse filterResponse = productQueryService.getMetadataForFilter();
+
         FilterMetadataResponse filterMetadataResponse = FilterMetadataResponse.of(filterResponse);
         return  ResponseTemplate.createTemplate(HttpStatus.OK, true,
-                "필터 옵션 조회 성공", filterMetadataResponse);
+                "이용 범위 옵션 조회 성공", filterMetadataResponse);
     }
 
-    @Operation(summary = "카테고리 옵션 조회")
+    @Operation(summary = "정렬 옵션 조회")
+    @GetMapping("/sort-options")
+    public ResponseEntity<ResponseTemplate<List<SortBy>>> getSortOptions(){
+        List<SortBy> sortOptions = productQueryService.getSortOptions();
+
+        return ResponseTemplate.createTemplate(HttpStatus.OK,true,"정렬 옵션 조회 성공", sortOptions);
+    }
+
+    @Operation(summary = "서브 카테고리 옵션 조회")
     @GetMapping("/subcategories")
-    public ResponseEntity<ResponseTemplate<FilterSubCategoryResponse>> getSubCategories(){
-        FilterSubCategoryResponse subCategoryProductsResponse = productQueryService.getMetaForSubCategory();
+    public ResponseEntity<ResponseTemplate<FilterSubCategoryResponse>> getSubCategories(
+            @RequestParam Category category
+    ){
+        FilterSubCategoryResponse subCategoryProductsResponse = productQueryService.getMetaForSubCategory(category);
         return ResponseTemplate.createTemplate(HttpStatus.OK, true,
-                "카테고리 옵션 조회 성공", subCategoryProductsResponse);
+                "서브 카테고리 옵션 조회 성공", subCategoryProductsResponse);
     }
 
     @Operation(summary = "상품 상세 조회")
@@ -65,16 +72,6 @@ public class ProductController {
         GetProductResponse getProductResponse = productQueryService.getProductResponse(id);
         return ResponseTemplate.createTemplate(HttpStatus.OK,true,
                 "상품 상세 조회 성공", getProductResponse);
-    }
-
-    @Operation(summary ="상위 카테고리 내 상품 조회 ")
-    @PostMapping
-    public ResponseEntity<ResponseTemplate<List<CategoryProductsResponse>>> getProductsByCategory(
-            @RequestBody final CategoryProductsRequest request){
-        List<CategoryProductsResponse> responses = productQueryService.getProductByCategory(request);
-
-        return ResponseTemplate.createTemplate(HttpStatus.OK, true,
-                "상위 카테고리 내 상품 조회 성공",responses);
     }
 
 

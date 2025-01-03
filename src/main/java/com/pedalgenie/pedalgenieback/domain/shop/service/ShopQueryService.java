@@ -1,18 +1,13 @@
-package com.pedalgenie.pedalgenieback.domain.shop.application;
+package com.pedalgenie.pedalgenieback.domain.shop.service;
 
-import com.pedalgenie.pedalgenieback.domain.product.dto.request.FilterRequest;
-import com.pedalgenie.pedalgenieback.domain.product.dto.response.GetProductQueryResponse;
-import com.pedalgenie.pedalgenieback.domain.product.dto.response.GetProductsResponse;
 import com.pedalgenie.pedalgenieback.domain.product.dto.response.ProductResponse;
-import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 import com.pedalgenie.pedalgenieback.domain.product.repository.ProductRepository;
 import com.pedalgenie.pedalgenieback.domain.product.service.ProductQueryService;
-import com.pedalgenie.pedalgenieback.domain.productImage.applicatioin.ProductImageQueryService;
-import com.pedalgenie.pedalgenieback.domain.productImage.applicatioin.dto.ProductImageDto;
+import com.pedalgenie.pedalgenieback.domain.productImage.service.ProductImageQueryService;
+import com.pedalgenie.pedalgenieback.domain.productImage.service.dto.ProductImageDto;
 import com.pedalgenie.pedalgenieback.domain.shop.dto.response.GetShopResponse;
 import com.pedalgenie.pedalgenieback.domain.shop.dto.response.GetShopsResponses;
 import com.pedalgenie.pedalgenieback.domain.shop.dto.response.ShopProductResponse;
-import com.pedalgenie.pedalgenieback.domain.shop.dto.response.ShopResponse;
 import com.pedalgenie.pedalgenieback.domain.shop.entity.Shop;
 import com.pedalgenie.pedalgenieback.domain.shop.repository.ShopRepository;
 import com.pedalgenie.pedalgenieback.global.exception.CustomException;
@@ -62,5 +57,7 @@ public class ShopQueryService {
         return GetShopResponse.from(shop, products);
 
     }
+
+    // 매장 상품 필터 옵션 조회
 
 }

@@ -1,28 +1,21 @@
 package com.pedalgenie.pedalgenieback.domain.category.entity;
 
-import com.pedalgenie.pedalgenieback.global.BaseTimeEntity;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Entity
-@NoArgsConstructor
 @Getter
-public class Category extends BaseTimeEntity {
+@AllArgsConstructor
+public enum Category {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id")
-    private Long id;
+    GUITAR(1L, "기타"),
+    BASE(2L, "베이스"),
+    KEYBOARD(3L, "키보드"),
+    DRUM(4L, "드럼"),
+    ORCHESTRA(5L, "관현악")
+    ;
+    private final Long id;
+    private final String name;
 
-    @NotNull
-    private String name;
 
-    @Builder
-    public Category(Long id, String name){
-        this.id=id;
-        this.name=name;
-    }
 }
