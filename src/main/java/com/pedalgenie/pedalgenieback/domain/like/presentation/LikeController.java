@@ -1,6 +1,6 @@
 package com.pedalgenie.pedalgenieback.domain.like.presentation;
 
-import com.pedalgenie.pedalgenieback.domain.like.service.LikeService;
+import com.pedalgenie.pedalgenieback.domain.like.application.LikeService;
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
 import com.pedalgenie.pedalgenieback.global.jwt.AuthUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -38,20 +38,20 @@ public class LikeController {
     }
 
     // 악기 좋아요 삭제
-    @DeleteMapping("/products/{productLikeId}")
-    public ResponseEntity<ResponseTemplate<Object>> removeProductLike(@PathVariable Long productLikeId) {
+    @DeleteMapping("/products/{productId}")
+    public ResponseEntity<ResponseTemplate<Object>> removeProductLike(@PathVariable Long productId) {
         Long memberId = AuthUtils.getCurrentMemberId();
 
-        likeService.removeProductLike(productLikeId, memberId);
-        return ResponseTemplate.createTemplate(HttpStatus.NO_CONTENT, true, "악기 좋아요 삭제 성공", null);
+        likeService.removeProductLike(productId, memberId);
+        return ResponseTemplate.createTemplate(HttpStatus.OK, true, "악기 좋아요 삭제 성공", null);
     }
 
     // 가게 좋아요 삭제
-    @DeleteMapping("/likes/shops/{shopLikeId}")
-    public ResponseEntity<ResponseTemplate<Object>> removeShopLike(@PathVariable Long shopLikeId) {
+    @DeleteMapping("/shops/{shopId}")
+    public ResponseEntity<ResponseTemplate<Object>> removeShopLike(@PathVariable Long shopId) {
         Long memberId = AuthUtils.getCurrentMemberId();
 
-        likeService.removeShopLike(shopLikeId, memberId);
-        return ResponseTemplate.createTemplate(HttpStatus.NO_CONTENT, true, "가게 좋아요 삭제 성공", null);
+        likeService.removeShopLike(shopId, memberId);
+        return ResponseTemplate.createTemplate(HttpStatus.OK, true, "가게 좋아요 삭제 성공", null);
     }
 }

@@ -1,4 +1,4 @@
-package com.pedalgenie.pedalgenieback.domain.like.service;
+package com.pedalgenie.pedalgenieback.domain.like.application;
 
 import com.pedalgenie.pedalgenieback.domain.like.entity.ProductLike;
 import com.pedalgenie.pedalgenieback.domain.like.entity.ShopLike;
@@ -75,32 +75,40 @@ public class LikeService {
 
     // 상품 좋아요 삭제
     @Transactional
-    public void removeProductLike(Long productLikeId, Long memberId) {
-        // 상품 좋아요 조회
-        ProductLike productLike = productLikeRepository.findById(productLikeId)
+    public void removeProductLike(Long productId, Long memberId) {
+        // 멤버 조회
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXISTS_MEMBER_ID));
+
+        // 상품 조회
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
+
+        // 해당 상품에 멤버가 누른 좋아요 조회
+        ProductLike productLike = productLikeRepository.findByProductAndMember(product, member)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_LIKE));
 
-        // 유저가 생성한 좋아요인지 확인
-        if (productLike.getMember() == null || !productLike.getMember().getMemberId().equals(memberId)) {
-            throw new CustomException(ErrorCode.NO_PERMISSION); // 다른 유저의 좋아요 삭제 불가
-        }
-
-        productLikeRepository.delete(productLike); // 좋아요 삭제
+        // 좋아요 삭제
+        productLikeRepository.delete(productLike);
     }
 
     // 가게 좋아요 삭제
     @Transactional
-    public void removeShopLike(Long shopLikeId, Long memberId) {
-        // 가게 좋아요 조회
-        ShopLike shopLike = shopLikeRepository.findById(shopLikeId)
+    public void removeShopLike(Long shopId, Long memberId) {
+        // 멤버 조회
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXISTS_MEMBER_ID));
+
+        // 가게 조회
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SHOP_NAME));
+
+        // 해당 가게에 멤버가 누른 좋아요 조회
+        ShopLike shopLike = shopLikeRepository.findByShopAndMember(shop, member)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_LIKE));
 
-        // 유저가 생성한 좋아요인지 확인
-        if (shopLike.getMember() == null || !shopLike.getMember().getMemberId().equals(memberId)) {
-            throw new CustomException(ErrorCode.NO_PERMISSION); // 다른 유저의 좋아요 삭제 불가
-        }
-
-        shopLikeRepository.delete(shopLike); // 좋아요 삭제
+        // 좋아요 삭제
+        shopLikeRepository.delete(shopLike);
     }
 
     // 상품 좋아요 개수 조회
