@@ -8,7 +8,7 @@ import com.pedalgenie.pedalgenieback.domain.member.service.MemberService;
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
 import com.pedalgenie.pedalgenieback.global.exception.CustomException;
 import com.pedalgenie.pedalgenieback.global.exception.ErrorCode;
-import com.pedalgenie.pedalgenieback.global.jwt.CustomUserDetails;
+import com.pedalgenie.pedalgenieback.global.jwt.AuthUtils;
 import com.pedalgenie.pedalgenieback.global.jwt.TokenDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -18,7 +18,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -76,11 +75,8 @@ public class MemberController {
     @Operation(summary="회원 조회")
     @GetMapping("/members")
     public ResponseEntity<ResponseTemplate<MemberResponseDto>> getMemberInfo() {
-        // SecurityContext에서 사용자 정보 가져오기
-        CustomUserDetails userDetails =
-                (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        Long memberId = userDetails.getMemberId();
+        // 로그인한 memberId 가져오기
+        Long memberId = AuthUtils.getCurrentMemberId();
 
         // 회원 조회
         MemberResponseDto responseDto = memberService.getMemberInfo(memberId);
