@@ -28,10 +28,23 @@ public class ProductController {
     @Operation(summary = "옵션에 따른 상품 목록 조회")
     @PostMapping("/search")
     public ResponseEntity<ResponseTemplate<List<GetProductQueryResponse>>> searchProducts(
+
             @RequestParam(required = false) Category category,
-            @RequestBody(required = false) FilterRequest request
+            @RequestParam(required = false) Boolean isRentable,
+            @RequestParam(required = false) Boolean isPurchasable,
+            @RequestParam(required = false) Boolean isDemoable,
+            @RequestParam(required = false) SortBy sortBy,
+            @RequestParam(required = false) List<Long> subCategoryIds
 
     ){
+
+        FilterRequest request = FilterRequest.of(
+                isRentable,
+                isPurchasable,
+                isDemoable,
+                sortBy,
+                subCategoryIds);
+
         List<GetProductQueryResponse> response = productQueryService.getProductsByCategory(category,request);
 
         return ResponseTemplate.createTemplate(HttpStatus.OK, true,

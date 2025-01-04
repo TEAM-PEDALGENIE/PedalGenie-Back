@@ -14,17 +14,12 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-//    // 특정 하위 카테고리에 속한 상품 조회
-//    @Query("select distinct p from Product p join fetch p.subCategory " +
-//            "where p.subCategory.id = :id")
-//    List<Product> findBySubCategoryId(@Param("id")Long id);
-
-//    List<Product> findAllByCategory(Category category);
 
     List<Product> findByShop(Shop shop);
 
     List<Product> findByShopId(Long shopId);
 
+    // 검색
 //    List<Product> findByNameContaining(String name);
 
 }

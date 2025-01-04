@@ -42,6 +42,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
                 ))
                 .from(product)
                 .where(
+
                         inCategories(category),
                         isRentalbeFilter(isRentable),
                         isPurchasableFilter(isPurchasable),
@@ -55,30 +56,35 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
 
     private BooleanExpression inCategories(Category category){
 
+        if(category == null){
+            return null;
+        }
         return product.subCategory.category.eq(category);
     }
 
 
-    private BooleanExpression isRentalbeFilter(Boolean isRentable){
-        if(isRentable == null){
+    private BooleanExpression isRentalbeFilter(Boolean isRentable) {
+        if (isRentable == null) {
             return null;
         }
         return product.isRentable.eq(isRentable);
     }
 
-    private BooleanExpression isPurchasableFilter(Boolean isPurchasable){
-        if(isPurchasable==null){
+    private BooleanExpression isPurchasableFilter(Boolean isPurchasable) {
+        if (isPurchasable == null) {
             return null;
         }
         return product.isPurchasable.eq(isPurchasable);
     }
 
-    private BooleanExpression isDemoableFilter(Boolean isDemoable){
-        if(isDemoable==null){
+
+    private BooleanExpression isDemoableFilter(Boolean isDemoable) {
+        if (isDemoable == null) {
             return null;
         }
         return product.isDemoable.eq(isDemoable);
     }
+
 
     private BooleanExpression inSubCategories(List<Long> subCategoryIds){
         if (subCategoryIds == null || subCategoryIds.isEmpty()){
@@ -96,7 +102,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
         }
         // 상품 좋아요 구현 이후 정렬 기준 추가할 것
 
-        return product.id.desc(); // 기본 정렬
+        return product.name.asc(); // 기본 정렬 이름순
     }
 
 
