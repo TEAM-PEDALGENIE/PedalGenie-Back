@@ -1,4 +1,4 @@
-package com.pedalgenie.pedalgenieback.domain.product.service;
+package com.pedalgenie.pedalgenieback.domain.product.application;
 
 import com.pedalgenie.pedalgenieback.domain.product.dto.request.ProductCreateRequestDto;
 import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
