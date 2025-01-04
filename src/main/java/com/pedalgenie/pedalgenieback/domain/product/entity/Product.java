@@ -1,5 +1,6 @@
 package com.pedalgenie.pedalgenieback.domain.product.entity;
 
+import com.pedalgenie.pedalgenieback.domain.category.entity.Category;
 import com.pedalgenie.pedalgenieback.domain.shop.entity.Shop;
 import com.pedalgenie.pedalgenieback.domain.subcategory.entity.SubCategory;
 import com.pedalgenie.pedalgenieback.global.BaseTimeEntity;
@@ -38,6 +39,10 @@ public class Product extends BaseTimeEntity {
 
     private Boolean isDemoable;
 
+    private String thumbnailImageUrl; // 썸네일 이미지
+
+    private String descriptionUrl; // 매장 설명 이미지
+
     @ManyToOne
     @JoinColumn(name = "shop_id")
     private Shop shop;
@@ -46,10 +51,14 @@ public class Product extends BaseTimeEntity {
     @JoinColumn(name = "subCategory_id")
     private SubCategory subCategory;
 
+//    @Enumerated(EnumType.STRING)
+//    private Category category;
+
     @Builder
     public Product(Long id, String name, Double rentPricePerDay,
                    Integer rentQuantityPerDay, Double price, Shop shop, SubCategory subCategory,
-                   Boolean isRentable, Boolean isPurchasable, Boolean isDemoable){
+                   Boolean isRentable, Boolean isPurchasable, Boolean isDemoable, String thumbnailImageUrl,
+                   String descriptionUrl){
         this.id=id;
         this.name=name;
         this.rentPricePerDay=rentPricePerDay;
@@ -60,5 +69,7 @@ public class Product extends BaseTimeEntity {
         this.isRentable=isRentable;
         this.isPurchasable=isPurchasable;
         this.isDemoable=isDemoable;
+        this.thumbnailImageUrl=thumbnailImageUrl;
+        this.descriptionUrl=descriptionUrl;
     }
 }

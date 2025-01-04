@@ -1,6 +1,9 @@
 package com.pedalgenie.pedalgenieback.domain.product.dto.response;
 
 import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
+import com.pedalgenie.pedalgenieback.domain.productImage.application.dto.ProductImageDto;
+
+import java.util.List;
 
 // 상품 상세 조회 dto
 public record GetProductResponse(
@@ -11,9 +14,11 @@ public record GetProductResponse(
         Double rentPricePerDay,
         Boolean isRentable,
         Boolean isPurchasable,
-        Boolean isDemoable
+        Boolean isDemoable,
+        // 상품 설명 텍스트, 이미지 추가
+        List<ProductImageDto> productImage
 ) {
-    public static GetProductResponse of(Product product){
+    public static GetProductResponse of(Product product, List<ProductImageDto> productImage){
         return new GetProductResponse(
                 product.getName(),
                 product.getShop().getShopname(),
@@ -22,7 +27,9 @@ public record GetProductResponse(
                 product.getRentPricePerDay(),
                 product.getIsRentable(),
                 product.getIsPurchasable(),
-                product.getIsDemoable()
+                product.getIsDemoable(),
+                productImage
+
         );
     }
 }

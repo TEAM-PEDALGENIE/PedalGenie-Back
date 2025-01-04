@@ -2,6 +2,7 @@ package com.pedalgenie.pedalgenieback.domain.product.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,11 +17,12 @@ public class ProductDescription {
     private Long id;
 
     @Column(nullable = false)
-    private String url;
+    private String imageUrl;
 
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id")
     private Product product;
+
 }

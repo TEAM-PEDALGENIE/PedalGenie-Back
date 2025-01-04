@@ -1,5 +1,6 @@
 package com.pedalgenie.pedalgenieback.domain.shop.entity;
 
+import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 import com.pedalgenie.pedalgenieback.global.BaseTimeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -32,14 +33,30 @@ public class Shop extends BaseTimeEntity {
     @NotNull
     private String businessHours;
 
+    private String imageUrl;
+
+
+    private String detailAddress;
+
+
+    private String description;
+
+
+    private String instrumentCount;
+
+
     @Builder
-    public Shop(Long id, String name, String address,
-                String contactNumber, Integer demoQuantityPerDay, String businessHours){
+    public Shop(Long id, String name, String address, String contactNumber, Integer demoQuantityPerDay, String businessHours,
+                String imageUrl, String detailAddress, String description, String instrumentCount){
         this.id= id;
         this.shopname =name;
         this.address=address;
         this.contactNumber=contactNumber;
         this.demoQuantityPerDay=demoQuantityPerDay;
         this.businessHours=businessHours;
+        this.imageUrl=imageUrl;
+        this.detailAddress=detailAddress;
+        this.description=description;
+        this.instrumentCount=instrumentCount;
     }
 }

@@ -1,3 +1,4 @@
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.4'
@@ -58,9 +59,44 @@ dependencies {
 	testImplementation 'org.assertj:assertj-core:3.23.1'
 	testImplementation 'com.h2database:h2'
 
+	// QueryDSL 설정
+
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta' // :jakarta 반드시 붙여야 Q 클래스가 컴파일 가능
+	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+
+	implementation "com.querydsl:querydsl-core"
+	implementation "com.querydsl:querydsl-collections"
+
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+/*
+ * queryDSL 설정 추가
+ */
+
+def generated = 'build/generated'
+
+tasks.withType(JavaCompile) {
+	options.generatedSourceOutputDirectory = file(generated)
+}
+
+sourceSets {
+	main.java.srcDirs += [generated]
+}
+
+clean {
+	delete file(generated)
+}
+
+
+
+
+
+
+

@@ -18,11 +18,10 @@ public class SubCategory extends BaseTimeEntity {
     @Column(name = "subCategory_id")
     private Long id;
 
-    @NotNull
+    @Column(nullable = false, unique = true) // 중복 불가
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
+    @Enumerated(EnumType.STRING)
     private Category category;
 
     @Builder
