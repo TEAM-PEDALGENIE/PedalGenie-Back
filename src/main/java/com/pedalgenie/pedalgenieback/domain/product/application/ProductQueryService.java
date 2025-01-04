@@ -80,7 +80,8 @@ public class ProductQueryService {
                         product.getRentPricePerDay(),
                         product.getIsRentable(),
                         product.getIsPurchasable(),
-                        product.getIsDemoable()
+                        product.getIsDemoable(),
+                        product.getThumbnailImageUrl() // 여기 추가
                 ))
                 .toList();
 

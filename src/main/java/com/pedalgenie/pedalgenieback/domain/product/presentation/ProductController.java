@@ -1,7 +1,5 @@
 package com.pedalgenie.pedalgenieback.domain.product.presentation;
 
-import com.pedalgenie.pedalgenieback.domain.category.dto.CategoryProductsRequest;
-import com.pedalgenie.pedalgenieback.domain.category.dto.CategoryProductsResponse;
 import com.pedalgenie.pedalgenieback.domain.category.entity.Category;
 import com.pedalgenie.pedalgenieback.domain.product.dto.request.FilterRequest;
 import com.pedalgenie.pedalgenieback.domain.product.dto.response.*;

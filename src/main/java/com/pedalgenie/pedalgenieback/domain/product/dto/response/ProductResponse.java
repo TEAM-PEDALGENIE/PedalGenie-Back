@@ -11,7 +11,7 @@ public record ProductResponse(
         Boolean isRentable,
         Boolean isPurchasable,
         Boolean isDemoable,
-        String thumbnailImage
+        String thumbnailImage // 여기 추가
 ) {
 
     public static ProductResponse from(final GetProductQueryResponse product, ProductImageDto productImage){
