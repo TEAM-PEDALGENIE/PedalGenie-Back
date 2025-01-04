@@ -4,7 +4,7 @@ import com.pedalgenie.pedalgenieback.domain.category.entity.Category;
 import com.pedalgenie.pedalgenieback.domain.product.dto.request.FilterRequest;
 import com.pedalgenie.pedalgenieback.domain.product.dto.response.GetProductQueryResponse;
 import com.pedalgenie.pedalgenieback.domain.product.dto.response.QGetProductQueryResponse;
-import com.pedalgenie.pedalgenieback.domain.product.service.SortBy;
+import com.pedalgenie.pedalgenieback.domain.product.application.SortBy;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;

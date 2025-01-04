@@ -1,10 +1,10 @@
-package com.pedalgenie.pedalgenieback.domain.shop.service;
+package com.pedalgenie.pedalgenieback.domain.shop.application;
 
 import com.pedalgenie.pedalgenieback.domain.product.dto.response.ProductResponse;
 import com.pedalgenie.pedalgenieback.domain.product.repository.ProductRepository;
-import com.pedalgenie.pedalgenieback.domain.product.service.ProductQueryService;
-import com.pedalgenie.pedalgenieback.domain.productImage.service.ProductImageQueryService;
-import com.pedalgenie.pedalgenieback.domain.productImage.service.dto.ProductImageDto;
+import com.pedalgenie.pedalgenieback.domain.product.application.ProductQueryService;
+import com.pedalgenie.pedalgenieback.domain.productImage.application.ProductImageQueryService;
+import com.pedalgenie.pedalgenieback.domain.productImage.application.dto.ProductImageDto;
 import com.pedalgenie.pedalgenieback.domain.shop.dto.response.GetShopResponse;
 import com.pedalgenie.pedalgenieback.domain.shop.dto.response.GetShopsResponses;
 import com.pedalgenie.pedalgenieback.domain.shop.dto.response.ShopProductResponse;

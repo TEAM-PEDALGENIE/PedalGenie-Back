@@ -1,4 +1,4 @@
-package com.pedalgenie.pedalgenieback.domain.product.service;
+package com.pedalgenie.pedalgenieback.domain.product.application;
 
 import com.pedalgenie.pedalgenieback.domain.category.entity.Category;
 import com.pedalgenie.pedalgenieback.domain.product.dto.request.FilterRequest;
@@ -6,8 +6,8 @@ import com.pedalgenie.pedalgenieback.domain.product.dto.response.*;
 import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 import com.pedalgenie.pedalgenieback.domain.product.repository.ProductQueryRepositoryCustom;
 import com.pedalgenie.pedalgenieback.domain.product.repository.ProductRepository;
-import com.pedalgenie.pedalgenieback.domain.productImage.service.dto.ProductImageDto;
-import com.pedalgenie.pedalgenieback.domain.productImage.service.ProductImageQueryService;
+import com.pedalgenie.pedalgenieback.domain.productImage.application.dto.ProductImageDto;
+import com.pedalgenie.pedalgenieback.domain.productImage.application.ProductImageQueryService;
 import com.pedalgenie.pedalgenieback.domain.shop.repository.ShopRepository;
 import com.pedalgenie.pedalgenieback.domain.subcategory.dto.FilterSubCategoryResponse;
 import com.pedalgenie.pedalgenieback.domain.subcategory.entity.SubCategory;

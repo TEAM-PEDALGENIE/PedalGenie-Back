@@ -1,7 +1,7 @@
 package com.pedalgenie.pedalgenieback.domain.product.dto.response;
 
 import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
-import com.pedalgenie.pedalgenieback.domain.productImage.service.dto.ProductImageDto;
+import com.pedalgenie.pedalgenieback.domain.productImage.application.dto.ProductImageDto;
 
 import java.util.List;
 

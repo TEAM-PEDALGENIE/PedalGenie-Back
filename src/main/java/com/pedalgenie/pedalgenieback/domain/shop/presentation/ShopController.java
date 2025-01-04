@@ -1,6 +1,6 @@
-package com.pedalgenie.pedalgenieback.domain.shop.controller;
+package com.pedalgenie.pedalgenieback.domain.shop.presentation;
 
-import com.pedalgenie.pedalgenieback.domain.shop.service.ShopQueryService;
+import com.pedalgenie.pedalgenieback.domain.shop.application.ShopQueryService;
 import com.pedalgenie.pedalgenieback.domain.shop.dto.response.GetShopResponse;
 import com.pedalgenie.pedalgenieback.domain.shop.dto.response.GetShopsResponses;
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;

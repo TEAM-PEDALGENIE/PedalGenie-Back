@@ -5,8 +5,8 @@ import com.pedalgenie.pedalgenieback.domain.category.dto.CategoryProductsRespons
 import com.pedalgenie.pedalgenieback.domain.category.entity.Category;
 import com.pedalgenie.pedalgenieback.domain.product.dto.request.FilterRequest;
 import com.pedalgenie.pedalgenieback.domain.product.dto.response.*;
-import com.pedalgenie.pedalgenieback.domain.product.service.ProductQueryService;
-import com.pedalgenie.pedalgenieback.domain.product.service.SortBy;
+import com.pedalgenie.pedalgenieback.domain.product.application.ProductQueryService;
+import com.pedalgenie.pedalgenieback.domain.product.application.SortBy;
 import com.pedalgenie.pedalgenieback.domain.subcategory.dto.FilterSubCategoryResponse;
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
 import io.swagger.v3.oas.annotations.Operation;

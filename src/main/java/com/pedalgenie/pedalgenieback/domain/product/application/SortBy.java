@@ -1,4 +1,4 @@
-package com.pedalgenie.pedalgenieback.domain.product.service;
+package com.pedalgenie.pedalgenieback.domain.product.application;
 
 import com.pedalgenie.pedalgenieback.global.exception.CustomException;
 import com.pedalgenie.pedalgenieback.global.exception.ErrorCode;

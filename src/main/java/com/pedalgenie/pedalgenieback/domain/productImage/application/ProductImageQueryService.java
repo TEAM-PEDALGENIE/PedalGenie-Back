@@ -1,7 +1,7 @@
-package com.pedalgenie.pedalgenieback.domain.productImage.service;
+package com.pedalgenie.pedalgenieback.domain.productImage.application;
 
 import com.pedalgenie.pedalgenieback.domain.productImage.ProductImage;
-import com.pedalgenie.pedalgenieback.domain.productImage.service.dto.ProductImageDto;
+import com.pedalgenie.pedalgenieback.domain.productImage.application.dto.ProductImageDto;
 import com.pedalgenie.pedalgenieback.domain.productImage.repository.ProductImageRepository;
 import com.pedalgenie.pedalgenieback.global.exception.CustomException;
 import com.pedalgenie.pedalgenieback.global.exception.ErrorCode;

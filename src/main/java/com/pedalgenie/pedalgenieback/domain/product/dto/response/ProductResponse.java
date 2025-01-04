@@ -1,6 +1,6 @@
 package com.pedalgenie.pedalgenieback.domain.product.dto.response;
 
-import com.pedalgenie.pedalgenieback.domain.productImage.service.dto.ProductImageDto;
+import com.pedalgenie.pedalgenieback.domain.productImage.application.dto.ProductImageDto;
 
 // api 응답 전용
 public record ProductResponse(

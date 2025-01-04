@@ -1,10 +1,8 @@
 package com.pedalgenie.pedalgenieback.domain.product.dto.request;
 
-import com.pedalgenie.pedalgenieback.domain.product.service.SortBy;
+import com.pedalgenie.pedalgenieback.domain.product.application.SortBy;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
 
-import static java.util.Collections.emptyList;
 import java.util.List;
 
 public record FilterRequest(
