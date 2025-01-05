@@ -14,6 +14,7 @@ public enum ErrorCode {
     KAKAO_LOGIN_FAILED(HttpStatus.BAD_REQUEST, 400, "카카오 로그인에 실패했습니다."),
     KAKAO_ACCESS_TOKEN_ERROR(HttpStatus.BAD_REQUEST, 400, "카카오 액세스 토큰을 가져오는데 실패했습니다."),
     KAKAO_USER_INFO_ERROR(HttpStatus.BAD_REQUEST, 400, "카카오 사용자 정보를 가져오는데 실패했습니다."),
+    KAKAO_UNLINK_FAILED(HttpStatus.BAD_REQUEST, 400, "카카오 연동 해제에 실패했습니다."),
     KAKAO_INVALID_CODE(HttpStatus.BAD_REQUEST, 400, "유효하지 않은 카카오 인가 코드입니다."),
 
     // 401
