@@ -1,6 +1,7 @@
 package com.pedalgenie.pedalgenieback.domain.like.presentation;
 
 import com.pedalgenie.pedalgenieback.domain.like.application.LikeService;
+import com.pedalgenie.pedalgenieback.domain.like.dto.LikedShopDto;
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
 import com.pedalgenie.pedalgenieback.global.jwt.AuthUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -8,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -53,5 +56,17 @@ public class LikeController {
 
         likeService.removeShopLike(shopId, memberId);
         return ResponseTemplate.createTemplate(HttpStatus.OK, true, "가게 좋아요 삭제 성공", null);
+    }
+
+    // 악기 좋아요 목록 조회
+
+
+    // 가게 좋아요 목록 조회
+    @GetMapping("/shops")
+    public ResponseEntity<ResponseTemplate<Object>> getShopLikeList(){
+        Long memberId = AuthUtils.getCurrentMemberId();
+
+        List<LikedShopDto> responseDto = likeService.getShopLikeList(memberId);
+        return ResponseTemplate.createTemplate(HttpStatus.OK, true, "가게 좋아요 목록 조회 성공", responseDto);
     }
 }

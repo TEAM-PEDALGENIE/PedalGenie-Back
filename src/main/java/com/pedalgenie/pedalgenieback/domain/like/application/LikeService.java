@@ -1,24 +1,35 @@
 package com.pedalgenie.pedalgenieback.domain.like.application;
 
+import com.pedalgenie.pedalgenieback.domain.like.dto.LikedShopDto;
 import com.pedalgenie.pedalgenieback.domain.like.entity.ProductLike;
 import com.pedalgenie.pedalgenieback.domain.like.entity.ShopLike;
 import com.pedalgenie.pedalgenieback.domain.like.repository.ProductLikeRepository;
 import com.pedalgenie.pedalgenieback.domain.like.repository.ShopLikeRepository;
 import com.pedalgenie.pedalgenieback.domain.member.entity.Member;
 import com.pedalgenie.pedalgenieback.domain.member.repository.MemberRepository;
+import com.pedalgenie.pedalgenieback.domain.product.dto.response.GetProductQueryResponse;
+import com.pedalgenie.pedalgenieback.domain.product.dto.response.ProductResponse;
 import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 import com.pedalgenie.pedalgenieback.domain.product.repository.ProductRepository;
+import com.pedalgenie.pedalgenieback.domain.productImage.application.dto.ProductImageDto;
 import com.pedalgenie.pedalgenieback.domain.shop.entity.Shop;
 import com.pedalgenie.pedalgenieback.domain.shop.repository.ShopRepository;
 import com.pedalgenie.pedalgenieback.global.exception.CustomException;
 import com.pedalgenie.pedalgenieback.global.exception.ErrorCode;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
+@Tag(name = "Like api", description = "악기, 가게 좋아요 생성, 삭제, 조회 기능을 포함합니다.")
 public class LikeService {
 
     private final ProductLikeRepository productLikeRepository;
@@ -26,6 +37,7 @@ public class LikeService {
     private final ProductRepository productRepository;
     private final ShopRepository shopRepository;
     private final MemberRepository memberRepository;
+
 
     // 상품 좋아요 생성
     @Transactional
@@ -110,6 +122,26 @@ public class LikeService {
         // 좋아요 삭제
         shopLikeRepository.delete(shopLike);
     }
+
+    // 좋아요한 상품 목록 조회
+
+
+    // 좋아요한 가게 목록 조회
+    public List<LikedShopDto> getShopLikeList(Long memberId){
+        // 멤버 조회
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXISTS_MEMBER_ID));
+        // 좋아요한 가게 목록 조회
+        List<Shop> likedShops = shopLikeRepository.findLikedShopsByMember(member);
+
+        return likedShops.stream()
+                .map(shop -> LikedShopDto.builder()
+                        .shopId(shop.getId())
+                        .shopName(shop.getShopname())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
 
     // 상품 좋아요 개수 조회
     public Long countProductLikes(Long productId) {

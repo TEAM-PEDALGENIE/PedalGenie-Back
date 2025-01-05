@@ -72,7 +72,7 @@ public class SecurityConfig {
                 .formLogin(auth -> auth.disable()) // 기본 로그인 폼 비활성화
                 .httpBasic(HttpBasicConfigurer::disable) // 기본 HTTP 기본 인증 비활성화
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
+                .logout(logout -> logout.disable()) // 기본 로그아웃 비활성화
                 // 경로 권한 설정
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(ALLOWED_URIS.toArray(new String[0])).permitAll()
