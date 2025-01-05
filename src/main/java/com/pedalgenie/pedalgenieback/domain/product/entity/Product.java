@@ -56,8 +56,8 @@ public class Product extends BaseTimeEntity {
     @JoinColumn(name = "subCategory_id")
     private SubCategory subCategory;
 
-//    @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, REMOVE}, orphanRemoval = true)
-//    private List<ProductImage> productImages = new ArrayList<>();
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, REMOVE}, orphanRemoval = true)
+    private List<ProductImage> productImages = new ArrayList<>();
 
     @Builder
     public Product(Long id, String name, Double rentPricePerDay,
@@ -77,6 +77,6 @@ public class Product extends BaseTimeEntity {
         this.isDemoable=isDemoable;
         this.thumbnailImageUrl=thumbnailImageUrl;
         this.descriptionUrl=descriptionUrl;
-//        this.productImages=productImages;
+        this.productImages=productImages;
     }
 }

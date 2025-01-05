@@ -26,12 +26,13 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
     @Override
     public List<GetProductQueryResponse> findPagingProducts(
             Category category,
-            FilterRequest request){
+            FilterRequest request) {
 
         Boolean isRentable = request.isRentable();
         Boolean isPurchasable = request.isPurchasable();
         Boolean isDemoable = request.isDemoable();
-        List<Long> subCateooryIds = request.subCategoryIds();
+        List<Long> subCategoryIds = request.subCategoryIds();
+
 
         return queryFactory.select(new QGetProductQueryResponse(
                 product.id,
@@ -40,18 +41,19 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
                 product.rentPricePerDay,
                 product.isRentable,
                 product.isPurchasable,
-                product.isDemoable
+                product.isDemoable,
 
-//                        product.productImages.any().imageUrl
+                        productImage.imageUrl.stringValue().min() // Expression 타입, 첫 번째 이미지(가장 오래된, id=1)
                 ))
                 .from(product)
-//                .leftJoin(product.productImages,productImage)
+                .leftJoin(productImage).on(productImage.product.id.eq(product.id))
                 .where(
 
                         inCategories(category),
-                        inSubCategories(subCateooryIds),
+                        inSubCategories(subCategoryIds),
                         FilterOptions(isRentable, isPurchasable,isDemoable)
                 )
+                .groupBy(product.id)
                 .orderBy(getSorter(request.sortBy()))
                 .fetch();
 
@@ -113,7 +115,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
         }
         // 상품 좋아요 구현 이후 정렬 기준 추가할 것
 
-        return product.name.asc(); // 기본 정렬 이름순
+        return product.id.desc();// 기본 정렬 최신순
     }
 
 
