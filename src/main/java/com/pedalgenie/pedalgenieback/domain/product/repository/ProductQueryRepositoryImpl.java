@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.pedalgenie.pedalgenieback.domain.product.entity.QProduct.product;
+import static com.pedalgenie.pedalgenieback.domain.productImage.QProductImage.productImage;
 
 @Repository
 @RequiredArgsConstructor
@@ -39,10 +40,12 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
                 product.rentPricePerDay,
                 product.isRentable,
                 product.isPurchasable,
-                product.isDemoable,
-                product.thumbnailImageUrl
+                product.isDemoable
+
+//                        product.productImages.any().imageUrl
                 ))
                 .from(product)
+//                .leftJoin(product.productImages,productImage)
                 .where(
 
                         inCategories(category),

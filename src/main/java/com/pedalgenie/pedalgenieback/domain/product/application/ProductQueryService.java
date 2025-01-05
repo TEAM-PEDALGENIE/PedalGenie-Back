@@ -71,26 +71,11 @@ public class ProductQueryService {
 
         List<Product> products = productRepository.findByShopId(shopId);
 
-        // 조회한 Product를 GetProductQueryResponse로 변환
-        List<GetProductQueryResponse> getProductQueryResponses = products.stream()
-                .map(product -> new GetProductQueryResponse(
-                        product.getId(),
-                        product.getShop().getShopname(),
-                        product.getName(),
-                        product.getRentPricePerDay(),
-                        product.getIsRentable(),
-                        product.getIsPurchasable(),
-                        product.getIsDemoable(),
-                        product.getThumbnailImageUrl() // 여기 추가
-                ))
-                .toList();
-
-
         // 조회한 상품들을 ProductResponse로 변환하여 반환
-        List<ProductResponse> productResponses = getProductQueryResponses.stream()
+        List<ProductResponse> productResponses = products.stream()
                 .map(product -> ProductResponse.from(
                         product,
-                        productImageQueryService.getFirstProductImage(product.id())
+                        productImageQueryService.getFirstProductImage(product.getId())
                 ))
                 .toList();
 
