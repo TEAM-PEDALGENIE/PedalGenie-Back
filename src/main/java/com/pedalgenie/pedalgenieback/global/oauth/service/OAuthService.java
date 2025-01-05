@@ -33,6 +33,9 @@ public class OAuthService {
     @Value("${spring.security.oauth2.client.client-id}")
     private String clientId;
 
+    @Value("${spring.security.oauth2.client.app-id}")
+    private String appId;
+
     @Value("${spring.security.oauth2.client.redirect-uri}")
     private String redirectUri;
 
@@ -41,6 +44,10 @@ public class OAuthService {
 
     @Value("${spring.security.oauth2.provider.user-info-uri}")
     private String kakaoUserInfoUri;
+
+    @Value("${spring.security.oauth2.provider.unlink-uri}")
+    private String kakaoUnlinkUri;
+
 
     // 카카오 로그인 메서드
     @Transactional
@@ -122,7 +129,6 @@ public class OAuthService {
         try {
             // 요청 보내기
             ResponseEntity<Map> response = restTemplate.exchange(kakaoUserInfoUri, HttpMethod.GET, entity, Map.class);
-
             Map<String, Object> responseBody = response.getBody();
 
             // 사용자 정보에서 이메일과 닉네임을 추출
@@ -130,10 +136,12 @@ public class OAuthService {
                 Map<String, Object> properties = (Map<String, Object>) responseBody.get("properties");
                 Map<String, String> kakaoAccount = (Map<String, String>) responseBody.get("kakao_account");
 
+                Long oauthId = (Long) responseBody.get("id");
                 String email = kakaoAccount.get("email");
                 String nickname =  (String) properties.get("nickname");
 
                 return KakaoUserInfo.builder()
+                        .oauthId(oauthId)
                         .email(email)
                         .nickname(nickname)
                         .build();
@@ -147,11 +155,31 @@ public class OAuthService {
     // 회원가입 메서드 (처음 로그인하는 유저처리)
     private Member registerKakao(KakaoUserInfo kakaoUserInfo) {
         Member member = Member.builder()
+                .oauthId(kakaoUserInfo.getOauthId())
                 .email(kakaoUserInfo.getEmail())
                 .nickname(kakaoUserInfo.getNickname())
                 .memberRole(MemberRole.CUSTOMER)
                 .build();
 
         return memberRepository.save(member);
+    }
+
+    // 카카오 연동 해제 메서드
+    public void unlinkKakao(Long oauthId){
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "KakaoAK " + appId);
+
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("target_id_type", "user_id");
+        body.add("target_id", String.valueOf(oauthId));
+
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(body, headers);
+
+        try {
+            restTemplate.postForEntity(kakaoUnlinkUri, entity, String.class);
+        } catch (Exception e) {
+            throw new CustomException(ErrorCode.KAKAO_UNLINK_FAILED); // 예외 처리
+        }
     }
 }
