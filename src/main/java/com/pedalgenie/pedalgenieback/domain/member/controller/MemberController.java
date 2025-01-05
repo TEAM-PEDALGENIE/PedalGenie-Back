@@ -4,6 +4,7 @@ import com.pedalgenie.pedalgenieback.domain.member.dto.MemberLoginRequestDto;
 import com.pedalgenie.pedalgenieback.domain.member.dto.MemberLoginResponseDto;
 import com.pedalgenie.pedalgenieback.domain.member.dto.MemberRegisterRequestDto;
 import com.pedalgenie.pedalgenieback.domain.member.dto.MemberResponseDto;
+import com.pedalgenie.pedalgenieback.domain.member.entity.MemberRole;
 import com.pedalgenie.pedalgenieback.domain.member.service.MemberService;
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
 import com.pedalgenie.pedalgenieback.global.exception.CustomException;
@@ -82,5 +83,48 @@ public class MemberController {
         MemberResponseDto responseDto = memberService.getMemberInfo(memberId);
 
         return ResponseTemplate.createTemplate(HttpStatus.OK,true, "회원 조회 성공", responseDto);
+    }
+
+    // 로그아웃
+    @Operation(summary="로그아웃")
+    @PostMapping("/logout")
+    public ResponseEntity<ResponseTemplate<Object>> logout(HttpServletResponse response){
+        // 로그인한 memberId 가져오기
+        Long memberId = AuthUtils.getCurrentMemberId();
+
+        // 로그아웃 처리
+        memberService.logout(memberId);
+
+        // 쿠키에서 리프레시 토큰 삭제
+        Cookie refreshTokenCookie = new Cookie("refreshToken", null);
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setHttpOnly(true);
+//        refreshTokenCookie.setSecure(true); https only 나중에 도메인 붙이고 처리
+        refreshTokenCookie.setMaxAge(0); // 즉시 만료
+        response.addCookie(refreshTokenCookie);
+
+        return ResponseTemplate.createTemplate(HttpStatus.OK,true, "로그아웃 성공", null);
+    }
+
+    // 회원 탈퇴
+    @Operation(summary="회원 탈퇴")
+    @DeleteMapping("/withdraw")
+    public ResponseEntity<ResponseTemplate<MemberResponseDto>> withdraw(HttpServletResponse response){
+        // 로그인한 memberId 가져오기
+        Long memberId = AuthUtils.getCurrentMemberId();
+        String role = AuthUtils.getCurrentRole();
+
+        // 회원 탈퇴
+        memberService.withdraw(memberId, role);
+
+        // 쿠키에서 리프레시 토큰 삭제
+        Cookie refreshTokenCookie = new Cookie("refreshToken", null);
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setHttpOnly(true);
+//        refreshTokenCookie.setSecure(true); https only 나중에 도메인 붙이고 처리
+        refreshTokenCookie.setMaxAge(0); // 즉시 만료
+        response.addCookie(refreshTokenCookie);
+
+        return ResponseTemplate.createTemplate(HttpStatus.OK,true, "회원 탈퇴 성공", null);
     }
 }

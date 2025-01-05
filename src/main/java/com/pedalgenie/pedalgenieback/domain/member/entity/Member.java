@@ -30,12 +30,16 @@ public class Member extends BaseTimeEntity {
 
     private String password; // 어드민, 사장님용
 
+    private Long oauthId; // 일반 고객용
+
     @Builder
-    public Member(Long memberId, String nickname, MemberRole memberRole, String email, String password){
+    public Member(Long memberId, String nickname, MemberRole memberRole, String email, String password, Long oauthId){
         this.memberId = memberId;
         this.nickname = nickname;
         this.memberRole = memberRole;
         this.email = email;
         this.password = password;
+        this.oauthId = oauthId;
     }
+
 }
