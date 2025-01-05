@@ -95,7 +95,8 @@ public class SecurityConfig {
                             "/webjars/**",
                             "/auth/**",
                             "/shops/**",
-                            "/products/**"
+                            "/products/**",
+                            "/images/**"
                     );
         };
     }

@@ -31,3 +31,15 @@ redis:
   host: ${REDIS_HOST}
   port: ${REDIS_PORT}
 
+# aws
+cloud:
+  aws:
+    s3:
+      bucket: ${MUSAI_BUCKET}
+      musai-directory: ${MUSAI_DIRECTORY}
+      env: ${ENVIRONMENT_DIRECTORY}
+      image-url: ${MUSAI_IMAGE_URL}
+
+    stack:
+      auto: false #EC2 배포 시 필요
+
