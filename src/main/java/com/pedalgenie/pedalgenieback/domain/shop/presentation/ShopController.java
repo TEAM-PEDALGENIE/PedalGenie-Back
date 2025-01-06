@@ -22,9 +22,16 @@ public class ShopController {
 
     @Operation(summary = "매장 목록 조회")
     @GetMapping
-    public ResponseEntity<ResponseTemplate<GetShopsResponses>> getShops(){
+    public ResponseEntity<ResponseTemplate<GetShopsResponses>> getShops(@RequestHeader(value = "Authorization", required = false) String authorizationHeader){
 
-        GetShopsResponses getShopsResponses = shopQueryService.readShops();
+        Long memberId = null;
+
+        // 토큰이 있는 경우 memberId 추출
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            memberId = tokenProvider.getMemberIdFromToken(token);
+        }
+        GetShopsResponses getShopsResponses = shopQueryService.readShops(memberId);
         return ResponseTemplate.createTemplate(HttpStatus.OK,true,"매장 목록 조회 성공", getShopsResponses);
 
     }

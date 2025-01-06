@@ -9,11 +9,14 @@ import java.util.Map;
 public record GetShopsResponses(
         List<ShopResponse> shops
 ) {
-    public static GetShopsResponses from(List<Shop> shops, Map<Shop, List<ShopProductResponse>> shopProductMap){
+    public static GetShopsResponses from(List<Shop> shops, Map<Shop, List<ShopProductResponse>> shopProductMap,
+                                         List<Long> likedShopIds){
         List<ShopResponse> shopResponses = shops.stream()
                 .map(shop -> {
+                    Boolean isLiked = likedShopIds.contains(shop.getId())
+                            ? true: null;
                     List<ShopProductResponse> products = shopProductMap.get(shop); // 매장에 해당하는 상품 리스트 가져오기
-                    return ShopResponse.from(shop, products); //상품 리스트와 함께 ShopResponse 생성
+                    return ShopResponse.from(shop, isLiked, products); //상품 리스트와 함께 ShopResponse 생성
                 })
                 .toList();
 
