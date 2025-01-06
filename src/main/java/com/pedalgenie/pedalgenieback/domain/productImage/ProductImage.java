@@ -26,5 +26,10 @@ public class ProductImage {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @Builder
+    public ProductImage(String imageUrl, Product product){
+        this.imageUrl=imageUrl;
+        this.product=product;
+    }
 
 }

@@ -1,19 +1,24 @@
 package com.pedalgenie.pedalgenieback.domain.product.entity;
 
-import com.pedalgenie.pedalgenieback.domain.category.entity.Category;
+import com.pedalgenie.pedalgenieback.domain.productImage.ProductImage;
 import com.pedalgenie.pedalgenieback.domain.shop.entity.Shop;
 import com.pedalgenie.pedalgenieback.domain.subcategory.entity.SubCategory;
 import com.pedalgenie.pedalgenieback.global.BaseTimeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static jakarta.persistence.CascadeType.REMOVE;
 
 
+@Builder
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@AllArgsConstructor
 public class Product extends BaseTimeEntity {
 
     @Id
@@ -51,14 +56,15 @@ public class Product extends BaseTimeEntity {
     @JoinColumn(name = "subCategory_id")
     private SubCategory subCategory;
 
-//    @Enumerated(EnumType.STRING)
-//    private Category category;
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, REMOVE}, orphanRemoval = true)
+    private List<ProductImage> productImages = new ArrayList<>();
 
     @Builder
     public Product(Long id, String name, Double rentPricePerDay,
                    Integer rentQuantityPerDay, Double price, Shop shop, SubCategory subCategory,
                    Boolean isRentable, Boolean isPurchasable, Boolean isDemoable, String thumbnailImageUrl,
-                   String descriptionUrl){
+                   String descriptionUrl,
+                   List<ProductImage> productImages){
         this.id=id;
         this.name=name;
         this.rentPricePerDay=rentPricePerDay;
@@ -71,5 +77,6 @@ public class Product extends BaseTimeEntity {
         this.isDemoable=isDemoable;
         this.thumbnailImageUrl=thumbnailImageUrl;
         this.descriptionUrl=descriptionUrl;
+        this.productImages=productImages;
     }
 }

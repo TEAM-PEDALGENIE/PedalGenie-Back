@@ -70,6 +70,12 @@ dependencies {
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 
+	// S3 연결 관련
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
+	implementation 'software.amazon.awssdk:s3:2.20.121'
+	implementation 'software.amazon.awssdk:url-connection-client:2.20.121'
+
 }
 
 tasks.named('test') {

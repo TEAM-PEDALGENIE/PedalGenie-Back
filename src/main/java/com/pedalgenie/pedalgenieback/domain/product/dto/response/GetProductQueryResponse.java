@@ -11,7 +11,8 @@ public record GetProductQueryResponse(
         Double rentPricePerDay,
         Boolean isRentable,
         Boolean isPurchasable,
-        Boolean isDemoable
+        Boolean isDemoable,
+        String imageUrl // 여기 추가
 
 ) {
     @QueryProjection
