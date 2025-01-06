@@ -2,6 +2,7 @@ package com.pedalgenie.pedalgenieback.domain.like.presentation;
 
 import com.pedalgenie.pedalgenieback.domain.like.application.LikeService;
 import com.pedalgenie.pedalgenieback.domain.like.dto.LikedShopDto;
+import com.pedalgenie.pedalgenieback.domain.product.dto.response.ProductResponse;
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
 import com.pedalgenie.pedalgenieback.global.jwt.AuthUtils;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -59,7 +60,13 @@ public class LikeController {
     }
 
     // 악기 좋아요 목록 조회
+    @GetMapping("/products")
+    public ResponseEntity<ResponseTemplate<Object>> getProductLikeList(){
+        Long memberId = AuthUtils.getCurrentMemberId();
 
+        List<ProductResponse> responseDto = likeService.getProductLikeList(memberId);
+        return ResponseTemplate.createTemplate(HttpStatus.OK, true, "악기 좋아요 목록 조회 성공", responseDto);
+    }
 
     // 가게 좋아요 목록 조회
     @GetMapping("/shops")

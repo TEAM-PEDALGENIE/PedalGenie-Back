@@ -11,6 +11,7 @@ import com.pedalgenie.pedalgenieback.domain.product.dto.response.GetProductQuery
 import com.pedalgenie.pedalgenieback.domain.product.dto.response.ProductResponse;
 import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 import com.pedalgenie.pedalgenieback.domain.product.repository.ProductRepository;
+import com.pedalgenie.pedalgenieback.domain.productImage.application.ProductImageQueryService;
 import com.pedalgenie.pedalgenieback.domain.productImage.application.dto.ProductImageDto;
 import com.pedalgenie.pedalgenieback.domain.shop.entity.Shop;
 import com.pedalgenie.pedalgenieback.domain.shop.repository.ShopRepository;
@@ -37,6 +38,7 @@ public class LikeService {
     private final ProductRepository productRepository;
     private final ShopRepository shopRepository;
     private final MemberRepository memberRepository;
+    private final ProductImageQueryService productImageQueryService;
 
 
     // 상품 좋아요 생성
@@ -124,10 +126,28 @@ public class LikeService {
     }
 
     // 좋아요한 상품 목록 조회
+    public List<ProductResponse> getProductLikeList(Long memberId) {
+        List<Product> likedProducts = productLikeRepository.findLikedProductsByMember(memberId);
+
+        if (likedProducts.isEmpty()) {
+            return List.of();
+        }
+
+        return likedProducts.stream()
+                .map(product -> {
+                    Boolean isLiked = true; // 이미 좋아요된 상품이므로 항상 true
+                    return ProductResponse.from(
+                            product,
+                            productImageQueryService.getFirstProductImage(product.getId()),
+                            isLiked
+                    );
+                })
+                .toList();
+    }
 
 
     // 좋아요한 가게 목록 조회
-    public List<LikedShopDto> getShopLikeList(Long memberId){
+    public List<LikedShopDto> getShopLikeList(Long memberId) {
         // 멤버 조회
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXISTS_MEMBER_ID));
@@ -142,6 +162,36 @@ public class LikeService {
                 .collect(Collectors.toList());
     }
 
+    // 특정 상품 좋아요 여부 조회
+    public boolean isProductLiked(Long productId, Long memberId) {
+        // 멤버 조회
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXISTS_MEMBER_ID));
+
+        // 상품 조회
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
+
+        // 좋아요 여부 확인
+        return productLikeRepository.existsByProductAndMember(product, member);
+    }
+
+
+    // 특정 가게 좋아요 여부 조회
+    public boolean isShopLiked(Long shopId, Long memberId) {
+        // 멤버 조회
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXISTS_MEMBER_ID));
+
+        // 가게 조회
+        Shop shop = shopRepository.findById(shopId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SHOP_NAME));
+
+        // 좋아요 여부 확인
+        return shopLikeRepository.existsByShopAndMember(shop, member);
+    }
+
+
 
     // 상품 좋아요 개수 조회
     public Long countProductLikes(Long productId) {
@@ -152,4 +202,7 @@ public class LikeService {
     public Long countShopLikes(Long shopId) {
         return shopLikeRepository.countByShopId(shopId);
     }
+
+
+
 }

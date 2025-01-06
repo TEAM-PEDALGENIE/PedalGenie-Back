@@ -13,10 +13,10 @@ public record GetShopResponse (
         String contactNumber,
         String businessHours,
         String imageUrl,
+        Boolean isLiked,
         List<ProductResponse> products// 해당 매장의 상품 목록
-
 ) {
-    public static GetShopResponse from(Shop shop, List<ProductResponse> products){
+    public static GetShopResponse from(Shop shop, Boolean isLiked, List<ProductResponse> products){
 
         return new GetShopResponse(
                 shop.getShopname(),
@@ -24,6 +24,7 @@ public record GetShopResponse (
                 shop.getContactNumber(),
                 shop.getBusinessHours(),
                 shop.getImageUrl(),
+                isLiked != null ? isLiked : null,
                 products
         );
     }

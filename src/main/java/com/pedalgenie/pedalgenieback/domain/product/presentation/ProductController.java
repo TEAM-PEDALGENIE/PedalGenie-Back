@@ -7,6 +7,8 @@ import com.pedalgenie.pedalgenieback.domain.product.application.ProductQueryServ
 import com.pedalgenie.pedalgenieback.domain.product.application.SortBy;
 import com.pedalgenie.pedalgenieback.domain.subcategory.dto.FilterSubCategoryResponse;
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
+import com.pedalgenie.pedalgenieback.global.jwt.AuthUtils;
+import com.pedalgenie.pedalgenieback.global.jwt.TokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,7 @@ import java.util.List;
 public class ProductController {
 
     private final ProductQueryService productQueryService;
+    private final TokenProvider tokenProvider;
 
     // 요청 파라미터와 바디 값에 따라 전체 조회, 상위 카테고리 조회 가능, 옵션 설정 가능
     @Operation(summary = "옵션에 따른 상품 목록 조회")
@@ -79,8 +82,18 @@ public class ProductController {
 
     @Operation(summary = "상품 상세 조회")
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseTemplate<GetProductResponse>> getProduct(@PathVariable Long id){
-        GetProductResponse getProductResponse = productQueryService.getProductResponse(id);
+    public ResponseEntity<ResponseTemplate<GetProductResponse>> getProduct(@PathVariable Long id,
+                                                                           @RequestHeader(value = "Authorization", required = false) String authorizationHeader){
+
+        Long memberId = null;
+
+        // 토큰이 있는 경우 memberId 추출
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            memberId = tokenProvider.getMemberIdFromToken(token);
+        }
+
+        GetProductResponse getProductResponse = productQueryService.getProductResponse(id, memberId);
         return ResponseTemplate.createTemplate(HttpStatus.OK,true,
                 "상품 상세 조회 성공", getProductResponse);
     }

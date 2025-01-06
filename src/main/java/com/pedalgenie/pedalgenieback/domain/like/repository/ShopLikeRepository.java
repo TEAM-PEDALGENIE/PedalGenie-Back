@@ -23,6 +23,8 @@ public interface ShopLikeRepository extends JpaRepository<ShopLike, Long> {
     @Query("SELECT sl.shop FROM ShopLike sl WHERE sl.member = :member")
     List<Shop> findLikedShopsByMember(@Param("member") Member member);
 
-
+    // memberId를 기준으로 상점 좋아요 Id 리스트 반환하는 메서드
+    @Query("SELECT sl.shop.id FROM ShopLike sl WHERE sl.member.memberId = :memberId")
+    List<Long> findLikedShopIdsByMemberId(@Param("memberId") Long memberId);
 }
 
