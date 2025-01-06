@@ -48,11 +48,11 @@ public class ShopQueryService {
     }
 
     // 매장 상세 조회
-    public GetShopResponse readShop(Long id){
+    public GetShopResponse readShop(Long id, Long memberId){
         Shop shop = shopRepository.findById(id)
                 .orElseThrow(()-> new CustomException(ErrorCode.NOT_EXISTS_SHOP_ID));
 
-        List<ProductResponse> products = productQueryService.getProductsByShop(id);
+        List<ProductResponse> products = productQueryService.getProductsByShop(id, memberId);
 
         return GetShopResponse.from(shop, products);
 
