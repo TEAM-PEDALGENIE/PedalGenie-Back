@@ -17,8 +17,7 @@ public record GetProductResponse(
         Boolean isRentable,
         Boolean isPurchasable,
         Boolean isDemoable,
-
-        // 상품 설명 텍스트, 이미지 추가
+        String descriptionUrl,
         List<ProductImageDto> productImage,
         Boolean isLiked
 ) {
@@ -32,6 +31,7 @@ public record GetProductResponse(
                 product.getIsRentable(),
                 product.getIsPurchasable(),
                 product.getIsDemoable(),
+                product.getDescriptionUrl(),
                 productImage,
                 isLiked != null ? isLiked : null
         );

@@ -14,7 +14,7 @@ import java.util.List;
 import static jakarta.persistence.CascadeType.REMOVE;
 
 
-@Builder
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -59,7 +59,7 @@ public class Product extends BaseTimeEntity {
     @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, REMOVE}, orphanRemoval = true)
     private List<ProductImage> productImages = new ArrayList<>();
 
-    @Builder
+    @Builder(toBuilder = true)
     public Product(Long id, String name, Double rentPricePerDay,
                    Integer rentQuantityPerDay, Double price, Shop shop, SubCategory subCategory,
                    Boolean isRentable, Boolean isPurchasable, Boolean isDemoable, String thumbnailImageUrl,

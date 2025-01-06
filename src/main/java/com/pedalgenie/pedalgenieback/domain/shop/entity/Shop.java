@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Getter
+@Table(name = "shop")
 public class Shop extends BaseTimeEntity {
 
     @Id
@@ -33,6 +34,7 @@ public class Shop extends BaseTimeEntity {
     @NotNull
     private String businessHours;
 
+    @Column(nullable = false)
     private String imageUrl;
 
 

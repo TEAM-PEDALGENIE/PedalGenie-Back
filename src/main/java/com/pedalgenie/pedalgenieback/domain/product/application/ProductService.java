@@ -1,6 +1,7 @@
 package com.pedalgenie.pedalgenieback.domain.product.application;
 
 import com.pedalgenie.pedalgenieback.domain.product.dto.request.ProductCreateRequestDto;
+import com.pedalgenie.pedalgenieback.domain.product.dto.response.ProductDescriptionUrlResponse;
 import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 import com.pedalgenie.pedalgenieback.domain.product.repository.ProductRepository;
 import com.pedalgenie.pedalgenieback.domain.shop.entity.Shop;
@@ -42,6 +43,23 @@ public class ProductService {
     public void updateProduct(Long id){
 
     }
+
+    // 상품 설명 이미지 업로드
+    public ProductDescriptionUrlResponse saveProductDescription(Long productId, String url){
+
+        Product product= productRepository.findById(productId)
+                .orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
+
+        Product updatedProduct = product.toBuilder()
+                .descriptionUrl(url)
+                .build();
+
+        productRepository.save(updatedProduct);
+
+        return ProductDescriptionUrlResponse.from(url);
+
+    }
+
 
 
 }
