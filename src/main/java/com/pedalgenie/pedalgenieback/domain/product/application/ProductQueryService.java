@@ -1,6 +1,7 @@
 package com.pedalgenie.pedalgenieback.domain.product.application;
 
 import com.pedalgenie.pedalgenieback.domain.category.entity.Category;
+import com.pedalgenie.pedalgenieback.domain.like.application.LikeService;
 import com.pedalgenie.pedalgenieback.domain.like.repository.ProductLikeRepository;
 import com.pedalgenie.pedalgenieback.domain.product.dto.request.FilterRequest;
 import com.pedalgenie.pedalgenieback.domain.product.dto.response.*;
@@ -30,6 +31,7 @@ public class ProductQueryService {
     private final SubcategoryRepository subcategoryRepository;
     private final ProductQueryRepositoryCustom productQueryRepository;
     private final ProductImageQueryService productImageQueryService;
+    private final LikeService likeService;
     private final ShopRepository shopRepository;
     private final ProductLikeRepository productLikeRepository;
 
@@ -67,9 +69,8 @@ public class ProductQueryService {
         List<ProductImageDto> productImages = productImageQueryService.getProductImages(id);
 
         // 로그인하지 않은 유저 처리
-        Boolean isLiked = (memberId == null)
-                ? null
-                : getLikedProductIds(memberId, List.of(id)).contains(id);
+        Boolean isLiked = (memberId != null) &&
+            likeService.isProductLiked(id, memberId) ? true: null;
 
         return GetProductResponse.of(product, productImages, isLiked);
     }
