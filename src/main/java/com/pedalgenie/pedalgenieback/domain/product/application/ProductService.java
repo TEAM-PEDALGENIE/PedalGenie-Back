@@ -44,7 +44,6 @@ public class ProductService {
 
     }
 
-    // 상품 설명 이미지 업로드
     public ProductDescriptionUrlResponse saveProductDescription(Long productId, String url){
 
         Product product= productRepository.findById(productId)
@@ -54,7 +53,7 @@ public class ProductService {
                 .descriptionUrl(url)
                 .build();
 
-        productRepository.save(updatedProduct);
+        productRepository.save(updatedProduct);  // 상품 설명 이미지 DB 저장
 
         return ProductDescriptionUrlResponse.from(url);
 

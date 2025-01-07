@@ -35,7 +35,8 @@ public class ProductController {
             @RequestParam(required = false) Boolean isPurchasable,
             @RequestParam(required = false) Boolean isDemoable,
             @RequestParam(required = false) SortBy sortBy,
-            @RequestParam(required = false) List<Long> subCategoryIds
+            @RequestParam(required = false) List<Long> subCategoryIds,
+            @RequestHeader(value = "Authorization", required = false) String authorizationHeader
 
     ){
 
@@ -46,7 +47,15 @@ public class ProductController {
                 sortBy,
                 subCategoryIds);
 
-        List<GetProductQueryResponse> response = productQueryService.getProductsByCategory(category,request);
+        Long memberId = null;
+
+        // 토큰이 있는 경우 memberId 추출
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+            memberId = tokenProvider.getMemberIdFromToken(token);
+        }
+
+        List<GetProductQueryResponse> response = productQueryService.getProductsByCategory(category,request,memberId);
 
         return ResponseTemplate.createTemplate(HttpStatus.OK, true,
                 "옵션에 따른 상품 목록 조회 성공", response);

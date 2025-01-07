@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.pedalgenie.pedalgenieback.domain.like.entity.QProductLike.productLike;
 import static com.pedalgenie.pedalgenieback.domain.product.entity.QProduct.product;
 import static com.pedalgenie.pedalgenieback.domain.productImage.QProductImage.productImage;
 
@@ -24,15 +25,23 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<GetProductQueryResponse> findPagingProducts(
+    public List<GetProductQueryResponse> findPagingProducts( // 메서드 분리
             Category category,
-            FilterRequest request) {
+            FilterRequest request,
+            Long memberId) {
 
         Boolean isRentable = request.isRentable();
         Boolean isPurchasable = request.isPurchasable();
         Boolean isDemoable = request.isDemoable();
         List<Long> subCategoryIds = request.subCategoryIds();
 
+        // memberId 가 null 일 때 처리
+        BooleanBuilder likeCondition = new BooleanBuilder();
+        if (memberId != null) {
+            likeCondition.and(productLike.member.memberId.eq(memberId));
+        } else {
+            likeCondition.and(productLike.member.memberId.isNull());
+        }
 
         return queryFactory.select(new QGetProductQueryResponse(
                 product.id,
@@ -43,15 +52,21 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
                 product.isPurchasable,
                 product.isDemoable,
 
-                        productImage.imageUrl.stringValue().min() // Expression 타입, 첫 번째 이미지(가장 오래된, id=1)
+                        productImage.imageUrl.stringValue().min(),
+                        productLike.productLikeId.max().isNotNull()
+
+
                 ))
                 .from(product)
                 .leftJoin(productImage).on(productImage.product.id.eq(product.id))
+                .leftJoin(productLike).on(productLike.product.id.eq(product.id)
+                                .and(likeCondition))
+
                 .where(
 
                         inCategories(category),
                         inSubCategories(subCategoryIds),
-                        FilterOptions(isRentable, isPurchasable,isDemoable)
+                        filterOptions(isRentable, isPurchasable,isDemoable)
                 )
                 .groupBy(product.id)
                 .orderBy(getSorter(request.sortBy()))
@@ -68,15 +83,15 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
     }
 
     // 이용 범위 옵션 AND 연산
-    public BooleanBuilder FilterOptions(Boolean isRentable, Boolean isPurchasable, Boolean isDemoable){
+    public BooleanBuilder filterOptions(Boolean isRentable, Boolean isPurchasable, Boolean isDemoable){
 
         return new BooleanBuilder()
-                .and(isRentalbeFilter(isRentable))
+                .and(isRentableFilter(isRentable))
                 .and(isPurchasableFilter(isPurchasable))
                 .and(isDemoableFilter(isDemoable));
     }
 
-    private BooleanExpression isRentalbeFilter(Boolean isRentable) {
+    private BooleanExpression isRentableFilter(Boolean isRentable) {
         if (isRentable == null) {
             return null;
         }
@@ -106,7 +121,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
         return product.subCategory.id.in(subCategoryIds);
     }
 
-    private OrderSpecifier getSorter(SortBy sortBy){
+    private OrderSpecifier<?> getSorter(SortBy sortBy){
         if (sortBy == SortBy.RECENT){
             return product.id.desc();
         }

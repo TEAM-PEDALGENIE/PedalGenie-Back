@@ -32,16 +32,35 @@ public class ProductQueryService {
     private final ProductQueryRepositoryCustom productQueryRepository;
     private final ProductImageQueryService productImageQueryService;
     private final LikeService likeService;
-    private final ShopRepository shopRepository;
     private final ProductLikeRepository productLikeRepository;
 
 
     // 전체, 상위 카테고리별 목록 조회(필터, 정렬, 서브 카테고리 옵션)
     public List<GetProductQueryResponse> getProductsByCategory(
             Category category,
-            FilterRequest request) {
+            FilterRequest request,
+            Long memberId) {
 
-        return productQueryRepository.findPagingProducts(category, request);
+        List<GetProductQueryResponse> products =productQueryRepository.findPagingProducts(category, request, memberId);
+
+        return products.stream()
+                .map(product -> {
+                    if (memberId == null) {
+                        return new GetProductQueryResponse(
+                                product.id(),
+                                product.name(),
+                                product.shopName(),
+                                product.rentPricePerDay(),
+                                product.isRentable(),
+                                product.isPurchasable(),
+                                product.isDemoable(),
+                                product.imageUrl(),
+                                null // 응답 DTO 에서 isLiked 제외
+                        );
+                    }
+                    return product;
+                })
+                .toList();
 
     }
 
