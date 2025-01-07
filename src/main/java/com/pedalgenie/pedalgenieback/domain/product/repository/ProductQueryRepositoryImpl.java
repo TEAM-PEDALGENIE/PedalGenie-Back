@@ -8,6 +8,7 @@ import com.pedalgenie.pedalgenieback.domain.product.application.SortBy;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -25,7 +26,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<GetProductQueryResponse> findPagingProducts( // 메서드 분리
+    public List<GetProductQueryResponse> findPagingProducts(
             Category category,
             FilterRequest request,
             Long memberId) {
@@ -53,7 +54,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
                 product.isDemoable,
 
                         productImage.imageUrl.stringValue().min(),
-                        productLike.productLikeId.max().isNotNull()
+                        productLike.productLikeId.isNotNull()
 
 
                 ))
@@ -68,7 +69,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
                         inSubCategories(subCategoryIds),
                         filterOptions(isRentable, isPurchasable,isDemoable)
                 )
-                .groupBy(product.id)
+                .groupBy(product.id, productLike.productLikeId)
                 .orderBy(getSorter(request.sortBy()))
                 .fetch();
 
@@ -128,7 +129,12 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
         if (sortBy == SortBy.NAME_ASC){
             return product.name.asc();
         }
-        // 상품 좋아요 구현 이후 정렬 기준 추가할 것
+        if (sortBy == SortBy.LIKE_DESC){
+            return new CaseBuilder()
+                    .when(productLike.productLikeId.isNotNull()).then(1)
+                    .otherwise(0)
+                    .desc(); // 좋아요 눌린 상품을 우선 배치, 내림차순
+        }
 
         return product.id.desc();// 기본 정렬 최신순
     }
