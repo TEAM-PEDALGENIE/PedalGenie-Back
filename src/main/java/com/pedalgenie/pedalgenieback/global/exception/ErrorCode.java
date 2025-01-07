@@ -45,6 +45,8 @@ public enum ErrorCode {
     NOT_FOUND_SORT_BY(HttpStatus.NOT_FOUND,404,"해당하는 정렬 기준을 찾을 수 없습니다."),
     NOT_FOUND_LIKE(HttpStatus.NOT_FOUND,404,"존재하지 않는 좋아요입니다."),
 
+    NOT_FOUND_ARTICLE(HttpStatus.NOT_FOUND,404, "존재하지 않는 아티클입니다."),
+
     // 409
     ALREADY_REGISTERED_MEMBER_EMAIL(HttpStatus.CONFLICT, 409, "이미 가입된 이메일입니다."),
     ALREADY_LIKED(HttpStatus.CONFLICT, 409, "이미 좋아요를 눌렀습니다."),

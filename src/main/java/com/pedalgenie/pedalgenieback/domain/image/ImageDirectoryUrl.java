@@ -7,4 +7,5 @@ public class ImageDirectoryUrl {
     public final static String PRODUCT_DIRECTORY = "product" + SUFFIX_DIRECTORY;
     public final static String PRODUCT_DESCRIPTION_DIRECTORY = "product-description" + SUFFIX_DIRECTORY;
     public final static String SHOP_DIRECTORY = "shop" + SUFFIX_DIRECTORY;
+    public final static String ARTICLE_DIRECTORY = "article" + SUFFIX_DIRECTORY;
 }
