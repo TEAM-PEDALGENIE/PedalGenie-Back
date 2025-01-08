@@ -1,8 +1,15 @@
 package com.pedalgenie.pedalgenieback.domain.shop.presentation;
 
+import com.pedalgenie.pedalgenieback.domain.image.ImageDirectoryUrl;
+import com.pedalgenie.pedalgenieback.domain.image.application.ImageService;
 import com.pedalgenie.pedalgenieback.domain.shop.application.ShopQueryService;
+import com.pedalgenie.pedalgenieback.domain.shop.application.ShopService;
+import com.pedalgenie.pedalgenieback.domain.shop.dto.request.ShopCreateRequest;
+import com.pedalgenie.pedalgenieback.domain.shop.dto.request.ShopImageRequest;
 import com.pedalgenie.pedalgenieback.domain.shop.dto.response.GetShopResponse;
 import com.pedalgenie.pedalgenieback.domain.shop.dto.response.GetShopsResponses;
+import com.pedalgenie.pedalgenieback.domain.shop.dto.response.ShopCreateResponse;
+import com.pedalgenie.pedalgenieback.domain.shop.dto.response.ShopResponse;
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
 import com.pedalgenie.pedalgenieback.global.jwt.AuthUtils;
 import com.pedalgenie.pedalgenieback.global.jwt.TokenProvider;
@@ -14,14 +21,15 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/shops")
 public class ShopController {
 
     private final ShopQueryService shopQueryService;
     private final TokenProvider tokenProvider;
+    private final ImageService imageService;
+    private final ShopService shopService;
 
     @Operation(summary = "매장 목록 조회")
-    @GetMapping
+    @GetMapping("/shops")
     public ResponseEntity<ResponseTemplate<GetShopsResponses>> getShops(@RequestHeader(value = "Authorization", required = false) String authorizationHeader){
 
         Long memberId = null;
@@ -36,7 +44,7 @@ public class ShopController {
 
     }
     @Operation(summary = "매장 상세 조회")
-    @GetMapping("/{id}")
+    @GetMapping("/shops/{id}")
     public ResponseEntity<ResponseTemplate<GetShopResponse>> getShopDetails(@PathVariable Long id,
                                                                             @RequestHeader(value = "Authorization", required = false) String authorizationHeader){
 
@@ -50,6 +58,16 @@ public class ShopController {
 
         GetShopResponse response = shopQueryService.readShop(id, memberId);
         return ResponseTemplate.createTemplate(HttpStatus.OK, true, "매장 상세 조회 성공", response);
+
+    }
+    @PostMapping("/admin/shops")
+    public ResponseEntity<ResponseTemplate<ShopCreateResponse>> createShop(@ModelAttribute ShopImageRequest request){
+        String url = imageService.save(request.imageUrl(), ImageDirectoryUrl.SHOP_DIRECTORY);
+
+        ShopCreateResponse response = shopService.createShop(
+                request.toCreateRequest(), url);
+
+        return ResponseTemplate.createTemplate(HttpStatus.OK, true, "매장 등록 성공", response);
 
     }
 
