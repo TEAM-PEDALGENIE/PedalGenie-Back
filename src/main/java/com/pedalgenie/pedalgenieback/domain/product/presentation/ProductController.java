@@ -11,6 +11,7 @@ import com.pedalgenie.pedalgenieback.global.jwt.AuthUtils;
 import com.pedalgenie.pedalgenieback.global.jwt.TokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,8 @@ public class ProductController {
             @RequestParam(required = false) Boolean isDemoable,
             @RequestParam(required = false) SortBy sortBy,
             @RequestParam(required = false) List<Long> subCategoryIds,
-            @RequestHeader(value = "Authorization", required = false) String authorizationHeader
+            @RequestHeader(value = "Authorization", required = false) String authorizationHeader,
+            Pageable pageable
 
     ){
 
@@ -55,7 +57,8 @@ public class ProductController {
             memberId = tokenProvider.getMemberIdFromToken(token);
         }
 
-        List<GetProductQueryResponse> response = productQueryService.getProductsByCategory(category,request,memberId);
+        List<GetProductQueryResponse> response = productQueryService
+                .getProductsByCategory(category,request,memberId,pageable);
 
         return ResponseTemplate.createTemplate(HttpStatus.OK, true,
                 "옵션에 따른 상품 목록 조회 성공", response);

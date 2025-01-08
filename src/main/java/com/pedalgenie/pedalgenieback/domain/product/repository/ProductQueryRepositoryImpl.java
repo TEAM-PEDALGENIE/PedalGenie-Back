@@ -8,9 +8,12 @@ import com.pedalgenie.pedalgenieback.domain.product.application.SortBy;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -26,10 +29,11 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<GetProductQueryResponse> findPagingProducts(
+    public Page<GetProductQueryResponse> findPagingProducts(
             Category category,
             FilterRequest request,
-            Long memberId) {
+            Long memberId,
+            Pageable pageable) {
 
         Boolean isRentable = request.isRentable();
         Boolean isPurchasable = request.isPurchasable();
@@ -45,7 +49,8 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
             likeCondition.and(productLike.member.memberId.isNotNull());
         }
 
-        return queryFactory.select(new QGetProductQueryResponse(
+        List<GetProductQueryResponse> content = queryFactory
+                .select(new QGetProductQueryResponse(
                 product.id,
                 product.name,
                 product.shop.shopname,
@@ -71,9 +76,27 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
                         inSubCategories(subCategoryIds),
                         filterOptions(isRentable, isPurchasable,isDemoable)
                 )
+                .offset(pageable.getOffset()) // 몇 번째 페이지부터 시작할 것인지
+                .limit(pageable.getPageSize()) // 페이지당 몇 개의 데이터를 보여줄 것인지
                 .groupBy(product.id, productLike.productLikeId) // 중복 발생 가능
                 .orderBy(getSorter(request.sortBy()))
                 .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory
+                .select(product.id.countDistinct()) // distinct한 product.id 개수를 세도록 수정
+                .from(product)
+                .leftJoin(productImage).on(productImage.product.id.eq(product.id))
+                .leftJoin(productLike).on(productLike.product.id.eq(product.id)
+                        .and(likeCondition))
+                .where(
+                        inCategories(category),
+                        inSubCategories(subCategoryIds),
+                        filterOptions(isRentable, isPurchasable, isDemoable)
+                );
+
+
+        return PageableExecutionUtils.getPage(content, pageable,
+                countQuery::fetchOne);
 
     }
 

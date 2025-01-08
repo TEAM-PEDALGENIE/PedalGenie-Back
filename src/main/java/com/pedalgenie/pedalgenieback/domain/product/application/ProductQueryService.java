@@ -17,6 +17,8 @@ import com.pedalgenie.pedalgenieback.domain.subcategory.repository.SubcategoryRe
 import com.pedalgenie.pedalgenieback.global.exception.CustomException;
 import com.pedalgenie.pedalgenieback.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,9 +41,11 @@ public class ProductQueryService {
     public List<GetProductQueryResponse> getProductsByCategory(
             Category category,
             FilterRequest request,
-            Long memberId) {
+            Long memberId,
+            Pageable pageable) {
 
-        List<GetProductQueryResponse> products =productQueryRepository.findPagingProducts(category, request, memberId);
+        Page<GetProductQueryResponse> products =productQueryRepository
+                .findPagingProducts(category, request, memberId, pageable);
 
         return products.stream()
                 .map(product -> {
