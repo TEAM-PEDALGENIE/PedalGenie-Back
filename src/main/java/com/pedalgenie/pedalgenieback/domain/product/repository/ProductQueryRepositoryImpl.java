@@ -41,7 +41,8 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
         if (memberId != null) {
             likeCondition.and(productLike.member.memberId.eq(memberId));
         } else {
-            likeCondition.and(productLike.member.memberId.isNull());
+            // null 을 반환하지 않도록 모든 사용자의 좋아요를 조회
+            likeCondition.and(productLike.member.memberId.isNotNull());
         }
 
         return queryFactory.select(new QGetProductQueryResponse(
@@ -54,10 +55,11 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
                 product.isDemoable,
 
                         productImage.imageUrl.stringValue().min(),
-                        productLike.productLikeId.isNotNull()
+                        productLike.productLikeId.isNotNull() // 집계함수 사용 불가
 
 
                 ))
+                .distinct() // 중복 결과 제거
                 .from(product)
                 .leftJoin(productImage).on(productImage.product.id.eq(product.id))
                 .leftJoin(productLike).on(productLike.product.id.eq(product.id)
@@ -69,7 +71,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
                         inSubCategories(subCategoryIds),
                         filterOptions(isRentable, isPurchasable,isDemoable)
                 )
-                .groupBy(product.id, productLike.productLikeId)
+                .groupBy(product.id, productLike.productLikeId) // 중복 발생 가능
                 .orderBy(getSorter(request.sortBy()))
                 .fetch();
 
@@ -130,10 +132,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
             return product.name.asc();
         }
         if (sortBy == SortBy.LIKE_DESC){
-            return new CaseBuilder()
-                    .when(productLike.productLikeId.isNotNull()).then(1)
-                    .otherwise(0)
-                    .desc(); // 좋아요 눌린 상품을 우선 배치, 내림차순
+            return product.productLikes.size().desc();
         }
 
         return product.id.desc();// 기본 정렬 최신순
