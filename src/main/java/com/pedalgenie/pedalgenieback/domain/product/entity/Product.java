@@ -62,21 +62,20 @@ public class Product extends BaseTimeEntity {
     private List<ProductLike> productLikes;
 
     @Builder(toBuilder = true)
-    public Product(Long id, String name, Double rentPricePerDay,
+    public Product(String name, Double rentPricePerDay,
                    Integer rentQuantityPerDay, Double price, Shop shop, SubCategory subCategory,
-                   Boolean isRentable, Boolean isPurchasable, Boolean isDemoable, String descriptionUrl,
-                   List<ProductImage> productImages){
-        this.id=id;
+                   Boolean isRentable, Boolean isPurchasable, Boolean isDemoable, String descriptionUrl
+                   ){
+
         this.name=name;
         this.rentPricePerDay=rentPricePerDay;
         this.rentQuantityPerDay=rentQuantityPerDay;
         this.price=price;
-        this.shop=shop;
-        this.subCategory=subCategory;
         this.isRentable=isRentable;
         this.isPurchasable=isPurchasable;
         this.isDemoable=isDemoable;
+        this.shop=shop;
+        this.subCategory=subCategory;
         this.descriptionUrl=descriptionUrl;
-        this.productImages=productImages;
     }
 }

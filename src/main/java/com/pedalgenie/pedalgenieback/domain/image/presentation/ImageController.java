@@ -40,18 +40,4 @@ public class ImageController {
 
     }
 
-    // 상품 설명 이미지 db에 저장
-    @PostMapping("/products/{productId}/description")
-    public ResponseEntity<ResponseTemplate<ImageResponse>> uploadProductDescription(
-            @PathVariable Long productId,
-            @RequestPart(required = false, value = "description") MultipartFile descriptionFile
-    ){
-        String url = imageService.save(descriptionFile,ImageDirectoryUrl.PRODUCT_DESCRIPTION_DIRECTORY);
-
-        productService.saveProductDescription(productId,url);
-
-        return ResponseTemplate.createTemplate(HttpStatus.CREATED,
-                true, "상품 설명 이미지 저장 성공", ImageResponse.from(url));
-    }
-
 }

@@ -71,6 +71,5 @@ public class ShopQueryService {
 
     }
 
-    // 매장 상품 필터 옵션 조회
 
 }

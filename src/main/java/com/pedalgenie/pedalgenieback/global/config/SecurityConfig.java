@@ -96,8 +96,7 @@ public class SecurityConfig {
                             "/auth/**",
                             "/shops/**",
                             "/products/**",
-                            "/admin/images/**",
-                            "/admin/shops/**"
+                            "/admin/**"
                     );
         };
     }
