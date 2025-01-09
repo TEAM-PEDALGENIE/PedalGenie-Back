@@ -8,6 +8,7 @@ import java.util.List;
 
 // 매장 상세 조회 dto
 public record GetShopResponse (
+        Long shopId,
         String shopname,
         String address,
         String contactNumber,
@@ -19,6 +20,7 @@ public record GetShopResponse (
     public static GetShopResponse from(Shop shop, Boolean isLiked, List<ProductResponse> products){
 
         return new GetShopResponse(
+                shop.getId(),
                 shop.getShopname(),
                 shop.getAddress(),
                 shop.getContactNumber(),

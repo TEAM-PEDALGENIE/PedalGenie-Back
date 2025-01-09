@@ -53,6 +53,7 @@ public class ProductQueryService {
                         return new GetProductQueryResponse(
                                 product.id(),
                                 product.name(),
+                                product.shopId(),
                                 product.shopName(),
                                 product.rentPricePerDay(),
                                 product.isRentable(),

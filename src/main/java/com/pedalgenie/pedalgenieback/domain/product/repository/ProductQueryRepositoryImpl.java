@@ -53,6 +53,7 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
                 .select(new QGetProductQueryResponse(
                 product.id,
                 product.name,
+                product.shop.id,
                 product.shop.shopname,
                 product.rentPricePerDay,
                 product.isRentable,

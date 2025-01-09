@@ -60,6 +60,7 @@ public class ShopController {
         return ResponseTemplate.createTemplate(HttpStatus.OK, true, "매장 상세 조회 성공", response);
 
     }
+    @Operation(summary = "매장 등록")
     @PostMapping("/admin/shops")
     public ResponseEntity<ResponseTemplate<ShopCreateResponse>> createShop(@ModelAttribute ShopImageRequest request){
         String url = imageService.save(request.imageUrl(), ImageDirectoryUrl.SHOP_DIRECTORY);

@@ -9,6 +9,7 @@ public record GetProductQueryResponse(
 
         Long id,
         String name,
+        Long shopId,
         String shopName,
         Double rentPricePerDay,
         Boolean isRentable,
