@@ -10,8 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.pedalgenie.pedalgenieback.domain.productImage.QProductImage.productImage;
-
 
 @Service
 @RequiredArgsConstructor

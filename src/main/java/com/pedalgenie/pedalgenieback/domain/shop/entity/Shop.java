@@ -1,6 +1,5 @@
 package com.pedalgenie.pedalgenieback.domain.shop.entity;
 
-import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 import com.pedalgenie.pedalgenieback.global.BaseTimeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
