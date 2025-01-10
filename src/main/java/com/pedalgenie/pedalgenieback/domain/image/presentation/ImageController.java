@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("admin/images")
+@RequestMapping("api/admin/productImages")
 public class ImageController {
 
     private final ImageService imageService;
@@ -25,7 +25,7 @@ public class ImageController {
     private final ShopService shopService;
 
     // 상품 이미지 db에 저장
-    @PostMapping("/products/{productId}")
+    @PostMapping("/{productId}")
     public ResponseEntity<ResponseTemplate<ImageResponse>> uploadProductImage(
             @PathVariable Long productId,
             @RequestPart(required = false, value = "image") MultipartFile imageFile
