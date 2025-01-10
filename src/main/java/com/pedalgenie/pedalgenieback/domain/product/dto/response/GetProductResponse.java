@@ -10,6 +10,7 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL) // null인 필드 제외
 public record GetProductResponse(
         String name,
+        Long shopId,
         String shopName,
         String businessHours,
         Double price,
@@ -17,14 +18,14 @@ public record GetProductResponse(
         Boolean isRentable,
         Boolean isPurchasable,
         Boolean isDemoable,
-
-        // 상품 설명 텍스트, 이미지 추가
+        String descriptionUrl,
         List<ProductImageDto> productImage,
         Boolean isLiked
 ) {
     public static GetProductResponse of(Product product, List<ProductImageDto> productImage, Boolean isLiked){
         return new GetProductResponse(
                 product.getName(),
+                product.getShop().getId(),
                 product.getShop().getShopname(),
                 product.getShop().getBusinessHours(),
                 product.getPrice(),
@@ -32,6 +33,7 @@ public record GetProductResponse(
                 product.getIsRentable(),
                 product.getIsPurchasable(),
                 product.getIsDemoable(),
+                product.getDescriptionUrl(),
                 productImage,
                 isLiked != null ? isLiked : null
         );

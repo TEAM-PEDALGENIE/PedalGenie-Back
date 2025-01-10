@@ -17,6 +17,8 @@ import com.pedalgenie.pedalgenieback.domain.subcategory.repository.SubcategoryRe
 import com.pedalgenie.pedalgenieback.global.exception.CustomException;
 import com.pedalgenie.pedalgenieback.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,16 +34,38 @@ public class ProductQueryService {
     private final ProductQueryRepositoryCustom productQueryRepository;
     private final ProductImageQueryService productImageQueryService;
     private final LikeService likeService;
-    private final ShopRepository shopRepository;
     private final ProductLikeRepository productLikeRepository;
 
 
     // 전체, 상위 카테고리별 목록 조회(필터, 정렬, 서브 카테고리 옵션)
     public List<GetProductQueryResponse> getProductsByCategory(
             Category category,
-            FilterRequest request) {
+            FilterRequest request,
+            Long memberId,
+            Pageable pageable) {
 
-        return productQueryRepository.findPagingProducts(category, request);
+        Page<GetProductQueryResponse> products =productQueryRepository
+                .findPagingProducts(category, request, memberId, pageable);
+
+        return products.stream()
+                .map(product -> {
+                    if (memberId == null) {
+                        return new GetProductQueryResponse(
+                                product.id(),
+                                product.name(),
+                                product.shopId(),
+                                product.shopName(),
+                                product.rentPricePerDay(),
+                                product.isRentable(),
+                                product.isPurchasable(),
+                                product.isDemoable(),
+                                product.imageUrl(),
+                                null // 응답 DTO 에서 isLiked 제외
+                        );
+                    }
+                    return product;
+                })
+                .toList();
 
     }
 

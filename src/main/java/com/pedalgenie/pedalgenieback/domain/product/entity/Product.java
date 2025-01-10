@@ -1,5 +1,6 @@
 package com.pedalgenie.pedalgenieback.domain.product.entity;
 
+import com.pedalgenie.pedalgenieback.domain.like.entity.ProductLike;
 import com.pedalgenie.pedalgenieback.domain.productImage.ProductImage;
 import com.pedalgenie.pedalgenieback.domain.shop.entity.Shop;
 import com.pedalgenie.pedalgenieback.domain.subcategory.entity.SubCategory;
@@ -14,7 +15,7 @@ import java.util.List;
 import static jakarta.persistence.CascadeType.REMOVE;
 
 
-@Builder
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -44,8 +45,6 @@ public class Product extends BaseTimeEntity {
 
     private Boolean isDemoable;
 
-    private String thumbnailImageUrl; // 썸네일 이미지
-
     private String descriptionUrl; // 매장 설명 이미지
 
     @ManyToOne
@@ -57,26 +56,26 @@ public class Product extends BaseTimeEntity {
     private SubCategory subCategory;
 
     @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, REMOVE}, orphanRemoval = true)
-    private List<ProductImage> productImages = new ArrayList<>();
+    private List<ProductImage> productImages;
 
-    @Builder
-    public Product(Long id, String name, Double rentPricePerDay,
+    @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, REMOVE}, orphanRemoval = true)
+    private List<ProductLike> productLikes;
+
+    @Builder(toBuilder = true)
+    public Product(String name, Double rentPricePerDay,
                    Integer rentQuantityPerDay, Double price, Shop shop, SubCategory subCategory,
-                   Boolean isRentable, Boolean isPurchasable, Boolean isDemoable, String thumbnailImageUrl,
-                   String descriptionUrl,
-                   List<ProductImage> productImages){
-        this.id=id;
+                   Boolean isRentable, Boolean isPurchasable, Boolean isDemoable, String descriptionUrl
+                   ){
+
         this.name=name;
         this.rentPricePerDay=rentPricePerDay;
         this.rentQuantityPerDay=rentQuantityPerDay;
         this.price=price;
-        this.shop=shop;
-        this.subCategory=subCategory;
         this.isRentable=isRentable;
         this.isPurchasable=isPurchasable;
         this.isDemoable=isDemoable;
-        this.thumbnailImageUrl=thumbnailImageUrl;
+        this.shop=shop;
+        this.subCategory=subCategory;
         this.descriptionUrl=descriptionUrl;
-        this.productImages=productImages;
     }
 }

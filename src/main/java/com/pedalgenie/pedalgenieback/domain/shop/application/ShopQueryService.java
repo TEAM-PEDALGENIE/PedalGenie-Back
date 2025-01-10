@@ -59,7 +59,7 @@ public class ShopQueryService {
     // 매장 상세 조회
     public GetShopResponse readShop(Long id, Long memberId){
         Shop shop = shopRepository.findById(id)
-                .orElseThrow(()-> new CustomException(ErrorCode.NOT_EXISTS_SHOP_ID));
+                .orElseThrow(()-> new CustomException(ErrorCode.NOT_EXISTS_SHOP));
 
         Boolean isLiked = (memberId != null) &&
                 likeService.isShopLiked(id, memberId) ? true: null;
@@ -71,6 +71,5 @@ public class ShopQueryService {
 
     }
 
-    // 매장 상품 필터 옵션 조회
 
 }
