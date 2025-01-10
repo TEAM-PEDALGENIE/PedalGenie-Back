@@ -5,6 +5,7 @@ import com.pedalgenie.pedalgenieback.domain.productImage.application.dto.Product
 
 // 특정 매장이 보유한 상품 정보
 public record ShopProductResponse(
+        Long id,
         String name,
         Double rentPricePerDay,
         String thumbnailImage
@@ -13,6 +14,7 @@ public record ShopProductResponse(
 
     public static ShopProductResponse from(final Product product, ProductImageDto productImage){
         return new ShopProductResponse(
+                product.getId(),
                 product.getName(),
                 product.getRentPricePerDay(),
                 productImage != null ? productImage.imageUrl() : null
