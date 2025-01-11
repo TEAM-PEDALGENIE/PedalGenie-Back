@@ -3,7 +3,6 @@ package com.pedalgenie.pedalgenieback.domain.demo.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.pedalgenie.pedalgenieback.domain.demo.entity.DemoStatus;
 import lombok.Builder;
 import lombok.Getter;
 
