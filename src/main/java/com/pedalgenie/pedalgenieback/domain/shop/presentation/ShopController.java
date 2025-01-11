@@ -4,14 +4,11 @@ import com.pedalgenie.pedalgenieback.domain.image.ImageDirectoryUrl;
 import com.pedalgenie.pedalgenieback.domain.image.application.ImageService;
 import com.pedalgenie.pedalgenieback.domain.shop.application.ShopQueryService;
 import com.pedalgenie.pedalgenieback.domain.shop.application.ShopService;
-import com.pedalgenie.pedalgenieback.domain.shop.dto.request.ShopCreateRequest;
 import com.pedalgenie.pedalgenieback.domain.shop.dto.request.ShopImageRequest;
 import com.pedalgenie.pedalgenieback.domain.shop.dto.response.GetShopResponse;
 import com.pedalgenie.pedalgenieback.domain.shop.dto.response.GetShopsResponses;
 import com.pedalgenie.pedalgenieback.domain.shop.dto.response.ShopCreateResponse;
-import com.pedalgenie.pedalgenieback.domain.shop.dto.response.ShopResponse;
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
-import com.pedalgenie.pedalgenieback.global.jwt.AuthUtils;
 import com.pedalgenie.pedalgenieback.global.jwt.TokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class ShopController {
 
     private final ShopQueryService shopQueryService;

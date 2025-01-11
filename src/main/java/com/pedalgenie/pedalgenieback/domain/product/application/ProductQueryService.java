@@ -10,7 +10,6 @@ import com.pedalgenie.pedalgenieback.domain.product.repository.ProductQueryRepos
 import com.pedalgenie.pedalgenieback.domain.product.repository.ProductRepository;
 import com.pedalgenie.pedalgenieback.domain.productImage.application.dto.ProductImageDto;
 import com.pedalgenie.pedalgenieback.domain.productImage.application.ProductImageQueryService;
-import com.pedalgenie.pedalgenieback.domain.shop.repository.ShopRepository;
 import com.pedalgenie.pedalgenieback.domain.subcategory.dto.FilterSubCategoryResponse;
 import com.pedalgenie.pedalgenieback.domain.subcategory.entity.SubCategory;
 import com.pedalgenie.pedalgenieback.domain.subcategory.repository.SubcategoryRepository;
