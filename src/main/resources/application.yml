@@ -47,3 +47,6 @@ cloud:
     stack:
       auto: false #EC2 배포 시 필요
 
+holiday-api:
+  key: ${HOLIDAY_API_KEY}
+  uri: ${HOLIDAY_API_URI}
