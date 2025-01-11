@@ -4,30 +4,26 @@ import com.pedalgenie.pedalgenieback.domain.demo.dto.request.DemoRequestDto;
 import com.pedalgenie.pedalgenieback.domain.demo.dto.response.DemoPatchResponseDto;
 import com.pedalgenie.pedalgenieback.domain.demo.dto.response.DemoResponseDto;
 import com.pedalgenie.pedalgenieback.domain.demo.entity.Demo;
-import com.pedalgenie.pedalgenieback.domain.demo.entity.DemoSlot;
 import com.pedalgenie.pedalgenieback.domain.demo.entity.DemoStatus;
 import com.pedalgenie.pedalgenieback.domain.demo.repository.DemoRepository;
-import com.pedalgenie.pedalgenieback.domain.demo.repository.DemoSlotRepository;
 import com.pedalgenie.pedalgenieback.domain.member.entity.Member;
 import com.pedalgenie.pedalgenieback.domain.member.repository.MemberRepository;
 import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 import com.pedalgenie.pedalgenieback.domain.product.repository.ProductRepository;
 import com.pedalgenie.pedalgenieback.domain.shop.entity.Shop;
-import com.pedalgenie.pedalgenieback.domain.shop.entity.ShopHours;
-import com.pedalgenie.pedalgenieback.domain.shop.repository.ShopHoursRepository;
+import com.pedalgenie.pedalgenieback.domain.shop.entity.ShopHours;;
 import com.pedalgenie.pedalgenieback.global.exception.CustomException;
 import com.pedalgenie.pedalgenieback.global.exception.ErrorCode;
+import com.pedalgenie.pedalgenieback.global.time.application.TimeService;
 import com.pedalgenie.pedalgenieback.global.time.dto.DateDto;
-import com.pedalgenie.pedalgenieback.global.time.entity.DayType;
 import com.pedalgenie.pedalgenieback.global.time.dto.TimeSlotDto;
-import com.pedalgenie.pedalgenieback.global.time.application.HolidayService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,60 +34,69 @@ import java.util.stream.Collectors;
 public class DemoService {
     private final MemberRepository memberRepository;
     private final ProductRepository productRepository;
-    private final ShopHoursRepository shopHoursRepository;
-
-    private final DemoSlotRepository demoSlotRepository;
     private final DemoRepository demoRepository;
-    private final DemoSlotService demoSlotService;
-    private final HolidayService holidayService;
+    private final TimeService timeService;
 
     // 시연 가능 일자 조회 메서드
-    public List<DateDto> getAvailableDateList(Long productId){
+    public List<DateDto> getAvailableDateList(Long productId) {
         // 시연하려는 상품과 소속 상점 조회
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
         Long shopId = product.getShop().getId();
+        int demoQuantityPerDay = product.getShop().getDemoQuantityPerDay();
 
         // 오늘 기준으로 28일간 가능 일자 리스트 생성
-        LocalDate toDay = LocalDate.now();
+        LocalDate today = LocalDate.now();
         List<DateDto> availableList = new ArrayList<>();
 
         for (int i = 1; i <= 28; i++) {
-            LocalDate targetDate = toDay.plusDays(i);
+            LocalDate targetDate = today.plusDays(i);
 
-            // 공휴일 여부 확인
-            boolean isHoliday = holidayService.isHoliday(targetDate);
+            // ShopHours 조회
+            ShopHours shopHours = timeService.determineShopHours(shopId, targetDate);
 
-            // ShopHours 조회, HOLIDAY인지 확인
-            ShopHours holidayHours = shopHoursRepository.findByShopIdAndDayType(shopId, DayType.HOLIDAY).orElse(null);
+            boolean isAvailable = false;
 
-            // 공휴일이지만 HOLIDAY, 운영 시간이 있는 경우
-            boolean isHolidayAvailable = isHoliday && holidayHours != null;
+            if (shopHours != null) {
+                // 운영 시간이 존재하면 30분 단위로 가능한 시간 확인
+                LocalTime currentTime = shopHours.getOpenTime();
+                LocalTime closeTime = shopHours.getCloseTime();
 
-            // 공휴일이 아니거나, HOLIDAY 운영 시간이 설정된 경우만 가능한 슬롯 개수 확인
-            long availableCount = (isHolidayAvailable || !isHoliday) ? demoSlotRepository.countAvailableSlots(shopId, targetDate) : 0;
+                while (!currentTime.isAfter(closeTime)) {
+                    // 점심시간 제외 처리
+                    if (shopHours.getBreakStartTime() != null && shopHours.getBreakEndTime() != null) {
+                        if (!currentTime.isBefore(shopHours.getBreakStartTime()) && !currentTime.isAfter(shopHours.getBreakEndTime())) {
+                            currentTime = currentTime.plusMinutes(30);
+                            continue;
+                        }
+                    }
+                    LocalDateTime demoDateTime = LocalDateTime.of(targetDate, currentTime);
 
-            // 가능한 슬롯이 있는 경우 true
-            boolean isAvailable = availableCount > 0;
+                    // SCHEDULED 상태의 예약 수량 확인
+                    long bookedCount = demoRepository.countByShopIdAndDemoDateAndDemoStatus(shopId, demoDateTime, DemoStatus.SCHEDULED);
 
+                    if (bookedCount < demoQuantityPerDay) {
+                        isAvailable = true;
+                        break; // 가능한 시간이 있으면 바로 다음 날짜로 이동
+                    }
+                    // 30분 단위로 시간 증가
+                    currentTime = currentTime.plusMinutes(30);
+                }
+            }
             DateDto dateAvailability = DateDto.builder()
                     .date(targetDate)
-                    .available(isAvailable)
+                    .isAvailable(isAvailable)
                     .build();
             availableList.add(dateAvailability);
         }
         return availableList;
     }
 
+
     // 특정 일자의 시연 가능 시간 조회 메서드
     public List<TimeSlotDto> generateDemoAvailableSlots(Long productId, LocalDate date) {
         List<TimeSlotDto> availableSlots = new ArrayList<>();
         LocalDateTime currentDateTime = LocalDateTime.now();
-
-        // 요청 날짜가 공휴일이고, 운영 시간이 없으면 예외 발생
-        if (holidayService.isHoliday(date)) {
-            throw new CustomException(ErrorCode.NOT_FOUND_SHOP_HOURS);
-        }
 
         // 당일 조회 예외처리
         if (date.isEqual(LocalDate.now())) {
@@ -105,29 +110,51 @@ public class DemoService {
         Long shopId = shop.getId();
         int demoQuantityPerDay = shop.getDemoQuantityPerDay();
 
-        // 해당 날짜의 DemoSlot 조회
-        List<DemoSlot> demoSlots = demoSlotService.getDemoSlotsByShopAndDate(shopId, date);
+        // 가게 운영 시간 조회
+        ShopHours shopHours = timeService.determineShopHours(shopId, date);
 
-        // 운영 시간이 없으면 빈 리스트 반환
-        if (demoSlots.isEmpty()) {
+        // 가게 운영 시간이 없으면 빈 리스트 반환
+        if (shopHours == null) {
             return availableSlots;
         }
 
-        for (DemoSlot demoSlot : demoSlots) {
-            // 24시간 내 가능 시간대 제외
-            LocalDateTime slotDateTime = LocalDateTime.of(demoSlot.getDemoDate(), demoSlot.getTimeSlot());
+        // 운영 시간 기반으로 30분 단위 시간대 생성 및 가능 여부 확인
+        LocalTime currentTime = shopHours.getOpenTime();
+        LocalTime closeTime = shopHours.getCloseTime();
+
+        while (!currentTime.isAfter(closeTime)) {
+            // 점심시간 제외 처리
+            if (shopHours.getBreakStartTime() != null && shopHours.getBreakEndTime() != null) {
+                if (!currentTime.isBefore(shopHours.getBreakStartTime()) && !currentTime.isAfter(shopHours.getBreakEndTime())) {
+                    currentTime = currentTime.plusMinutes(30);
+                    continue;
+                }
+            }
+
+            LocalDateTime slotDateTime = LocalDateTime.of(date, currentTime);
+
+            // 24시간 내 시간 제외
             if (slotDateTime.isBefore(currentDateTime.plusHours(24))) {
+                currentTime = currentTime.plusMinutes(30);
                 continue;
             }
 
-            // 가능한 시간대이고, 최대 수량보다 작은 타임만 가능
-            boolean isAvailable = (demoSlot.isAvailable()) && (demoSlot.getBookedQuantity() < demoQuantityPerDay);
+            // SCHEDULED 상태의 예약 수량 확인
+            long bookedCount = demoRepository.countByShopIdAndDemoDateAndDemoStatus(shopId, slotDateTime, DemoStatus.SCHEDULED);
+
+            // 가능한 시간대 여부 확인
+            boolean isAvailable = bookedCount < demoQuantityPerDay;
+
             TimeSlotDto slot = TimeSlotDto.builder()
-                    .slotTime(demoSlot.getTimeSlot().format(DateTimeFormatter.ofPattern("HH:mm")))
+                    .slotTime(currentTime)
                     .isAvailable(isAvailable)
                     .build();
             availableSlots.add(slot);
+
+            // 30분 단위로 시간 증가
+            currentTime = currentTime.plusMinutes(30);
         }
+
         return availableSlots;
     }
 
@@ -135,47 +162,48 @@ public class DemoService {
     @Transactional
     // 시연 생성 메서드
     public DemoResponseDto createDemo(DemoRequestDto requestDto, Long memberId) {
-        // 요청 날짜가 공휴일이고, 운영 시간이 없으면 예외 발생
-        if (holidayService.isHoliday(requestDto.getDemoDate().toLocalDate())) {
-            throw new CustomException(ErrorCode.NOT_AVAILABLE_SLOT);
-        }
-
         // 시연하려는 상품 조회
         Product product = productRepository.findById(requestDto.getProductId())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
 
         // 시연 가능하지 않은 상품 예외처리
-        if (Boolean.FALSE.equals(product.getIsDemoable())) {
+        if (!product.getIsDemoable()) {
             throw new CustomException(ErrorCode.PRODUCT_NOT_AVAILABLE_FOR_DEMO);
         }
 
         // 24시간 내 생성 요청 예외처리
-        LocalDateTime requestedDemoDate = requestDto.getDemoDate();
-        LocalDateTime currentDateTime = LocalDateTime.now();
-
-        if (requestedDemoDate.isBefore(currentDateTime.plusHours(24))) {
-            throw new CustomException(ErrorCode.NOT_AVAILABLE_SLOT);
+        if (requestDto.getDemoDate().isBefore(LocalDateTime.now().plusHours(24))) {
+            throw new CustomException(ErrorCode.NOT_AVAILABLE_TIME);
         }
 
-        // 시연 생성하려는 유저, 상품의 가게 정보 조회
+        // 시연 생성하려는 유저 조회
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXISTS_MEMBER_ID));
 
         Shop shop = product.getShop();
         int demoQuantityPerDay = shop.getDemoQuantityPerDay();
 
-        // 시연 가능한 slot인지 조회
-        DemoSlot demoSlot = demoSlotRepository.findByShopIdAndDemoDateAndTimeSlot(
-                shop.getId(),
-                requestedDemoDate.toLocalDate(),
-                requestedDemoDate.toLocalTime()
-        ).orElseThrow(() -> new CustomException(ErrorCode.NOT_AVAILABLE_SLOT));
+        // 해당 일자에 맞는 가게 운영 시간 조회
+        ShopHours shopHours = timeService.determineShopHours(shop.getId(), requestDto.getDemoDate().toLocalDate());
 
-        if (!demoSlot.isAvailable()) {
-            throw new CustomException(ErrorCode.NOT_AVAILABLE_SLOT);
+        // 운영 시간이 없는 경우 예외 처리
+        if (shopHours == null) {
+            throw new CustomException(ErrorCode.NOT_AVAILABLE_TIME);
         }
 
-        // Demo 엔티티 생성
+        // 요청된 시간이 운영 시간 내에 있는지 확인
+        LocalTime requestedTime = requestDto.getDemoDate().toLocalTime();
+        if (requestedTime.isBefore(shopHours.getOpenTime()) || requestedTime.isAfter(shopHours.getCloseTime())) {
+            throw new CustomException(ErrorCode.NOT_AVAILABLE_TIME);
+        }
+
+        // SCHEDULED 상태 예약 수량 확인
+        long bookedCount = demoRepository.countByShopIdAndDemoDateAndDemoStatus(shop.getId(), requestDto.getDemoDate(), DemoStatus.SCHEDULED);
+        if (bookedCount >= demoQuantityPerDay) {
+            throw new CustomException(ErrorCode.NOT_AVAILABLE_TIME);
+        }
+
+        // Demo 엔티티 생성 및 저장
         Demo demo = Demo.builder()
                 .product(product)
                 .member(member)
@@ -184,11 +212,7 @@ public class DemoService {
                 .demoStatus(DemoStatus.SCHEDULED)
                 .build();
 
-        // Demo 저장
         Demo savedDemo = demoRepository.save(demo);
-
-        // DemoSlot 상태 갱신
-        demoSlot.markAsBooked(demoQuantityPerDay);
 
         return DemoResponseDto.builder()
                 .demoId(savedDemo.getDemoId())
@@ -199,6 +223,7 @@ public class DemoService {
                 .memberNickName(member.getNickname())
                 .build();
     }
+
 
     // 예약 시간이 지난 (3시간 이후) 시연 예정을 확인하고 완료로 변경하는 메서드
     @Transactional
@@ -342,18 +367,6 @@ public class DemoService {
         // 시연 조회
         Demo demo = demoRepository.findById(demoId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DEMO));
-
-        // 상태가 "취소"로 수정되는 경우, 타임슬롯 명수에서 -1
-        if (status.equals("CANCELED")) {
-            DemoSlot demoSlot = demoSlotRepository.findByShopIdAndDemoDateAndTimeSlot(
-                    demo.getShop().getId(),
-                    demo.getDemoDate().toLocalDate(),
-                    demo.getDemoDate().toLocalTime()
-            ).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_DEMO));
-
-            // 타임슬롯에서 예약된 수량 -1
-            demoSlot.decreaseBookedQuantity();
-        }
 
         // 상태 수정
         DemoStatus newStatus = DemoStatus.valueOf(status);
