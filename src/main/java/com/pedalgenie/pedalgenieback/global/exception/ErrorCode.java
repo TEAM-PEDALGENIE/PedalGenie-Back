@@ -10,7 +10,7 @@ public enum ErrorCode {
     // 400
     BAD_REQUEST(HttpStatus.BAD_REQUEST, 400, "잘못된 요청입니다."),
     PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, 400, "비밀번호가 일치하지 않습니다."),
-    NOT_AVAILABLE_SLOT(HttpStatus.BAD_REQUEST, 400, "해당 시간에 예약이 불가합니다."),
+    NOT_AVAILABLE_TIME(HttpStatus.BAD_REQUEST, 400, "해당 시간에 예약이 불가합니다."),
     INVALID_DEMO_TIME_UPDATE(HttpStatus.BAD_REQUEST, 400, "예약 시간 이전에는 완료 상태로 수정할 수 없습니다."),
     INVALID_DEMO_STATUS_UPDATE(HttpStatus.BAD_REQUEST, 400, "해당 상태에서는 다른 상태로 수정할 수 없습니다."),
     PRODUCT_NOT_AVAILABLE_FOR_DEMO(HttpStatus.BAD_REQUEST, 400, "해당 상품은 시연이 불가능합니다."),
