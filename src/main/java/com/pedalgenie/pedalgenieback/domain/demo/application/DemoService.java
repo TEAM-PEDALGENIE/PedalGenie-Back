@@ -10,6 +10,7 @@ import com.pedalgenie.pedalgenieback.domain.member.entity.Member;
 import com.pedalgenie.pedalgenieback.domain.member.repository.MemberRepository;
 import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 import com.pedalgenie.pedalgenieback.domain.product.repository.ProductRepository;
+import com.pedalgenie.pedalgenieback.domain.productImage.application.ProductImageQueryService;
 import com.pedalgenie.pedalgenieback.domain.shop.entity.Shop;
 import com.pedalgenie.pedalgenieback.domain.shop.entity.ShopHours;;
 import com.pedalgenie.pedalgenieback.global.exception.CustomException;
@@ -36,6 +37,7 @@ public class DemoService {
     private final ProductRepository productRepository;
     private final DemoRepository demoRepository;
     private final TimeService timeService;
+    private final ProductImageQueryService productImageQueryService;
 
     // 시연 가능 일자 조회 메서드
     public List<DateDto> getAvailableDateList(Long productId) {
@@ -258,7 +260,7 @@ public class DemoService {
                 .demoDate(demo.getDemoDate())
                 .reservedDate(demo.getCreatedAt().toLocalDate())
                 .productName(demo.getProduct().getName())
-                .productThumbnailImageUrl(demo.getProduct().getThumbnailImageUrl())
+                .productThumbnailImageUrl(productImageQueryService.getFirstProductImage(demo.getProduct().getId()).imageUrl())
                 .shopName(demo.getShop().getShopname())
                 .shopAddress(demo.getShop().getAddress())
                 .memberNickName(demo.getMember().getNickname())
@@ -279,7 +281,7 @@ public class DemoService {
                         .demoStatus(demo.getDemoStatus().getStatusDescription())
                         .demoDate(demo.getDemoDate())
                         .productName(demo.getProduct().getName())
-                        .productThumbnailImageUrl(demo.getProduct().getThumbnailImageUrl())
+                        .productThumbnailImageUrl(productImageQueryService.getFirstProductImage(demo.getProduct().getId()).imageUrl())
                         .shopName(demo.getShop().getShopname())
                         .shopAddress(demo.getShop().getAddress())
                         .build())
