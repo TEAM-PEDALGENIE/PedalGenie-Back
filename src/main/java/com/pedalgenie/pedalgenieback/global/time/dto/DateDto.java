@@ -9,5 +9,5 @@ import java.time.LocalDate;
 @Builder
 public class DateDto {
     private LocalDate date;
-    private boolean available;
+    private boolean isAvailable;
 }
