@@ -10,6 +10,10 @@ public enum ErrorCode {
     // 400
     BAD_REQUEST(HttpStatus.BAD_REQUEST, 400, "잘못된 요청입니다."),
     PASSWORD_MISMATCH(HttpStatus.BAD_REQUEST, 400, "비밀번호가 일치하지 않습니다."),
+    NOT_AVAILABLE_SLOT(HttpStatus.BAD_REQUEST, 400, "해당 시간에 예약이 불가합니다."),
+    INVALID_DEMO_TIME_UPDATE(HttpStatus.BAD_REQUEST, 400, "예약 시간 이전에는 완료 상태로 수정할 수 없습니다."),
+    INVALID_DEMO_STATUS_UPDATE(HttpStatus.BAD_REQUEST, 400, "해당 상태에서는 다른 상태로 수정할 수 없습니다."),
+    PRODUCT_NOT_AVAILABLE_FOR_DEMO(HttpStatus.BAD_REQUEST, 400, "해당 상품은 시연이 불가능합니다."),
 
     KAKAO_LOGIN_FAILED(HttpStatus.BAD_REQUEST, 400, "카카오 로그인에 실패했습니다."),
     KAKAO_ACCESS_TOKEN_ERROR(HttpStatus.BAD_REQUEST, 400, "카카오 액세스 토큰을 가져오는데 실패했습니다."),
@@ -35,9 +39,11 @@ public enum ErrorCode {
     NOT_EXISTS_MEMBER_ID(HttpStatus.NOT_FOUND, 404, "존재하지 않는 멤버 아이디입니다."),
     NOT_EXISTS_MEMBER_NICKNAME(HttpStatus.NOT_FOUND, 404, "존재하지 않는 멤버 닉네임입니다."),
     NOT_EXISTS_MEMBER_EMAIL(HttpStatus.NOT_FOUND, 404, "존재하지 않는 멤버 이메일입니다."),
-    NOT_EXISTS_SHOP_ID(HttpStatus.NOT_FOUND,404,"존재하지 않는 가게 아이디입니다."),
 
+    NOT_EXISTS_SHOP_ID(HttpStatus.NOT_FOUND,404,"존재하지 않는 가게 아이디입니다."),
     NOT_FOUND_SHOP_NAME(HttpStatus.NOT_FOUND, 404, "존재하지 않는 가게 이름입니다."),
+    NOT_FOUND_SHOP_HOURS(HttpStatus.NOT_FOUND, 404, "존재하지 않는 가게 운영 정보입니다."),
+
     NOT_FOUND_SUBCATEGORY(HttpStatus.NOT_FOUND,404,"존재하지 않는 서브 카테고리입니다."),
     NOT_FOUND_PRODUCT(HttpStatus.NOT_FOUND,404,"존재하지 않는 상품입니다."),
     NOT_FOUND_CATEGORY(HttpStatus.NOT_FOUND,404,"존재하지 않는 카테고리입니다."),
@@ -46,6 +52,7 @@ public enum ErrorCode {
     NOT_FOUND_LIKE(HttpStatus.NOT_FOUND,404,"존재하지 않는 좋아요입니다."),
 
     NOT_FOUND_ARTICLE(HttpStatus.NOT_FOUND,404, "존재하지 않는 아티클입니다."),
+    NOT_FOUND_DEMO(HttpStatus.NOT_FOUND,404, "존재하지 않는 시연 정보입니다."),
 
     // 409
     ALREADY_REGISTERED_MEMBER_EMAIL(HttpStatus.CONFLICT, 409, "이미 가입된 이메일입니다."),
