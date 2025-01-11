@@ -39,11 +39,12 @@ public enum ErrorCode {
     NOT_EXISTS_MEMBER_ID(HttpStatus.NOT_FOUND, 404, "존재하지 않는 멤버 아이디입니다."),
     NOT_EXISTS_MEMBER_NICKNAME(HttpStatus.NOT_FOUND, 404, "존재하지 않는 멤버 닉네임입니다."),
     NOT_EXISTS_MEMBER_EMAIL(HttpStatus.NOT_FOUND, 404, "존재하지 않는 멤버 이메일입니다."),
+    NOT_EXISTS_SHOP(HttpStatus.NOT_FOUND,404,"존재하지 않는 가게입니다."),
+    NOT_EXISTS_PRODUCT_OR_SHOP(HttpStatus.NOT_FOUND,404,"존재하지 않는 상품이거나 가게입니다."),
+
 
     NOT_EXISTS_SHOP_ID(HttpStatus.NOT_FOUND,404,"존재하지 않는 가게 아이디입니다."),
     NOT_FOUND_SHOP_NAME(HttpStatus.NOT_FOUND, 404, "존재하지 않는 가게 이름입니다."),
-    NOT_FOUND_SHOP_HOURS(HttpStatus.NOT_FOUND, 404, "존재하지 않는 가게 운영 정보입니다."),
-
     NOT_FOUND_SUBCATEGORY(HttpStatus.NOT_FOUND,404,"존재하지 않는 서브 카테고리입니다."),
     NOT_FOUND_PRODUCT(HttpStatus.NOT_FOUND,404,"존재하지 않는 상품입니다."),
     NOT_FOUND_CATEGORY(HttpStatus.NOT_FOUND,404,"존재하지 않는 카테고리입니다."),

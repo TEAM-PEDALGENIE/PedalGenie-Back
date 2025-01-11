@@ -8,12 +8,17 @@ import com.pedalgenie.pedalgenieback.domain.product.application.SortBy;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.pedalgenie.pedalgenieback.domain.like.entity.QProductLike.productLike;
 import static com.pedalgenie.pedalgenieback.domain.product.entity.QProduct.product;
 import static com.pedalgenie.pedalgenieback.domain.productImage.QProductImage.productImage;
 
@@ -24,38 +29,75 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<GetProductQueryResponse> findPagingProducts(
+    public Page<GetProductQueryResponse> findPagingProducts(
             Category category,
-            FilterRequest request) {
+            FilterRequest request,
+            Long memberId,
+            Pageable pageable) {
 
         Boolean isRentable = request.isRentable();
         Boolean isPurchasable = request.isPurchasable();
         Boolean isDemoable = request.isDemoable();
         List<Long> subCategoryIds = request.subCategoryIds();
 
+        // memberId 가 null 일 때 처리
+        BooleanBuilder likeCondition = new BooleanBuilder();
+        if (memberId != null) {
+            likeCondition.and(productLike.member.memberId.eq(memberId));
+        } else {
+            // null 을 반환하지 않도록 모든 사용자의 좋아요를 조회
+            likeCondition.and(productLike.member.memberId.isNotNull());
+        }
 
-        return queryFactory.select(new QGetProductQueryResponse(
+        List<GetProductQueryResponse> content = queryFactory
+                .select(new QGetProductQueryResponse(
                 product.id,
                 product.name,
+                product.shop.id,
                 product.shop.shopname,
                 product.rentPricePerDay,
                 product.isRentable,
                 product.isPurchasable,
                 product.isDemoable,
 
-                        productImage.imageUrl.stringValue().min() // Expression 타입, 첫 번째 이미지(가장 오래된, id=1)
+                        productImage.imageUrl.stringValue().min(),
+                        productLike.productLikeId.isNotNull() // 집계함수 사용 불가
+
+
                 ))
+                .distinct() // 중복 결과 제거
                 .from(product)
                 .leftJoin(productImage).on(productImage.product.id.eq(product.id))
+                .leftJoin(productLike).on(productLike.product.id.eq(product.id)
+                                .and(likeCondition))
+
                 .where(
 
                         inCategories(category),
                         inSubCategories(subCategoryIds),
-                        FilterOptions(isRentable, isPurchasable,isDemoable)
+                        filterOptions(isRentable, isPurchasable,isDemoable)
                 )
-                .groupBy(product.id)
+                .offset(pageable.getOffset()) // 몇 번째 페이지부터 시작할 것인지
+                .limit(pageable.getPageSize()) // 페이지당 몇 개의 데이터를 보여줄 것인지
+                .groupBy(product.id, productLike.productLikeId) // 중복 발생 가능
                 .orderBy(getSorter(request.sortBy()))
                 .fetch();
+
+        JPAQuery<Long> countQuery = queryFactory
+                .select(product.id.countDistinct()) // distinct한 product.id 개수를 세도록 수정
+                .from(product)
+                .leftJoin(productImage).on(productImage.product.id.eq(product.id))
+                .leftJoin(productLike).on(productLike.product.id.eq(product.id)
+                        .and(likeCondition))
+                .where(
+                        inCategories(category),
+                        inSubCategories(subCategoryIds),
+                        filterOptions(isRentable, isPurchasable, isDemoable)
+                );
+
+
+        return PageableExecutionUtils.getPage(content, pageable,
+                countQuery::fetchOne);
 
     }
 
@@ -68,15 +110,15 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
     }
 
     // 이용 범위 옵션 AND 연산
-    public BooleanBuilder FilterOptions(Boolean isRentable, Boolean isPurchasable, Boolean isDemoable){
+    public BooleanBuilder filterOptions(Boolean isRentable, Boolean isPurchasable, Boolean isDemoable){
 
         return new BooleanBuilder()
-                .and(isRentalbeFilter(isRentable))
+                .and(isRentableFilter(isRentable))
                 .and(isPurchasableFilter(isPurchasable))
                 .and(isDemoableFilter(isDemoable));
     }
 
-    private BooleanExpression isRentalbeFilter(Boolean isRentable) {
+    private BooleanExpression isRentableFilter(Boolean isRentable) {
         if (isRentable == null) {
             return null;
         }
@@ -106,14 +148,16 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
         return product.subCategory.id.in(subCategoryIds);
     }
 
-    private OrderSpecifier getSorter(SortBy sortBy){
+    private OrderSpecifier<?> getSorter(SortBy sortBy){
         if (sortBy == SortBy.RECENT){
             return product.id.desc();
         }
         if (sortBy == SortBy.NAME_ASC){
             return product.name.asc();
         }
-        // 상품 좋아요 구현 이후 정렬 기준 추가할 것
+        if (sortBy == SortBy.LIKE_DESC){
+            return product.productLikes.size().desc();
+        }
 
         return product.id.desc();// 기본 정렬 최신순
     }

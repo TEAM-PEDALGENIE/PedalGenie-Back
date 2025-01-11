@@ -1,6 +1,5 @@
 package com.pedalgenie.pedalgenieback.domain.shop.entity;
 
-import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 import com.pedalgenie.pedalgenieback.global.BaseTimeEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -11,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor
 @Getter
+@Table(name = "shop")
 public class Shop extends BaseTimeEntity {
 
     @Id
@@ -33,6 +33,7 @@ public class Shop extends BaseTimeEntity {
     @NotNull
     private String businessHours;
 
+    @Column(nullable = false)
     private String imageUrl;
 
 
@@ -42,12 +43,12 @@ public class Shop extends BaseTimeEntity {
     private String description;
 
 
-    private String instrumentCount;
+    private Integer instrumentCount;
 
 
     @Builder
     public Shop(Long id, String name, String address, String contactNumber, Integer demoQuantityPerDay, String businessHours,
-                String imageUrl, String detailAddress, String description, String instrumentCount){
+                String imageUrl, String detailAddress, String description, Integer instrumentCount){
         this.id= id;
         this.shopname =name;
         this.address=address;
