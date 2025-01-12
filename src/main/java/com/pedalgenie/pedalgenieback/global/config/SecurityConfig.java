@@ -22,6 +22,7 @@ import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationF
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
@@ -76,6 +77,7 @@ public class SecurityConfig {
                 // 경로 권한 설정
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(ALLOWED_URIS.toArray(new String[0])).permitAll()
+                        .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterAfter(new JwtFilter(tokenProvider, memberRepository, refreshTokenRepository, redisTemplate), OAuth2LoginAuthenticationFilter.class);
@@ -113,12 +115,13 @@ public class SecurityConfig {
 
     private CorsConfiguration getDefaultCorsConfiguration() {
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOriginPattern("*");
+        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("http://localhost:8080");
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
-
+        config.addExposedHeader("Authorization");
         return config;
     }
 }
