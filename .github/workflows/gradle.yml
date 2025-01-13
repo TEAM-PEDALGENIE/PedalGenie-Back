@@ -1,0 +1,65 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [ "dev" ]
+  pull_request:
+    branches: [ "dev" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+    # 레포지토리 브랜치 체크아웃
+    - uses: actions/checkout@v4
+
+    # JDK 설정
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    # gradle 빌드
+    - name: Build with Gradle
+      run: ./gradlew bootJar
+  
+    # 이미지 빌드 및 Docker Hub 업로드
+    - name: web docker build and push
+      run: |
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/musai:latest .
+        docker push ${{ secrets.DOCKER_USERNAME }}/musai:latest
+
+    # EC2 서버에 접속해 Docker 컨테이너 실행
+    - name: executing remote ssh commands
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }} # EC2 public DNS
+        username: ec2-user
+        key: ${{ secrets.KEY }} # .pem key
+        script: |
+          # 원하는 경로로 이동
+          mkdir -p /home/ec2-user/app
+          cd /home/ec2-user/app
+
+          # .env 파일 생성 (필요한 환경 변수 설정)
+          sudo touch .env
+          echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
+          echo "${{ secrets.ENV_VARS }}" | sudo tee .env > /dev/null
+          
+          # 도커 컴포즈 복사
+          scp ./docker-compose.yml ec2-user@${{ secrets.HOST }}:/home/ec2-user/app
+
+          # 기존 컨테이너가 있다면 중지 후 제거
+					docker-compose down || true
+
+          # Docker 이미지 다운로드
+          echo "${{ secrets.DOCKER_PASSWORD }}" | sudo docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          sudo docker pull ${{ secrets.DOCKER_USERNAME }}/musai:latest
+
+          # 새로운 Docker 컨테이너 실행
+	        docker-compose pull
+		      docker-compose up -d
