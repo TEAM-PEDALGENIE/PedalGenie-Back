@@ -29,7 +29,7 @@ jobs:
       # 이미지 빌드 및 Docker Hub 업로드
       - name: web docker build and push
         run: |
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -t ${{ secrets.DOCKER_USERNAME }}/musai:latest .
           docker push ${{ secrets.DOCKER_USERNAME }}/musai:latest
 
