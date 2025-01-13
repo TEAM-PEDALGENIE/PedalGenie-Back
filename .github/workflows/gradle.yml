@@ -45,7 +45,7 @@ jobs:
             mkdir -p /home/ec2-user/app
             cd /home/ec2-user/app
 
-            # .env 파일 생성 (필요한 환경 변수 설정)
+            # .env 파일 생성
             sudo touch .env
             echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" | sudo tee -a .env > /dev/null
             echo "${{ secrets.ENV_VARS }}" | sudo tee -a .env > /dev/null
