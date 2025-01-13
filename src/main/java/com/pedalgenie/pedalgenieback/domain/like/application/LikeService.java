@@ -158,6 +158,7 @@ public class LikeService {
                 .map(shop -> LikedShopDto.builder()
                         .shopId(shop.getId())
                         .shopName(shop.getShopname())
+                        .thumbNailUrl(shop.getImageUrl())
                         .build())
                 .collect(Collectors.toList());
     }

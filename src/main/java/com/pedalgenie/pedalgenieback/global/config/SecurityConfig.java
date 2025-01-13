@@ -98,14 +98,10 @@ public class SecurityConfig {
                             "/auth/**",
                             "/shops/**",
                             "/products/**",
-                            "/admin/**",
                             "/api/**"
-
                     );
         };
     }
-
-
 
     protected CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
