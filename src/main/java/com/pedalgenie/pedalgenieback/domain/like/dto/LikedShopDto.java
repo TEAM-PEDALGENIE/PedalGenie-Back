@@ -8,4 +8,5 @@ import lombok.Getter;
 public class LikedShopDto {
     private Long shopId;
     private String shopName;
+    private String thumbNailUrl;
 }
