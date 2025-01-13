@@ -50,7 +50,7 @@ jobs:
             echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> .env
             echo "${{ secrets.ENV_VARS }}" | sudo tee .env > /dev/null
           
-            # 도커 컴포즈 복사하기
+            # 도커 컴포즈 복사
             scp ./docker-compose.yml ec2-user@${{ secrets.HOST }}:/home/ec2-user/app
 
             # 기존 컨테이너가 있다면 중지 후 제거
