@@ -5,6 +5,8 @@ import com.pedalgenie.pedalgenieback.domain.productImage.ProductImage;
 import com.pedalgenie.pedalgenieback.domain.shop.entity.Shop;
 import com.pedalgenie.pedalgenieback.domain.subcategory.entity.SubCategory;
 import com.pedalgenie.pedalgenieback.global.BaseTimeEntity;
+import com.pedalgenie.pedalgenieback.global.exception.CustomException;
+import com.pedalgenie.pedalgenieback.global.exception.ErrorCode;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -33,7 +35,7 @@ public class Product extends BaseTimeEntity {
     private Double rentPricePerDay;
 
     @NotNull
-    private Integer rentQuantityPerDay;
+    private Integer rentQuantity;
 
     @NotNull
     private Double price;
@@ -60,15 +62,15 @@ public class Product extends BaseTimeEntity {
     @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, REMOVE}, orphanRemoval = true)
     private List<ProductLike> productLikes;
 
-    @Builder(toBuilder = true)
+    @Builder
     public Product(String name, Double rentPricePerDay,
-                   Integer rentQuantityPerDay, Double price, Shop shop, SubCategory subCategory,
+                   Integer rentQuantity, Double price, Shop shop, SubCategory subCategory,
                    Boolean isRentable, Boolean isPurchasable, Boolean isDemoable, String descriptionUrl
                    ){
 
         this.name=name;
         this.rentPricePerDay=rentPricePerDay;
-        this.rentQuantityPerDay=rentQuantityPerDay;
+        this.rentQuantity =rentQuantity;
         this.price=price;
         this.isRentable=isRentable;
         this.isPurchasable=isPurchasable;
@@ -76,5 +78,15 @@ public class Product extends BaseTimeEntity {
         this.shop=shop;
         this.subCategory=subCategory;
         this.descriptionUrl=descriptionUrl;
+    }
+
+    public boolean isRentable(){
+        return rentQuantity >0;
+    }
+    public void decreaseStock(){
+        if(rentQuantity <= 0){
+            throw new CustomException(ErrorCode.INVALID_RENT_QUANTITY);
+        }
+        rentQuantity--;
     }
 }

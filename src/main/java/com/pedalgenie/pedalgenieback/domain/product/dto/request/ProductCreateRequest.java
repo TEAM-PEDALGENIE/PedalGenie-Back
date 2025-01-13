@@ -5,7 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 public record ProductCreateRequest(
         String name,
         Double rentPricePerDay,
-        Integer rentQuantityPerDay,
+        Integer rentQuantity,
         Double price,
         Boolean isRentable,
         Boolean isPurchasable,
@@ -17,7 +17,7 @@ public record ProductCreateRequest(
     public static ProductCreateRequest of(
             String name,
             Double rentPricePerDay,
-            Integer rentQuantityPerDay,
+            Integer rentQuantity,
             Double price,
             Boolean isRentable,
             Boolean isPurchasable,
@@ -28,7 +28,7 @@ public record ProductCreateRequest(
         return new ProductCreateRequest(
                 name,
                 rentPricePerDay,
-                rentQuantityPerDay,
+                rentQuantity,
                 price,
                 isRentable,
                 isPurchasable,
