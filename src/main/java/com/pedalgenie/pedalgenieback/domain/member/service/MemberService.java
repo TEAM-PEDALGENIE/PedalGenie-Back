@@ -2,8 +2,8 @@ package com.pedalgenie.pedalgenieback.domain.member.service;
 
 import com.pedalgenie.pedalgenieback.domain.member.dto.MemberLoginRequestDto;
 import com.pedalgenie.pedalgenieback.domain.member.dto.MemberLoginResponseDto;
-import com.pedalgenie.pedalgenieback.domain.member.dto.MemberResponseDto;
 import com.pedalgenie.pedalgenieback.domain.member.dto.MemberRegisterRequestDto;
+import com.pedalgenie.pedalgenieback.domain.member.dto.MemberResponseDto;
 import com.pedalgenie.pedalgenieback.domain.member.entity.Member;
 import com.pedalgenie.pedalgenieback.domain.member.entity.MemberRole;
 import com.pedalgenie.pedalgenieback.domain.member.repository.MemberRepository;
@@ -13,7 +13,10 @@ import com.pedalgenie.pedalgenieback.global.jwt.CustomUserDetails;
 import com.pedalgenie.pedalgenieback.global.jwt.CustomUserDetailsService;
 import com.pedalgenie.pedalgenieback.global.jwt.TokenDto;
 import com.pedalgenie.pedalgenieback.global.jwt.TokenProvider;
+import com.pedalgenie.pedalgenieback.global.oauth.service.OAuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,17 +25,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
+    @Autowired
+    private RedisTemplate<String, String> redisTemplate;
+
     private final MemberRepository memberRepository;
     private final TokenProvider tokenProvider;
     private final CustomUserDetailsService customUserDetailsService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
+    private final OAuthService oAuthService;
 
     // 자체 회원가입 메서드
     @Transactional
@@ -129,5 +135,37 @@ public class MemberService {
                 .role(member.getMemberRole().name())
                 .build();
     }
+    // 로그아웃 메서드
+    public void logout(Long memberId){
+        // 회원 조회 및 예외 처리
+        memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXISTS_MEMBER_ID));
+        
+        // redis에서 리프레시 토큰 삭제
+        String key = "refreshToken:" + memberId;
+        String refreshToken = redisTemplate.opsForValue().get(key);
 
+        if (refreshToken != null) {
+            redisTemplate.delete(key);
+        } else {
+            throw new CustomException(ErrorCode.REFRESH_TOKEN_NOT_FOUND);
+        }
+    }
+    // 회원 탈퇴 메서드
+    @Transactional
+    public void withdraw(Long memberId, String role) {
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXISTS_MEMBER_ID));
+
+        // 로그아웃 처리
+        logout(memberId);
+
+        // 일반 회원
+        if(role.equals("CUSTOMER")){
+            Long oauthId = member.getOauthId();
+            // 카카오 연동 끊기
+            oAuthService.unlinkKakao(oauthId);
+        }
+        // DB 변경 로직 추가 필요
+    }
 }

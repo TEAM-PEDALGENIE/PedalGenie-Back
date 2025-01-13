@@ -14,19 +14,42 @@ spring:
       format_sql: true
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    dialect: org.hibernate.dialect.MySQL8Dialect  # 이 항목 추가
   security:
     oauth2:
       client:
+        app-id: ${KAKAO_APP_ID}
         client-id: ${KAKAO_CLIENT_ID}
         redirect-uri: ${KAKAO_REDIRECT_URI}
       provider:
         token-uri: https://kauth.kakao.com/oauth/token
         user-info-uri: https://kapi.kakao.com/v2/user/me
-
+        unlink-uri: https://kapi.kakao.com/v1/user/unlink
+  servlet:
+    multipart:
+      max-file-size: 2MB
 jwt:
   secret: ${JWT}
 
 redis:
   host: ${REDIS_HOST}
   port: ${REDIS_PORT}
+  password: ${REDIS_PASSWORD}
 
+# aws
+cloud:
+  aws:
+    credentials:
+        instance-profile: true
+    s3:
+      bucket: ${MUSAI_BUCKET}
+      musai-directory: ${MUSAI_DIRECTORY}
+      env: ${ENVIRONMENT_DIRECTORY}
+      image-url: ${MUSAI_IMAGE_URL}
+
+    stack:
+      auto: false #EC2 배포 시 필요
+
+holiday-api:
+  key: ${HOLIDAY_API_KEY}
+  uri: ${HOLIDAY_API_URI}

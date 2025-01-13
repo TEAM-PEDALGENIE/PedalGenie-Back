@@ -42,9 +42,10 @@ public class CustomUserDetails implements UserDetails {
         return authorityList;
     }
 
-    public Long getMemberId() {
-        return member.getMemberId();
-    }
+    public Long getMemberId() { return member.getMemberId(); }
+
+    public String getRole() { return member.getMemberRole().name(); }
+
     @Override
     public String getPassword() {
         return member.getPassword();
