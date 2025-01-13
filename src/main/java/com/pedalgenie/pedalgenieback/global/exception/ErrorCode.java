@@ -21,6 +21,17 @@ public enum ErrorCode {
     KAKAO_UNLINK_FAILED(HttpStatus.BAD_REQUEST, 400, "카카오 연동 해제에 실패했습니다."),
     KAKAO_INVALID_CODE(HttpStatus.BAD_REQUEST, 400, "유효하지 않은 카카오 인가 코드입니다."),
 
+    // 대여 관련
+    PAST_RESERVATION_TIME(HttpStatus.BAD_REQUEST,400,"예약 시작 시간은 현재 시간보다 이후여야 합니다."),
+    IMPOSSIBLE_START_END_TIME(HttpStatus.BAD_REQUEST,400,"예약 종료 시간은 예약 시작 시간보다 이후여야 합니다."),
+    CANT_UPDATE_DELETED(HttpStatus.BAD_REQUEST, 400, "삭제된 예약은 업데이트할 수 없다."),
+    INVALID_RENT_DATE(HttpStatus.BAD_REQUEST,400,"유효하지 않은 대여 날짜입니다."),
+    INVALID_RENT_END_DATE_TOO_SOON(HttpStatus.BAD_REQUEST,400, "대여 기간은 최소 3일입니다."),
+    INVALID_RENT_END_DATE_TOO_LATE(HttpStatus.BAD_REQUEST,400,"대여 기간은 최대 30일입니다."),
+    INVALID_RENT_QUANTITY(HttpStatus.BAD_REQUEST,400,"대여 가능 수량이 없습니다."),
+    INVALID_USED_BY_OTHER(HttpStatus.BAD_REQUEST,400,"사용되고 있는 예약입니다."),
+
+
     // 401
     AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, 401, "인증에 실패했습니다."),
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, 401, "토큰이 만료되었습니다."),
@@ -54,6 +65,8 @@ public enum ErrorCode {
 
     NOT_FOUND_ARTICLE(HttpStatus.NOT_FOUND,404, "존재하지 않는 아티클입니다."),
     NOT_FOUND_DEMO(HttpStatus.NOT_FOUND,404, "존재하지 않는 시연 정보입니다."),
+
+    AVAILABLE_DATE_TIME_NOT_FOUND(HttpStatus.NOT_FOUND,404,"대여 예약 가능한 날짜를 찾을 수 없습니다."),
 
     // 409
     ALREADY_REGISTERED_MEMBER_EMAIL(HttpStatus.CONFLICT, 409, "이미 가입된 이메일입니다."),

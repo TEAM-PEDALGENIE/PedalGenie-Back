@@ -1,12 +1,15 @@
 package com.pedalgenie.pedalgenieback.domain.rent.entity.availableTime;
 
 import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
+import com.pedalgenie.pedalgenieback.domain.shop.entity.Shop;
+import com.pedalgenie.pedalgenieback.domain.shop.entity.ShopHours;
 import com.pedalgenie.pedalgenieback.global.exception.CustomException;
 import com.pedalgenie.pedalgenieback.global.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,14 +21,15 @@ import static com.pedalgenie.pedalgenieback.domain.rent.entity.availableTime.Ava
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class AvailableDateTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private Product product;
+    @Column(name = "product_id", nullable = false)
+    private Long productId;
 
     @Column(nullable = false)
     private LocalDateTime localDateTime;
@@ -33,13 +37,15 @@ public class AvailableDateTime {
     @Enumerated(EnumType.STRING)
     private AvailableStatus rentStatus;
 
-    public AvailableDateTime(final Product product,
+    public AvailableDateTime(final Long productId,
                              final LocalDateTime localDateTime,
                              final AvailableStatus rentStatus){
-        this.product=product;
+        this.productId= productId;
         this.localDateTime = localDateTime;
         this.rentStatus=rentStatus;
     }
+
+
     public void changeStatus(final AvailableStatus status) {
         if (this.rentStatus.equals(DELETED)) {
             throw new CustomException(ErrorCode.CANT_UPDATE_DELETED);
