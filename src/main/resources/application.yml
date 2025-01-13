@@ -34,10 +34,13 @@ jwt:
 redis:
   host: ${REDIS_HOST}
   port: ${REDIS_PORT}
+  password: ${REDIS_PASSWORD}
 
 # aws
 cloud:
   aws:
+    credentials:
+        instance-profile: true
     s3:
       bucket: ${MUSAI_BUCKET}
       musai-directory: ${MUSAI_DIRECTORY}
