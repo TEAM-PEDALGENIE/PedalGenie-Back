@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+
 import java.time.LocalTime;
 
 import static com.pedalgenie.pedalgenieback.domain.available.entity.AvailableStatus.USED;
@@ -92,9 +92,9 @@ public class RentService {
 
     }
 
-    // 24시간 이후 FIXED 로 상태 변경
+    // TODO: 24시간 이후 FIXED 로 상태 변경
 
 
-    // 픽업 이후 COMPLETED 로 변경
+    // TODO: 픽업 이후 COMPLETED 로 변경
 
 }

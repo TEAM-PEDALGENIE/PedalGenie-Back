@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 import static com.pedalgenie.pedalgenieback.domain.rent.entity.RentStatusType.EDITABLE;
-import static com.pedalgenie.pedalgenieback.domain.available.entity.AvailableStatus.OPEN;
 
 @Getter
 @Entity

@@ -2,7 +2,6 @@ package com.pedalgenie.pedalgenieback.domain.rent.presentation;
 
 import com.pedalgenie.pedalgenieback.domain.rent.application.RentService;
 import com.pedalgenie.pedalgenieback.domain.rent.dto.request.RentRequest;
-import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableTimeResponse;
 import com.pedalgenie.pedalgenieback.domain.rent.dto.response.RentResponse;
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
 import com.pedalgenie.pedalgenieback.global.jwt.AuthUtils;
@@ -11,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+
 
 @RestController
 @AllArgsConstructor
