@@ -48,20 +48,21 @@ public class ArticleService {
 
         // article - product 연관 관계 설정
         if (productIds != null && !productIds.isEmpty()) {
-            for (Long productId : productIds) {
-                Product product = productRepository.findById(productId)
-                        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
-
-
-                // ArticleProduct 엔티티 생성
-                ArticleProduct articleProduct = ArticleProduct.builder()
-                        .article(savedArticle)
-                        .product(product)
-                        .build();
-
-                articleProductRepository.save(articleProduct);
-            }
+            // ArticleProduct 리스트 생성
+            List<ArticleProduct> articleProducts = productIds.stream()
+                    .map(productId -> {
+                        Product product = productRepository.findById(productId)
+                                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
+                        return ArticleProduct.builder()
+                                .article(savedArticle)
+                                .product(product)
+                                .build();
+                    })
+                    .toList();
+            // 배치 저장
+            articleProductRepository.saveAll(articleProducts);
         }
+
 
         // hashTag String을 List<String>으로 변환
         List<String> hashTagList = parseHashTags(hashTag);

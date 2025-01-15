@@ -81,7 +81,7 @@ public class ArticleController {
     }
 
     @Operation(summary="아티클 목록 조회")
-    @GetMapping("/articles")
+    @GetMapping("/api/articles")
     public ResponseEntity<ResponseTemplate<List<ArticleResponseDto>>> getArticleList() {
         // 아티클 목록 조회
         List<ArticleResponseDto> articleList = articleService.getArticleList();
@@ -91,7 +91,7 @@ public class ArticleController {
 
 
     @Operation(summary="아티클 상세 조회")
-    @GetMapping("/articles/{articleId}")
+    @GetMapping("/api/articles/{articleId}")
     public ResponseEntity<ResponseTemplate<ArticleResponseDto>> getArticle(@PathVariable Long articleId,
                                                                                  @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         Long memberId = null;

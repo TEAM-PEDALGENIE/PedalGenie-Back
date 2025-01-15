@@ -2,7 +2,7 @@ spring:
   config:
     import: optional:file:.env[.properties]
   datasource:
-    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}?serverTimezone=Asia/Seoul
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -34,10 +34,13 @@ jwt:
 redis:
   host: ${REDIS_HOST}
   port: ${REDIS_PORT}
+  password: ${REDIS_PASSWORD}
 
 # aws
 cloud:
   aws:
+    credentials:
+        instance-profile: true
     s3:
       bucket: ${MUSAI_BUCKET}
       musai-directory: ${MUSAI_DIRECTORY}

@@ -15,9 +15,9 @@ public class S3Config {
     @Bean
     public S3Client s3Client(){
         return S3Client.builder()
-                .credentialsProvider(ProfileCredentialsProvider.create()) // 로컬 자격증명
+//                .credentialsProvider(ProfileCredentialsProvider.create()) // 로컬 자격증명
                 // EC2 실행 시 IAM 역할 자동 사용
-//                .credentialsProvider(InstanceProfileCredentialsProvider.builder().build())
+                .credentialsProvider(InstanceProfileCredentialsProvider.builder().build())
                 .httpClient(UrlConnectionHttpClient.builder().build())
                 .region(AP_NORTHEAST_2)
                 .build();

@@ -65,6 +65,7 @@ public enum ErrorCode {
     NOT_FOUND_PRODUCT_IMAGE(HttpStatus.NOT_FOUND,404,"존재하지 않는 상품 이미지입니다."),
     NOT_FOUND_SORT_BY(HttpStatus.NOT_FOUND,404,"해당하는 정렬 기준을 찾을 수 없습니다."),
     NOT_FOUND_LIKE(HttpStatus.NOT_FOUND,404,"존재하지 않는 좋아요입니다."),
+    NOT_FOUND_GENRE(HttpStatus.NOT_FOUND,404,"존재하지 않는 장르입니다."),
 
     NOT_FOUND_ARTICLE(HttpStatus.NOT_FOUND,404, "존재하지 않는 아티클입니다."),
     NOT_FOUND_DEMO(HttpStatus.NOT_FOUND,404, "존재하지 않는 시연 정보입니다."),
