@@ -17,6 +17,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -27,6 +28,9 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Auth api", description = "어드민, 사장님 유저의 자체 로그인 기능을 포함합니다.")
 public class MemberController {
     private final MemberService memberService;
+
+    @Value("${domain}")
+    private String domain;
 
     // 회원 가입
     @Operation(summary="자체 회원가입")
@@ -63,6 +67,7 @@ public class MemberController {
         // 리프레시 토큰 쿠키에 추가
         Cookie refreshTokenCookie = new Cookie("refreshToken", tokenDto.getRefreshToken());
         refreshTokenCookie.setAttribute("SameSite", "None"); // 다른 도메인간 허용
+        refreshTokenCookie.setDomain(domain);
         refreshTokenCookie.setHttpOnly(true); // javascript로 접근 불가
         refreshTokenCookie.setSecure(true); //https only
         refreshTokenCookie.setPath("/");
