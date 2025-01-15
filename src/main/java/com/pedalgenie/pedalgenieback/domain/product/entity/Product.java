@@ -28,24 +28,28 @@ public class Product extends BaseTimeEntity {
     @Column(name = "product_id")
     private Long id;
 
-    @NotNull
+    @Column(nullable = false)
     private String name;
 
-    @NotNull
+    @Column(nullable = false)
     private Double rentPricePerDay;
 
-    @NotNull
+    @Column(nullable = false)
     private Integer rentQuantity;
 
-    @NotNull
+    @Column(nullable = false)
     private Double price;
 
+    @Column(nullable = false)
     private Boolean isRentable;
 
+    @Column(nullable = false)
     private Boolean isPurchasable;
 
+    @Column(nullable = false)
     private Boolean isDemoable;
 
+    @Column(nullable = false)
     private String descriptionUrl; // 매장 설명 이미지
 
     @ManyToOne
