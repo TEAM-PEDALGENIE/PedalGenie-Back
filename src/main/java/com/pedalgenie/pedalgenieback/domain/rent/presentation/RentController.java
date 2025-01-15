@@ -4,6 +4,7 @@ import com.pedalgenie.pedalgenieback.domain.rent.application.RentQueryService;
 import com.pedalgenie.pedalgenieback.domain.rent.application.RentService;
 import com.pedalgenie.pedalgenieback.domain.rent.dto.request.RentRequest;
 import com.pedalgenie.pedalgenieback.domain.rent.dto.response.RentDetailResponse;
+import com.pedalgenie.pedalgenieback.domain.rent.dto.response.RentListResponse;
 import com.pedalgenie.pedalgenieback.domain.rent.dto.response.RentResponse;
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
 import com.pedalgenie.pedalgenieback.global.jwt.AuthUtils;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
 
 @RestController
@@ -40,6 +42,18 @@ public class RentController {
     public ResponseEntity<ResponseTemplate<RentDetailResponse>> getRentDetail(@PathVariable Long rentId) {
         RentDetailResponse response = rentQueryService.getRentDetail(rentId);
         return ResponseTemplate.createTemplate(HttpStatus.OK, true, "대여 상세 조회 성공", response);
+    }
+
+    // 대여 목록 조회
+    @GetMapping("/rents/list")
+    @Operation(summary = "대여 목록 조회")
+    public ResponseEntity<ResponseTemplate<List<RentListResponse>>> getRentList() {
+
+        Long memberId = AuthUtils.getCurrentMemberId();
+
+        List<RentListResponse> rentList = rentQueryService.getRentList(memberId);
+
+        return ResponseTemplate.createTemplate(HttpStatus.OK, true, "대여 목록 조회 성공", rentList);
     }
 
     // 어드민용, 대여 상태 픽업으로 변경

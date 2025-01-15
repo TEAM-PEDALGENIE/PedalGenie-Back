@@ -1,9 +1,8 @@
 package com.pedalgenie.pedalgenieback.domain.rent.application;
 
-import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 import com.pedalgenie.pedalgenieback.domain.rent.dto.response.RentDetailResponse;
+import com.pedalgenie.pedalgenieback.domain.rent.dto.response.RentListResponse;
 import com.pedalgenie.pedalgenieback.domain.rent.entity.Rent;
-import com.pedalgenie.pedalgenieback.domain.rent.entity.RentStatusType;
 import com.pedalgenie.pedalgenieback.domain.rent.repository.RentRepository;
 import com.pedalgenie.pedalgenieback.global.exception.CustomException;
 import com.pedalgenie.pedalgenieback.global.exception.ErrorCode;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +36,16 @@ public class RentQueryService {
                 rent.getProduct().getName(),
                 rent.getProduct().getShop().getShopname()
         );
+    }
+    // 대여 목록 조회
+    public List<RentListResponse> getRentList(Long memberId) {
+
+        List<Rent> rents = rentRepository.findAllByMemberId(memberId);
+
+
+        return rents.stream()
+                .map(RentListResponse::from)
+                .toList();
     }
 
     // 어드민용, 대여 상태 픽업 예정으로 변경

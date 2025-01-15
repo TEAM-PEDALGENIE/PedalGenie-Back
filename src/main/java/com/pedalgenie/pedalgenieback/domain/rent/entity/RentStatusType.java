@@ -5,6 +5,6 @@ public enum RentStatusType {
     PICKUP_SCHEDULED, // 픽업 예정
     RENTED, // 대여 중
     RETURNED, // 반납 완료
-    CANCELED // 취소됨
+    CANCELED // 취소
 
 }
