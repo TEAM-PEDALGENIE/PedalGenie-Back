@@ -1,17 +1,17 @@
-package com.pedalgenie.pedalgenieback.domain.rent.dto.response;
+package com.pedalgenie.pedalgenieback.domain.available.dto;
 
-import com.pedalgenie.pedalgenieback.domain.rent.entity.availableTime.AvailableDateTime;
+import com.pedalgenie.pedalgenieback.domain.available.entity.AvailableDateTime;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
 @Builder
 public class AvailableTimeResponse {
     private Long productId;
-    private LocalDateTime localDateTime;
+    private LocalDate localDate;
     private String rentStatus;
 
     // AvailableDateTime -> AvailableTimeResponse 변환 메서드
@@ -19,7 +19,7 @@ public class AvailableTimeResponse {
         return availableDateTimes.stream()
                 .map(availableTime -> AvailableTimeResponse.builder()
                         .productId(availableTime.getProductId())
-                        .localDateTime(availableTime.getLocalDateTime())
+                        .localDate(availableTime.getLocalDate())
                         .rentStatus(availableTime.getRentStatus().name())
                         .build())
                 .toList();

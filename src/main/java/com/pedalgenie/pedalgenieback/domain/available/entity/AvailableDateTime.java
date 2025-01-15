@@ -1,8 +1,5 @@
-package com.pedalgenie.pedalgenieback.domain.rent.entity.availableTime;
+package com.pedalgenie.pedalgenieback.domain.available.entity;
 
-import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
-import com.pedalgenie.pedalgenieback.domain.shop.entity.Shop;
-import com.pedalgenie.pedalgenieback.domain.shop.entity.ShopHours;
 import com.pedalgenie.pedalgenieback.global.exception.CustomException;
 import com.pedalgenie.pedalgenieback.global.exception.ErrorCode;
 import jakarta.persistence.*;
@@ -12,10 +9,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
-import static com.pedalgenie.pedalgenieback.domain.rent.entity.availableTime.AvailableStatus.DELETED;
-import static com.pedalgenie.pedalgenieback.domain.rent.entity.availableTime.AvailableStatus.USED;
+import static com.pedalgenie.pedalgenieback.domain.available.entity.AvailableStatus.DELETED;
+import static com.pedalgenie.pedalgenieback.domain.available.entity.AvailableStatus.USED;
 
 @Entity
 @Getter
@@ -32,17 +29,22 @@ public class AvailableDateTime {
     private Long productId;
 
     @Column(nullable = false)
-    private LocalDateTime localDateTime;
+    private LocalDate localDate;  // 날짜만 저장
+
+    @Column(nullable = false)
+    private LocalTime localTime;  // 시간만 저장
 
     @Enumerated(EnumType.STRING)
     private AvailableStatus rentStatus;
 
     public AvailableDateTime(final Long productId,
-                             final LocalDateTime localDateTime,
-                             final AvailableStatus rentStatus){
-        this.productId= productId;
-        this.localDateTime = localDateTime;
-        this.rentStatus=rentStatus;
+                             final LocalDate localDate,
+                             final LocalTime localTime,
+                             final AvailableStatus rentStatus) {
+        this.productId = productId;
+        this.localDate = localDate;
+        this.localTime = localTime;
+        this.rentStatus = rentStatus;
     }
 
 
@@ -55,14 +57,12 @@ public class AvailableDateTime {
 
     public boolean isPast() {
         final LocalDate nowDay = TimeMachine.dateOfNow();
-        final LocalDate targetDay = localDateTime.toLocalDate();
-        return targetDay.isBefore(nowDay);
+        return localDate.isBefore(nowDay);
     }
 
     public boolean isToday() {
         final LocalDate nowDay = TimeMachine.dateOfNow();
-        final LocalDate targetDay = localDateTime.toLocalDate();
-        return targetDay.isEqual(nowDay);
+        return localDate.isEqual(nowDay);
     }
 
     public boolean isUsed() {

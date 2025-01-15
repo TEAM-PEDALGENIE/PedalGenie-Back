@@ -80,9 +80,6 @@ public class Product extends BaseTimeEntity {
         this.descriptionUrl=descriptionUrl;
     }
 
-    public boolean isRentable(){
-        return rentQuantity >0;
-    }
     public void decreaseStock(){
         if(rentQuantity <= 0){
             throw new CustomException(ErrorCode.INVALID_RENT_QUANTITY);

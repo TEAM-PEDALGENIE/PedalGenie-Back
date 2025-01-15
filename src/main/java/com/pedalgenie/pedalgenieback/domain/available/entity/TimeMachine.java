@@ -1,4 +1,4 @@
-package com.pedalgenie.pedalgenieback.domain.rent.entity.availableTime;
+package com.pedalgenie.pedalgenieback.domain.available.entity;
 
 import java.time.*;
 

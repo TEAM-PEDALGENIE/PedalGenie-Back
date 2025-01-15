@@ -30,6 +30,9 @@ public enum ErrorCode {
     INVALID_RENT_END_DATE_TOO_LATE(HttpStatus.BAD_REQUEST,400,"대여 기간은 최대 30일입니다."),
     INVALID_RENT_QUANTITY(HttpStatus.BAD_REQUEST,400,"대여 가능 수량이 없습니다."),
     INVALID_USED_BY_OTHER(HttpStatus.BAD_REQUEST,400,"사용되고 있는 예약입니다."),
+    PRODUCT_NOT_AVAILABLE(HttpStatus.BAD_REQUEST,400,"대여가 불가능한 상품입니다."),
+    RENT_CANCELLATION_DEADLINE_EXCEEDED(HttpStatus.BAD_REQUEST,400,"대여 취소 기한(24시간 전)을 초과했습니다."),
+    RENT_ALREADY_CANCELED(HttpStatus.BAD_REQUEST,400,"이미 대여가 취소되었습니다."),
 
 
     // 401
