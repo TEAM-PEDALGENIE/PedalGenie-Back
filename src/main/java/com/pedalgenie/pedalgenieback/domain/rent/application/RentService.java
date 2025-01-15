@@ -92,9 +92,4 @@ public class RentService {
 
     }
 
-    // TODO: 24시간 이후 FIXED 로 상태 변경
-
-
-    // TODO: 픽업 이후 COMPLETED 로 변경
-
 }

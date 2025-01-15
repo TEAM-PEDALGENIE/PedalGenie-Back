@@ -8,7 +8,6 @@ import com.pedalgenie.pedalgenieback.global.BaseTimeEntity;
 import com.pedalgenie.pedalgenieback.global.exception.CustomException;
 import com.pedalgenie.pedalgenieback.global.exception.ErrorCode;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
@@ -90,4 +89,8 @@ public class Product extends BaseTimeEntity {
         }
         rentQuantity--;
     }
+    public void increaseStock(Integer rentQuantity){
+        this.rentQuantity += rentQuantity;
+    }
+
 }

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-import static com.pedalgenie.pedalgenieback.domain.rent.entity.RentStatusType.EDITABLE;
+import static com.pedalgenie.pedalgenieback.domain.rent.entity.RentStatusType.ORDER_PENDING;
 
 @Getter
 @Entity
@@ -68,7 +68,7 @@ public class Rent {
                 final LocalDateTime rentEndTime,
                 final Product product,
                 final Member member) {
-        this(null, availableDateTime, rentStartTime, rentEndTime, product, member, EDITABLE);
+        this(null, availableDateTime, rentStartTime, rentEndTime, product, member, ORDER_PENDING);
     }
 
 
@@ -117,15 +117,53 @@ public class Rent {
             throw new CustomException(ErrorCode.INVALID_RENT_END_DATE_TOO_LATE);
         }
     }
+
+    // 이용 일자 상태 변경용
     public void changeAvailableTimeStatus(final AvailableStatus status){
         availableDateTime.changeStatus(status);
+    }
+
+    // 렌트 상태 픽업으로 변경
+    public void updateToPickUp(){
+
+        // 주문 확인 중 상태인지 확인
+        if(!getRentStatusType().equals(RentStatusType.ORDER_PENDING)){
+            throw new CustomException(ErrorCode.INVALID_ORDER_PENDING_STATE);
+        }
+
+        this.rentStatusType=RentStatusType.PICKUP_SCHEDULED;
+    }
+
+    // 렌트 상태 사용 중으로 변경
+    public void updateToRent(){
+
+        // 픽업 예정 상태인지 확인
+        if(!getRentStatusType().equals(RentStatusType.PICKUP_SCHEDULED)){
+            throw new CustomException(ErrorCode.INVALID_PICKUP_STATE);
+        }
+
+        this.rentStatusType=RentStatusType.RENTED;
+    }
+
+    // 렌트 상태 반납완료로 변경
+    public void updateToRETURND(){
+
+        // 사용 중 상태인지 확인
+        if(!getRentStatusType().equals(RentStatusType.RENTED)){
+            throw new CustomException(ErrorCode.INVALID_RENTED_STATE);
+        }
+
+        this.rentStatusType=RentStatusType.RETURNED;
+        product.increaseStock(1); // 대여 가능 수량 증가
+
     }
 
     // 대여 취소 메서드
     public void cancel() {
         validateCancelable(); // 취소 가능 여부 검증
         this.rentStatusType = RentStatusType.CANCELED; // 상태를 취소로 변경
-       // 대여 수량 개수만 다시 올리면 됨.
+
+        product.increaseStock(1); // 대여 가능 수량 증가
     }
 
     // 취소 가능 여부 검증

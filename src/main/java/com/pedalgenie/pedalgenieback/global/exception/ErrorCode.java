@@ -33,7 +33,9 @@ public enum ErrorCode {
     PRODUCT_NOT_AVAILABLE(HttpStatus.BAD_REQUEST,400,"대여가 불가능한 상품입니다."),
     RENT_CANCELLATION_DEADLINE_EXCEEDED(HttpStatus.BAD_REQUEST,400,"대여 취소 기한(24시간 전)을 초과했습니다."),
     RENT_ALREADY_CANCELED(HttpStatus.BAD_REQUEST,400,"이미 대여가 취소되었습니다."),
-
+    INVALID_ORDER_PENDING_STATE(HttpStatus.BAD_REQUEST,400,"대여 상태가 '주문 확인 중'이 아닌 경우, 상태를 변경할 수 없습니다."),
+    INVALID_PICKUP_STATE(HttpStatus.BAD_REQUEST,400,"대여 상태가 '픽업 예정'이 아닌 경우, 상태를 변경할 수 없습니다."),
+    INVALID_RENTED_STATE(HttpStatus.BAD_REQUEST,400,"대여 상태가 '사용 중' 이 아닌 경우, 상태를 변경할 수 없습니다. "),
 
     // 401
     AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, 401, "인증에 실패했습니다."),
