@@ -8,7 +8,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Getter
 @Builder
@@ -25,12 +27,15 @@ public class RentResponse { // 예약 생성 이후 조회
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime rentEndTime;
 
+    private LocalTime pickUpTime;
+
     public static RentResponse from(final Rent rent){
         return RentResponse.builder()
                 .rentId(rent.getId())
                 .status(rent.getRentStatusType())
-                .rentStartTime(rent.getRentStartTime())
+                .rentStartTime(rent.getAvailableDateTime().getLocalDate().atTime(rent.getAvailableDateTime().getLocalTime()))
                 .rentEndTime(rent.getRentEndTime())
+                .pickUpTime(rent.getAvailableDateTime().getLocalTime())
                 .build();
     }
 }

@@ -1,4 +1,4 @@
-package com.pedalgenie.pedalgenieback.domain.rent;
+package com.pedalgenie.pedalgenieback.domain.available.entity;
 
 import com.pedalgenie.pedalgenieback.global.exception.CustomException;
 import com.pedalgenie.pedalgenieback.global.exception.ErrorCode;

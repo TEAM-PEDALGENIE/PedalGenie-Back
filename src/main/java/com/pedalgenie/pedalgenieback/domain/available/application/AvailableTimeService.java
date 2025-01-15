@@ -1,10 +1,11 @@
 package com.pedalgenie.pedalgenieback.domain.available.application;
 
 import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableTimeResponse;
+import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableTimeSlotResponse;
 import com.pedalgenie.pedalgenieback.domain.available.entity.AvailableDateTime;
 import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 import com.pedalgenie.pedalgenieback.domain.product.repository.ProductRepository;
-import com.pedalgenie.pedalgenieback.domain.rent.TimeSlot;
+import com.pedalgenie.pedalgenieback.domain.available.entity.TimeSlot;
 import com.pedalgenie.pedalgenieback.domain.available.repository.AvailableTimeRepository;
 import com.pedalgenie.pedalgenieback.domain.shop.entity.ShopHours;
 import com.pedalgenie.pedalgenieback.global.exception.CustomException;
@@ -170,14 +171,18 @@ public class AvailableTimeService {
 
 
 
-    // 해당 날짜의 예약 가능한 시간 조회
-    public List<LocalTime> findAvailableTimesForDate(Long productId, LocalDate targetDate) {
+    // 픽업 가능한 시간대 조회
+    public List<AvailableTimeSlotResponse> findAvailableTimesForDate(Long productId, LocalDate targetDate) {
+
+        // DELETED 상태를 제외하고 조회
         List<AvailableDateTime> availableTimes =
                 availableTimeRepository.findByProductIdAndLocalDate(productId, targetDate, DELETED);
 
-
         return availableTimes.stream()
-                .map(AvailableDateTime::getLocalTime)
+                .map(slot ->AvailableTimeSlotResponse.builder()
+                        .time(slot.getLocalTime())
+                        .status(slot.getRentStatus().name())
+                        .build())
                 .toList();
     }
 
