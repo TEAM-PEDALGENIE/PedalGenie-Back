@@ -72,6 +72,9 @@ public enum ErrorCode {
 
     AVAILABLE_DATE_TIME_NOT_FOUND(HttpStatus.NOT_FOUND,404,"대여 예약 가능한 날짜를 찾을 수 없습니다."),
 
+    // 대여
+    NOT_FOUND_RENT(HttpStatus.NOT_FOUND,404,"해당 대여 정보를 찾을 수 없습니다."),
+
     // 409
     ALREADY_REGISTERED_MEMBER_EMAIL(HttpStatus.CONFLICT, 409, "이미 가입된 이메일입니다."),
     ALREADY_LIKED(HttpStatus.CONFLICT, 409, "이미 좋아요를 눌렀습니다."),
