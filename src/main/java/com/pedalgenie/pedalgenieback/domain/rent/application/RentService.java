@@ -44,13 +44,7 @@ public class RentService {
 
         rent.changeAvailableTimeStatus(USED);
 
-        return RentResponse.builder()
-                .rentId(savedRent.getId())
-                .status(savedRent.getRentStatusType())
-                .rentStartTime(savedRent.getRentStartTime())
-                .rentEndTime(savedRent.getRentEndTime())
-                .pickUpTime(savedRent.getAvailableDateTime().getLocalTime())
-                .build();
+        return RentResponse.from(savedRent);
     }
 
     private Rent convertRent(final Long memberId, final RentRequest request){

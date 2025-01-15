@@ -51,6 +51,7 @@ public class RentResponse { // 예약 생성 이후 조회
                 .rentEndTime(rent.getRentEndTime())
                 .pickUpTime(rent.getAvailableDateTime().getLocalTime())
                 .productId(rent.getProduct().getId())
+                .productName(rent.getProduct().getName())
                 .price(rent.getProduct().getPrice())
                 .fee(fee)
                 .totalPrice(totalPrice)
