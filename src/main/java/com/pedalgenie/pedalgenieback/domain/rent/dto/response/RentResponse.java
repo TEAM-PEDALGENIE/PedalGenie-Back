@@ -29,13 +29,31 @@ public class RentResponse { // 예약 생성 이후 조회
 
     private LocalTime pickUpTime;
 
+    // 추가
+    private Long productId;
+    private String productName;
+    private Double price;
+    private Double fee;
+    private Double totalPrice;
+
+
     public static RentResponse from(final Rent rent){
+
+        Double price = rent.getProduct().getPrice();
+        Double fee = price * 0.1; // 수수료 계산
+        Double totalPrice = price + fee; // 총 금액 계산
+
+
         return RentResponse.builder()
                 .rentId(rent.getId())
                 .status(rent.getRentStatusType())
                 .rentStartTime(rent.getAvailableDateTime().getLocalDate().atTime(rent.getAvailableDateTime().getLocalTime()))
                 .rentEndTime(rent.getRentEndTime())
                 .pickUpTime(rent.getAvailableDateTime().getLocalTime())
+                .productId(rent.getProduct().getId())
+                .price(rent.getProduct().getPrice())
+                .fee(fee)
+                .totalPrice(totalPrice)
                 .build();
     }
 }
