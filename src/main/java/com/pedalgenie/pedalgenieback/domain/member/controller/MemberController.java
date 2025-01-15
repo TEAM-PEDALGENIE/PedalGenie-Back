@@ -67,7 +67,7 @@ public class MemberController {
         // 리프레시 토큰 쿠키에 추가
         Cookie refreshTokenCookie = new Cookie("refreshToken", tokenDto.getRefreshToken());
         refreshTokenCookie.setAttribute("SameSite", "None"); // 다른 도메인간 허용
-        refreshTokenCookie.setDomain(domain);
+        refreshTokenCookie.setDomain(domain); // 도메인 정보 추가
         refreshTokenCookie.setHttpOnly(true); // javascript로 접근 불가
         refreshTokenCookie.setSecure(true); //https only
         refreshTokenCookie.setPath("/");
