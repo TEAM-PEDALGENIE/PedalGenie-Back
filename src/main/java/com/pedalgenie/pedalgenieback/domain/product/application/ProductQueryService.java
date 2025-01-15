@@ -110,11 +110,12 @@ public class ProductQueryService {
         List<ProductResponse> productResponses = products.stream()
                 .map(product -> {
                     Boolean isLiked = likedProductIds.contains(product.getId()) // 상품이 좋아요된 상품인지 체크
-                        ? true: null;
+                            ? true: false;
+
                     return ProductResponse.from(
                             product,
                             productImageQueryService.getFirstProductImage(product.getId()),
-                            isLiked
+                            memberId!=null ? isLiked: null // 로그인한 유저만 필드 포함
                     );
                 })
                 .toList();

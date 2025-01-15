@@ -61,13 +61,17 @@ public class ShopQueryService {
         Shop shop = shopRepository.findById(id)
                 .orElseThrow(()-> new CustomException(ErrorCode.NOT_EXISTS_SHOP));
 
+        // 좋아요 여부 확인
         Boolean isLiked = (memberId != null) &&
-                likeService.isShopLiked(id, memberId) ? true: null;
+                likeService.isShopLiked(id, memberId) ? true: false;
 
 
         List<ProductResponse> products = productQueryService.getProductsByShop(id, memberId);
 
-        return GetShopResponse.from(shop, isLiked, products);
+        return GetShopResponse.from(
+                shop,
+                memberId!=null ? isLiked: null, // 로그인한 유저만 필드 포함
+                products);
 
     }
 

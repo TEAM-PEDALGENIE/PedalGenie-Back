@@ -3,6 +3,7 @@ package com.pedalgenie.pedalgenieback.domain.product.dto.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 import com.pedalgenie.pedalgenieback.domain.productImage.application.dto.ProductImageDto;
+import com.pedalgenie.pedalgenieback.domain.shop.entity.ShopHours;
 
 import java.util.List;
 
@@ -12,7 +13,6 @@ public record GetProductResponse(
         String name,
         Long shopId,
         String shopName,
-        String businessHours,
         Double price,
         Double rentPricePerDay,
         Boolean isRentable,
@@ -20,14 +20,15 @@ public record GetProductResponse(
         Boolean isDemoable,
         String descriptionUrl,
         List<ProductImageDto> productImage,
-        Boolean isLiked
+        Boolean isLiked,
+        List<ShopHours> shopHours
+
 ) {
     public static GetProductResponse of(Product product, List<ProductImageDto> productImage, Boolean isLiked){
         return new GetProductResponse(
                 product.getName(),
                 product.getShop().getId(),
                 product.getShop().getShopname(),
-                product.getShop().getBusinessHours(),
                 product.getPrice(),
                 product.getRentPricePerDay(),
                 product.getIsRentable(),
@@ -35,7 +36,8 @@ public record GetProductResponse(
                 product.getIsDemoable(),
                 product.getDescriptionUrl(),
                 productImage,
-                isLiked != null ? isLiked : null
+                isLiked != null ? isLiked : null,
+                product.getShop().getShopHours()
         );
     }
 }
