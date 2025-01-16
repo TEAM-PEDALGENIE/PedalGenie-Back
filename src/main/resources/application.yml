@@ -53,3 +53,5 @@ cloud:
 holiday-api:
   key: ${HOLIDAY_API_KEY}
   uri: ${HOLIDAY_API_URI}
+
+domain: ${DOMAIN}

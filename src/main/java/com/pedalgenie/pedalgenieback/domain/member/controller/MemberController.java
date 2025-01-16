@@ -4,7 +4,6 @@ import com.pedalgenie.pedalgenieback.domain.member.dto.MemberLoginRequestDto;
 import com.pedalgenie.pedalgenieback.domain.member.dto.MemberLoginResponseDto;
 import com.pedalgenie.pedalgenieback.domain.member.dto.MemberRegisterRequestDto;
 import com.pedalgenie.pedalgenieback.domain.member.dto.MemberResponseDto;
-import com.pedalgenie.pedalgenieback.domain.member.entity.MemberRole;
 import com.pedalgenie.pedalgenieback.domain.member.service.MemberService;
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
 import com.pedalgenie.pedalgenieback.global.exception.CustomException;
@@ -14,19 +13,28 @@ import com.pedalgenie.pedalgenieback.global.jwt.TokenDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Auth api", description = "어드민, 사장님 유저의 자체 로그인 기능을 포함합니다.")
 public class MemberController {
     private final MemberService memberService;
+
+    @Value("${domain}")
+    private String domain;
 
     // 회원 가입
     @Operation(summary="자체 회원가입")
@@ -60,14 +68,18 @@ public class MemberController {
         TokenDto tokenDto = responseDto.getTokenDto();
         response.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
 
-        // 리프레시 토큰 쿠키에 추가
-        Cookie refreshTokenCookie = new Cookie("refreshToken", tokenDto.getRefreshToken());
-        refreshTokenCookie.setAttribute("SameSite", "None"); // 다른 도메인간 허용
-        refreshTokenCookie.setHttpOnly(true); // javascript로 접근 불가
-        refreshTokenCookie.setSecure(true); //https only
-        refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setMaxAge(30 * 24 * 60 * 60); // 30일
-        response.addCookie(refreshTokenCookie);
+        // 리프레시 토큰 쿠키 생성
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
+                .sameSite("None") // 다른 도메인간 허용
+                .domain(domain) // 도메인 정보 추가
+                .httpOnly(true) // javascript로 접근 불가
+                .secure(true) // https only
+                .path("/") // 쿠키 경로 설정
+                .maxAge(30 * 24 * 60 * 60) // 30일 (단위: 초)
+                .build();
+
+        // 쿠키 헤더에 추가
+        response.addHeader("Set-Cookie", refreshTokenCookie.toString());
 
         return ResponseTemplate.createTemplate(HttpStatus.OK, true, "로그인 성공", memberResponseDto);
     }
@@ -97,12 +109,15 @@ public class MemberController {
         memberService.logout(memberId);
 
         // 쿠키에서 리프레시 토큰 삭제
-        Cookie refreshTokenCookie = new Cookie("refreshToken", null);
-        refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setHttpOnly(true);
-//        refreshTokenCookie.setSecure(true); https only 나중에 도메인 붙이고 처리
-        refreshTokenCookie.setMaxAge(0); // 즉시 만료
-        response.addCookie(refreshTokenCookie);
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", null)
+                .path("/") // 쿠키 경로 설정
+                .httpOnly(true) // javascript로 접근 불가
+                .secure(true) // https only
+                .maxAge(0) // 즉시 만료
+                .build();
+
+        // 쿠키 삭제 설정 헤더에 추가
+        response.addHeader("Set-Cookie", refreshTokenCookie.toString());
 
         return ResponseTemplate.createTemplate(HttpStatus.OK,true, "로그아웃 성공", null);
     }
@@ -119,13 +134,39 @@ public class MemberController {
         memberService.withdraw(memberId, role);
 
         // 쿠키에서 리프레시 토큰 삭제
-        Cookie refreshTokenCookie = new Cookie("refreshToken", null);
-        refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setHttpOnly(true);
-//        refreshTokenCookie.setSecure(true); https only 나중에 도메인 붙이고 처리
-        refreshTokenCookie.setMaxAge(0); // 즉시 만료
-        response.addCookie(refreshTokenCookie);
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", null)
+                .path("/") // 쿠키 경로 설정
+                .httpOnly(true) // javascript로 접근 불가
+                .secure(true) // https only
+                .maxAge(0) // 즉시 만료
+                .build();
+
+        // 쿠키 삭제 설정 헤더에 추가
+        response.addHeader("Set-Cookie", refreshTokenCookie.toString());
 
         return ResponseTemplate.createTemplate(HttpStatus.OK,true, "회원 탈퇴 성공", null);
+    }
+
+    // 엑세스 토큰 재발급
+    @Operation(summary="엑세스 토큰 재발급")
+    @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*", allowCredentials = "true")
+    @GetMapping("/api/reissue")
+    public ResponseEntity<ResponseTemplate<TokenDto>> reissue(HttpServletRequest request, HttpServletResponse response){
+        Cookie[] cookies = Optional.ofNullable(request.getCookies())
+                .orElseThrow(() -> new CustomException(ErrorCode.COOKIE_NOT_FOUND));
+
+        String refreshToken = Arrays.stream(cookies)
+                .filter(cookie -> "refreshToken".equals(cookie.getName()))
+                .map(Cookie::getValue)
+                .findFirst()
+                .orElseThrow(() -> new CustomException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
+
+        // 토큰 재발급
+        TokenDto tokenDto = memberService.reissue(refreshToken);
+
+        // 엑세스 토큰 헤더에 추가
+        response.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
+
+        return ResponseTemplate.createTemplate(HttpStatus.OK,true, "엑세스 토큰 재발급 성공", tokenDto);
     }
 }
