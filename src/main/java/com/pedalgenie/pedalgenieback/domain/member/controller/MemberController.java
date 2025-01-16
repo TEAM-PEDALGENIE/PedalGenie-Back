@@ -149,6 +149,7 @@ public class MemberController {
 
     // 엑세스 토큰 재발급
     @Operation(summary="엑세스 토큰 재발급")
+    @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*", allowCredentials = "true")
     @GetMapping("/api/reissue")
     public ResponseEntity<ResponseTemplate<TokenDto>> reissue(HttpServletRequest request, HttpServletResponse response){
         Cookie[] cookies = Optional.ofNullable(request.getCookies())
