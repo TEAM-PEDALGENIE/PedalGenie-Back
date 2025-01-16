@@ -20,7 +20,7 @@ public record ProductCreateResponse(
                 product.getId(),
                 product.getName(),
                 product.getRentPricePerDay(),
-                product.getRentQuantityPerDay(),
+                product.getRentQuantity(),
                 product.getPrice(),
                 product.getIsRentable(),
                 product.getIsPurchasable(),

@@ -5,8 +5,9 @@ import com.pedalgenie.pedalgenieback.domain.productImage.ProductImage;
 import com.pedalgenie.pedalgenieback.domain.shop.entity.Shop;
 import com.pedalgenie.pedalgenieback.domain.subcategory.entity.SubCategory;
 import com.pedalgenie.pedalgenieback.global.BaseTimeEntity;
+import com.pedalgenie.pedalgenieback.global.exception.CustomException;
+import com.pedalgenie.pedalgenieback.global.exception.ErrorCode;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.List;
@@ -26,24 +27,28 @@ public class Product extends BaseTimeEntity {
     @Column(name = "product_id")
     private Long id;
 
-    @NotNull
+    @Column(nullable = false)
     private String name;
 
-    @NotNull
+    @Column(nullable = false)
     private Double rentPricePerDay;
 
-    @NotNull
-    private Integer rentQuantityPerDay;
+    @Column(nullable = false)
+    private Integer rentQuantity;
 
-    @NotNull
+    @Column(nullable = false)
     private Double price;
 
+    @Column(nullable = false)
     private Boolean isRentable;
 
+    @Column(nullable = false)
     private Boolean isPurchasable;
 
+    @Column(nullable = false)
     private Boolean isDemoable;
 
+    @Column(nullable = false)
     private String descriptionUrl; // 매장 설명 이미지
 
     @ManyToOne
@@ -60,15 +65,15 @@ public class Product extends BaseTimeEntity {
     @OneToMany(mappedBy = "product", cascade = {CascadeType.PERSIST, REMOVE}, orphanRemoval = true)
     private List<ProductLike> productLikes;
 
-    @Builder(toBuilder = true)
+    @Builder
     public Product(String name, Double rentPricePerDay,
-                   Integer rentQuantityPerDay, Double price, Shop shop, SubCategory subCategory,
+                   Integer rentQuantity, Double price, Shop shop, SubCategory subCategory,
                    Boolean isRentable, Boolean isPurchasable, Boolean isDemoable, String descriptionUrl
                    ){
 
         this.name=name;
         this.rentPricePerDay=rentPricePerDay;
-        this.rentQuantityPerDay=rentQuantityPerDay;
+        this.rentQuantity =rentQuantity;
         this.price=price;
         this.isRentable=isRentable;
         this.isPurchasable=isPurchasable;
@@ -77,4 +82,15 @@ public class Product extends BaseTimeEntity {
         this.subCategory=subCategory;
         this.descriptionUrl=descriptionUrl;
     }
+
+    public void decreaseStock(){
+        if(rentQuantity <= 0){
+            throw new CustomException(ErrorCode.INVALID_RENT_QUANTITY);
+        }
+        rentQuantity--;
+    }
+    public void increaseStock(Integer rentQuantity){
+        this.rentQuantity += rentQuantity;
+    }
+
 }
