@@ -1,7 +1,9 @@
 package com.pedalgenie.pedalgenieback.domain.product.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.web.multipart.MultipartFile;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record ProductCreateRequest(
         String name,
         Double rentPricePerDay,
