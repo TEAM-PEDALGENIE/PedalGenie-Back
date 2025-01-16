@@ -4,7 +4,6 @@ import com.pedalgenie.pedalgenieback.domain.member.dto.MemberLoginRequestDto;
 import com.pedalgenie.pedalgenieback.domain.member.dto.MemberLoginResponseDto;
 import com.pedalgenie.pedalgenieback.domain.member.dto.MemberRegisterRequestDto;
 import com.pedalgenie.pedalgenieback.domain.member.dto.MemberResponseDto;
-import com.pedalgenie.pedalgenieback.domain.member.entity.MemberRole;
 import com.pedalgenie.pedalgenieback.domain.member.service.MemberService;
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
 import com.pedalgenie.pedalgenieback.global.exception.CustomException;
@@ -14,6 +13,7 @@ import com.pedalgenie.pedalgenieback.global.jwt.TokenDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +23,9 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
@@ -142,5 +145,27 @@ public class MemberController {
         response.addHeader("Set-Cookie", refreshTokenCookie.toString());
 
         return ResponseTemplate.createTemplate(HttpStatus.OK,true, "회원 탈퇴 성공", null);
+    }
+
+    // 엑세스 토큰 재발급
+    @Operation(summary="엑세스 토큰 재발급")
+    @GetMapping("/api/reissue")
+    public ResponseEntity<ResponseTemplate<TokenDto>> reissue(HttpServletRequest request, HttpServletResponse response){
+        Cookie[] cookies = Optional.ofNullable(request.getCookies())
+                .orElseThrow(() -> new CustomException(ErrorCode.COOKIE_NOT_FOUND));
+
+        String refreshToken = Arrays.stream(cookies)
+                .filter(cookie -> "refreshToken".equals(cookie.getName()))
+                .map(Cookie::getValue)
+                .findFirst()
+                .orElseThrow(() -> new CustomException(ErrorCode.REFRESH_TOKEN_NOT_FOUND));
+
+        // 토큰 재발급
+        TokenDto tokenDto = memberService.reissue(refreshToken);
+
+        // 엑세스 토큰 헤더에 추가
+        response.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
+
+        return ResponseTemplate.createTemplate(HttpStatus.OK,true, "엑세스 토큰 재발급 성공", tokenDto);
     }
 }

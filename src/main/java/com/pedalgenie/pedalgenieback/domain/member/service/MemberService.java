@@ -168,4 +168,32 @@ public class MemberService {
         }
         // DB 변경 로직 추가 필요
     }
+
+    // 엑세스 토큰 재발급 메서드
+    public TokenDto reissue(String refreshToken){
+
+        // 토큰에서 memberId 추출
+        Long memberId = tokenProvider.getMemberIdFromToken(refreshToken);
+
+        // redis에 저장된 리프레시 토큰과 비교
+        String redisKey = "refreshToken:" + memberId;
+        String storedRefreshToken = redisTemplate.opsForValue().get(redisKey);
+
+        // 저장된 토큰이 없거나 일치하지 않을 경우 예외 처리
+        if (storedRefreshToken == null || !refreshToken.equals(storedRefreshToken)) {
+            throw new CustomException(ErrorCode.REFRESH_TOKEN_EXPIRED);
+        }
+
+        // 멤버 조회
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_EXISTS_MEMBER_ID));
+
+        // 새 엑세스 token 발급
+        String accessToken = tokenProvider.createAccessToken(member.getMemberId(), member.getMemberRole().name());
+
+        return TokenDto.builder()
+                .accessToken(accessToken)
+                .build();
+    }
+
 }
