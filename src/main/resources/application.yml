@@ -27,7 +27,7 @@ spring:
         unlink-uri: https://kapi.kakao.com/v1/user/unlink
   servlet:
     multipart:
-      max-file-size: 2MB
+      max-file-size: 5MB
 jwt:
   secret: ${JWT}
 
