@@ -48,8 +48,7 @@ public class Product extends BaseTimeEntity {
     @Column(nullable = false)
     private Boolean isDemoable;
 
-    @Column(nullable = false)
-    private String descriptionUrl; // 매장 설명 이미지
+    private String descriptionUrl; // 상품 설명 이미지
 
     @ManyToOne
     @JoinColumn(name = "shop_id")
