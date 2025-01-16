@@ -22,7 +22,7 @@ public class ProductImageQueryService {
     // 첫 번째 단일 이미지
     public ProductImageDto getFirstProductImage(Long productId){
         ProductImage firstImage = productImageRepository
-                .findFirstByProductId(productId, Sort.by(Sort.Direction.ASC, "id"))
+                .findFirstByProductId(productId, Sort.by(Sort.Direction.ASC, "id")) // 내림차순 썸네일
                 .orElseThrow(()->new CustomException(ErrorCode.NOT_FOUND_PRODUCT_IMAGE));
 
         return ProductImageDto.fromEntity(firstImage);

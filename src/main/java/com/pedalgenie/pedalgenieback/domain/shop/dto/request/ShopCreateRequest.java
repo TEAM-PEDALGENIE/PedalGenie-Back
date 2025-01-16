@@ -47,4 +47,10 @@ public class ShopCreateRequest {
         return shop;
 
     }
+
+    public List<ShopHours> toShopHoursEntities(Shop shop) {
+        return shopHours.stream()
+                .map(dto -> ShopHoursDto.toEntity(dto, shop))
+                .toList();
+    }
 }
