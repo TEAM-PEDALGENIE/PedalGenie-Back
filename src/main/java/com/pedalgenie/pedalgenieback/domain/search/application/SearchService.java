@@ -1,4 +1,4 @@
-package com.pedalgenie.pedalgenieback.domain.search;
+package com.pedalgenie.pedalgenieback.domain.search.application;
 
 import com.pedalgenie.pedalgenieback.domain.like.application.LikeService;
 import com.pedalgenie.pedalgenieback.domain.product.dto.response.ProductResponse;
@@ -6,6 +6,7 @@ import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 import com.pedalgenie.pedalgenieback.domain.product.repository.ProductRepository;
 import com.pedalgenie.pedalgenieback.domain.productImage.application.ProductImageQueryService;
 import com.pedalgenie.pedalgenieback.domain.productImage.application.dto.ProductImageDto;
+import com.pedalgenie.pedalgenieback.domain.search.dto.SearchResponse;
 import com.pedalgenie.pedalgenieback.domain.shop.application.ShopDto;
 import com.pedalgenie.pedalgenieback.domain.shop.entity.Shop;
 import com.pedalgenie.pedalgenieback.domain.shop.repository.ShopRepository;
@@ -17,8 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 @RequiredArgsConstructor
@@ -61,7 +60,7 @@ public class SearchService {
                 })
                 .toList();
 
-        return new SearchResponse(productResponses, shopDtos);
+        return SearchResponse.of(productResponses, shopDtos);
     }
 
 

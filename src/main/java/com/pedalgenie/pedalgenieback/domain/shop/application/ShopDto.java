@@ -9,7 +9,8 @@ public record ShopDto(
         Long shopId,
         String shopname,
         String imageUrl,
-        Boolean isLiked
+        Boolean isLiked,
+        String description
 ) {
     public static ShopDto from(final Shop shop, Boolean isLiked){
 
@@ -17,7 +18,8 @@ public record ShopDto(
                 shop.getId(),
                 shop.getShopname(),
                 shop.getImageUrl(),
-                isLiked != null ? isLiked : null
+                isLiked != null ? isLiked : null,
+                shop.getDescription()
         );
     }
 }

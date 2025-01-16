@@ -1,5 +1,7 @@
-package com.pedalgenie.pedalgenieback.domain.search;
+package com.pedalgenie.pedalgenieback.domain.search.presentation;
 
+import com.pedalgenie.pedalgenieback.domain.search.dto.SearchResponse;
+import com.pedalgenie.pedalgenieback.domain.search.application.SearchService;
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
 import com.pedalgenie.pedalgenieback.global.jwt.TokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
