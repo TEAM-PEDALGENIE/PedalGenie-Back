@@ -34,7 +34,7 @@ public class ProductService {
         Product product = Product.builder()
                 .name(request.name())
                 .rentPricePerDay(request.rentPricePerDay())
-                .rentQuantityPerDay(request.rentQuantityPerDay())
+                .rentQuantity(request.rentQuantity())
                 .price(request.price())
                 .isRentable(request.isRentable())
                 .isPurchasable(request.isPurchasable())

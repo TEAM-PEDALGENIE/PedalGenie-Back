@@ -1,18 +1,22 @@
 package com.pedalgenie.pedalgenieback.domain.shop.dto.response;
 
+import com.pedalgenie.pedalgenieback.domain.shop.dto.request.ShopHoursDto;
 import com.pedalgenie.pedalgenieback.domain.shop.entity.Shop;
+import com.pedalgenie.pedalgenieback.domain.shop.entity.ShopHours;
+
+import java.util.List;
 
 public record ShopCreateResponse(
         Long id,
         String name,
         String address,
         String contactNumber,
-        String businessHours,
         String imageUrl,
         String detailAddress,
         String description,
         Integer demoQuantityPerDay,
-        Integer instrumentCount
+        Integer instrumentCount,
+        List<ShopHoursDto> shopHours
 ) {
     public ShopCreateResponse(Shop shop) {
         this(
@@ -20,12 +24,14 @@ public record ShopCreateResponse(
                 shop.getShopname(),
                 shop.getAddress(),
                 shop.getContactNumber(),
-                shop.getBusinessHours(),
                 shop.getImageUrl(),
                 shop.getDetailAddress(),
                 shop.getDescription(),
                 shop.getDemoQuantityPerDay(),
-                shop.getInstrumentCount()
+                shop.getInstrumentCount(),
+                shop.getShopHours().stream()
+                        .map(ShopHoursDto::from)
+                        .toList()
         );
     }
 }

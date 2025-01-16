@@ -1,5 +1,6 @@
 package com.pedalgenie.pedalgenieback.domain.shop.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pedalgenie.pedalgenieback.global.time.entity.DayType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -19,6 +20,7 @@ public class ShopHours {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "shop_id", nullable = false)
+    @JsonIgnore // 순환 참조 방지
     private Shop shop;
 
     @Enumerated(EnumType.STRING)

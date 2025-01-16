@@ -61,7 +61,7 @@ public class ShopController {
     @Operation(summary = "매장 등록")
     @PostMapping("/admin/shops")
     public ResponseEntity<ResponseTemplate<ShopCreateResponse>> createShop(@ModelAttribute ShopImageRequest request){
-        String url = imageService.save(request.imageUrl(), ImageDirectoryUrl.SHOP_DIRECTORY);
+        String url = imageService.save(request.getImageUrl(), ImageDirectoryUrl.SHOP_DIRECTORY);
 
         ShopCreateResponse response = shopService.createShop(
                 request.toCreateRequest(), url);
