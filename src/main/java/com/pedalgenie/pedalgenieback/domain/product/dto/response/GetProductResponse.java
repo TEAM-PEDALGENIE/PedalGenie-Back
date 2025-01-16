@@ -21,7 +21,9 @@ public record GetProductResponse(
         String descriptionUrl,
         List<ProductImageDto> productImage,
         Boolean isLiked,
-        List<ShopHours> shopHours
+        List<ShopHours> shopHours,
+        String contactNumber,
+        String address
 
 ) {
     public static GetProductResponse of(Product product, List<ProductImageDto> productImage, Boolean isLiked){
@@ -37,7 +39,9 @@ public record GetProductResponse(
                 product.getDescriptionUrl(),
                 productImage,
                 isLiked != null ? isLiked : null,
-                product.getShop().getShopHours()
+                product.getShop().getShopHours(),
+                product.getShop().getContactNumber(),
+                product.getShop().getAddress()
         );
     }
 }
