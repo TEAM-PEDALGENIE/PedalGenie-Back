@@ -20,7 +20,7 @@ public class Shop extends BaseTimeEntity {
     @Column(name = "shop_id")
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String shopname;
 
     @Column(nullable = false)

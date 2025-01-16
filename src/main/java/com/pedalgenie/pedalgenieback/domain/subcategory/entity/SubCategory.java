@@ -18,7 +18,7 @@ public class SubCategory extends BaseTimeEntity {
     @Column(name = "subCategory_id")
     private Long id;
 
-    @Column(nullable = false, unique = true) // 중복 불가
+    @Column(nullable = false, unique = false)
     private String name;
 
     @Enumerated(EnumType.STRING)
