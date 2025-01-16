@@ -50,6 +50,8 @@ public class Product extends BaseTimeEntity {
 
     private String descriptionUrl; // 상품 설명 이미지
 
+    private Double deposit; // 보증금
+
     @ManyToOne
     @JoinColumn(name = "shop_id")
     private Shop shop;
