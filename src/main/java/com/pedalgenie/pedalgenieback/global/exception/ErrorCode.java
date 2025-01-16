@@ -46,6 +46,7 @@ public enum ErrorCode {
     REFRESH_TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, 401, "refresh token이 존재하지 않습니다."),
     REFRESH_TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, 401, "refresh token이 만료되었습니다."),
     NOT_ACCESS_TOKEN_TYPE(HttpStatus.UNAUTHORIZED, 401, "해당 토큰은 ACCESS TOKEN이 아닙니다."),
+    COOKIE_NOT_FOUND(HttpStatus.UNAUTHORIZED, 401, "쿠키가 존재하지 않습니다."),
 
     // 403
     NO_PERMISSION(HttpStatus.FORBIDDEN, 403, "권한이 없습니다."),

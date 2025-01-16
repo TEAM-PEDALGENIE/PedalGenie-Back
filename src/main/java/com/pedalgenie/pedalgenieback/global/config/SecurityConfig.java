@@ -118,6 +118,7 @@ public class SecurityConfig {
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
         config.addExposedHeader("Authorization");
+        config.addExposedHeader("Set-Cookie");
         return config;
     }
 }
