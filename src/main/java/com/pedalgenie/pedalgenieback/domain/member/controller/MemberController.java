@@ -19,6 +19,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -64,15 +65,18 @@ public class MemberController {
         TokenDto tokenDto = responseDto.getTokenDto();
         response.setHeader("Authorization", "Bearer " + tokenDto.getAccessToken());
 
-        // 리프레시 토큰 쿠키에 추가
-        Cookie refreshTokenCookie = new Cookie("refreshToken", tokenDto.getRefreshToken());
-        refreshTokenCookie.setAttribute("SameSite", "None"); // 다른 도메인간 허용
-        refreshTokenCookie.setDomain(domain); // 도메인 정보 추가
-        refreshTokenCookie.setHttpOnly(true); // javascript로 접근 불가
-        refreshTokenCookie.setSecure(true); //https only
-        refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setMaxAge(30 * 24 * 60 * 60); // 30일
-        response.addCookie(refreshTokenCookie);
+        // 리프레시 토큰 쿠키 생성
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", tokenDto.getRefreshToken())
+                .sameSite("None") // 다른 도메인간 허용
+                .domain(domain) // 도메인 정보 추가
+                .httpOnly(true) // javascript로 접근 불가
+                .secure(true) // https only
+                .path("/") // 쿠키 경로 설정
+                .maxAge(30 * 24 * 60 * 60) // 30일 (단위: 초)
+                .build();
+
+        // 쿠키 헤더에 추가
+        response.addHeader("Set-Cookie", refreshTokenCookie.toString());
 
         return ResponseTemplate.createTemplate(HttpStatus.OK, true, "로그인 성공", memberResponseDto);
     }
@@ -102,12 +106,15 @@ public class MemberController {
         memberService.logout(memberId);
 
         // 쿠키에서 리프레시 토큰 삭제
-        Cookie refreshTokenCookie = new Cookie("refreshToken", null);
-        refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setHttpOnly(true);
-//        refreshTokenCookie.setSecure(true); https only 나중에 도메인 붙이고 처리
-        refreshTokenCookie.setMaxAge(0); // 즉시 만료
-        response.addCookie(refreshTokenCookie);
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", null)
+                .path("/") // 쿠키 경로 설정
+                .httpOnly(true) // javascript로 접근 불가
+                .secure(true) // https only
+                .maxAge(0) // 즉시 만료
+                .build();
+
+        // 쿠키 삭제 설정 헤더에 추가
+        response.addHeader("Set-Cookie", refreshTokenCookie.toString());
 
         return ResponseTemplate.createTemplate(HttpStatus.OK,true, "로그아웃 성공", null);
     }
@@ -124,12 +131,15 @@ public class MemberController {
         memberService.withdraw(memberId, role);
 
         // 쿠키에서 리프레시 토큰 삭제
-        Cookie refreshTokenCookie = new Cookie("refreshToken", null);
-        refreshTokenCookie.setPath("/");
-        refreshTokenCookie.setHttpOnly(true);
-//        refreshTokenCookie.setSecure(true); https only 나중에 도메인 붙이고 처리
-        refreshTokenCookie.setMaxAge(0); // 즉시 만료
-        response.addCookie(refreshTokenCookie);
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", null)
+                .path("/") // 쿠키 경로 설정
+                .httpOnly(true) // javascript로 접근 불가
+                .secure(true) // https only
+                .maxAge(0) // 즉시 만료
+                .build();
+
+        // 쿠키 삭제 설정 헤더에 추가
+        response.addHeader("Set-Cookie", refreshTokenCookie.toString());
 
         return ResponseTemplate.createTemplate(HttpStatus.OK,true, "회원 탈퇴 성공", null);
     }
