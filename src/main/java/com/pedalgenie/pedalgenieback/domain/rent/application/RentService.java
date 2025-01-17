@@ -55,11 +55,11 @@ public class RentService {
         Shop shop = product.getShop();
         ShopHours shopHours = timeService.determineShopHours(shop.getId(), request.rentEndDateTime().toLocalDate());
 
-        // 요청된 시간이 운영 시간 내에 있는지 확인
-        LocalTime requestedTime = request.rentEndDateTime().toLocalTime();
-        if (requestedTime.isBefore(shopHours.getOpenTime()) || requestedTime.isAfter(shopHours.getCloseTime())) {
-            throw new CustomException(ErrorCode.NOT_AVAILABLE_TIME);
-        }
+//        // 요청된 시간이 운영 시간 내에 있는지 확인
+//        LocalTime requestedTime = request.rentEndDateTime().toLocalTime();
+//        if (requestedTime.isBefore(shopHours.getOpenTime()) || requestedTime.isAfter(shopHours.getCloseTime())) {
+//            throw new CustomException(ErrorCode.NOT_AVAILABLE_TIME);
+//        }
 
         final Long availableDateTimeId = request.availableDateTimeId();
         final AvailableDateTime availableDateTime = getAvailableDateTimeById(availableDateTimeId);
