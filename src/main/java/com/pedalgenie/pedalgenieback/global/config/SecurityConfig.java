@@ -48,7 +48,8 @@ public class SecurityConfig {
             "/swagger-resources/**",
             "/webjars/**",
             "/auth/**",
-            "http://localhost:3000/**"
+            "/api/**",
+            "/error"
     );
 
 
@@ -85,7 +86,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // 필터 체인에서 제외 (토큰 불필요)
+     // 필터 체인에서 제외
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> {
@@ -94,11 +95,7 @@ public class SecurityConfig {
                             "/swagger-ui/**",
                             "/swagger-resources/**",
                             "/v3/api-docs/**",
-                            "/webjars/**",
-                            "/auth/**",
-                            "/shops/**",
-                            "/products/**",
-                            "/api/**"
+                            "/webjars/**"
                     );
         };
     }
