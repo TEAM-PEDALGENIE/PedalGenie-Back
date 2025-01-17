@@ -62,7 +62,16 @@ public class Shop extends BaseTimeEntity {
         this.instrumentCount=instrumentCount;
     }
 
-    public void addShopHours(List<ShopHours> hoursList) {
-        this.shopHours.addAll(hoursList);
+    public void addShopHours(List<ShopHours> shopHoursList) {
+        if (shopHours == null) {
+            shopHours = new ArrayList<>();
+        }
+
+        // 이미 등록된 시간대인지 확인하고 추가
+        for (ShopHours shopHour : shopHoursList) {
+            if (!shopHours.contains(shopHour)) {
+                shopHours.add(shopHour);
+            }
+        }
     }
 }
