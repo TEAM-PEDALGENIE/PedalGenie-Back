@@ -34,7 +34,7 @@ public class ProductController {
 
     // 요청 파라미터와 바디 값에 따라 전체 조회, 상위 카테고리 조회 가능, 옵션 설정 가능
     @Operation(summary = "옵션에 따른 상품 목록 조회")
-    @PostMapping("/products/search")
+    @GetMapping("/products/search")
     public ResponseEntity<ResponseTemplate<List<GetProductQueryResponse>>> searchProducts(
 
             @RequestParam(required = false) Category category,
