@@ -192,6 +192,7 @@ public class AvailableTimeService {
                 .map(slot ->AvailableTimeSlotResponse.builder()
                         .time(slot.getLocalTime())
                         .status(slot.getRentStatus().name())
+                        .availableDateTimeId(slot.getId())
                         .build())
                 .toList();
     }

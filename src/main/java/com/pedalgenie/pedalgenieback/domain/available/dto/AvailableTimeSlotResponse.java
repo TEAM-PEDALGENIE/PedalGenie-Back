@@ -11,4 +11,5 @@ public class AvailableTimeSlotResponse {
 
     private LocalTime time;
     private String status;
+    private Long availableDateTimeId;
 }
