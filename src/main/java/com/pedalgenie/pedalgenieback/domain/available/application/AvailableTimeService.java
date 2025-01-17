@@ -181,10 +181,6 @@ public class AvailableTimeService {
     // 픽업 가능한 시간대 조회
     public List<AvailableTimeSlotResponse> findAvailableTimesForDate(Long productId, LocalDate targetDate) {
 
-//        // DELETED 상태를 제외하고 조회
-//        List<AvailableDateTime> availableTimes =
-//                availableTimeRepository.findByProductIdAndLocalDateAndStatus(productId, targetDate, DELETED);
-
         List<AvailableDateTime> availableTimes =
                 availableTimeRepository.findByProductIdAndLocalDate(productId,targetDate);
 

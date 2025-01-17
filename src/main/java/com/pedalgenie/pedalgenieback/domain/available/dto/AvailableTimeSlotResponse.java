@@ -7,7 +7,7 @@ import java.time.LocalTime;
 
 @Getter
 @Builder
-public class AvailableTimeSlotResponse {
+public class AvailableTimeSlotResponse { // 대여 가능(픽업) 시간대 응답 dto
 
     private LocalTime time;
     private String status;

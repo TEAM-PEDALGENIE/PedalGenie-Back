@@ -9,12 +9,12 @@ import java.util.List;
 
 @Getter
 @Builder
-public class AvailableTimeResponse {
+public class AvailableTimeResponse { // 대여 가능 날짜 응답 dto
     private Long productId;
     private LocalDate localDate;
     private String rentStatus;
 
-    // AvailableDateTime -> AvailableTimeResponse 변환 메서드
+
     public static List<AvailableTimeResponse> from(List<AvailableDateTime> availableDateTimes) {
         return availableDateTimes.stream()
                 .map(availableTime -> AvailableTimeResponse.builder()
