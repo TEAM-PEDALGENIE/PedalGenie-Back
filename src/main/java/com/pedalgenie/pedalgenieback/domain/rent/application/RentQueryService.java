@@ -11,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -83,11 +82,23 @@ public class RentQueryService {
         return RentDetailResponse.from(rent, productImageUrl);
     }
 
-    // 어드민용, 취소로 변경
-    public RentDetailResponse cancelRent(Long rentId){
+    // 어드민용, 취소 접수로 변경
+    public RentDetailResponse cancelRequestRent(Long rentId){
         Rent rent = getRent(rentId);
 
-        rent.cancel();
+        rent.cancelRequested();
+        rentRepository.save(rent);
+
+        String productImageUrl = productImageQueryService.getFirstProductImage(rent.getProduct().getId()).imageUrl();
+
+        return RentDetailResponse.from(rent, productImageUrl);
+    }
+
+    // 어드민용, 취소 완료로 변경
+    public RentDetailResponse cancelCompletedRent(Long rentId){
+        Rent rent = getRent(rentId);
+
+        rent.cancelCompleted();
         rentRepository.save(rent);
 
         String productImageUrl = productImageQueryService.getFirstProductImage(rent.getProduct().getId()).imageUrl();
