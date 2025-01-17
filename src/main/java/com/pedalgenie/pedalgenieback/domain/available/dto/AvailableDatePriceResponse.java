@@ -14,5 +14,14 @@ public class AvailableDatePriceResponse {
 
     private List<AvailableDateResponse> availableDates;
     private BigDecimal price;
+    private BigDecimal fee; // 수수료
+    private BigDecimal totalPrice; // 총금액
 
+    public AvailableDatePriceResponse(List<AvailableDateResponse> availableDates, BigDecimal price) {
+        this.availableDates = availableDates;
+        this.price = price;
+        this.fee = price.multiply(BigDecimal.valueOf(0.1));
+        this.totalPrice = price.add(fee);
+    }
 }
+
