@@ -8,6 +8,7 @@ import java.util.List;
 public record ShopResponse(
         Long shopId, // shopId 추가
         String shopname,
+        String ShopImageUrl,
 
         Boolean isLiked,
         // 해당 매장이 보유한 상품 리스트
@@ -18,8 +19,9 @@ public record ShopResponse(
         return new ShopResponse(
                 shop.getId(),
                 shop.getShopname(),
+                shop.getImageUrl(),
                 isLiked != null ? isLiked : null,
-                products // 이미 변환된 리스트
+                products
         );
     }
 }

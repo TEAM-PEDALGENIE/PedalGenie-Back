@@ -22,4 +22,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findAllByIsRentableTrue(); // isRentable이 true인 상품만 조회
 
+    // 상점의 보유 상품 개수 가져오기
+    @Query("SELECT COUNT(p) FROM Product p WHERE p.shop.id = :shopId")
+    Integer countProductsByShopId(@Param("shopId") Long shopId);
 }

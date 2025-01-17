@@ -1,7 +1,6 @@
 package com.pedalgenie.pedalgenieback.domain.shop.application;
 
 import com.pedalgenie.pedalgenieback.domain.like.application.LikeService;
-import com.pedalgenie.pedalgenieback.domain.like.entity.ShopLike;
 import com.pedalgenie.pedalgenieback.domain.like.repository.ShopLikeRepository;
 import com.pedalgenie.pedalgenieback.domain.product.dto.response.ProductResponse;
 import com.pedalgenie.pedalgenieback.domain.product.repository.ProductRepository;
@@ -43,6 +42,7 @@ public class ShopQueryService {
                 shopLikeRepository.findLikedShopIdsByMemberId(memberId) :
                 List.of();
 
+
         Map<Shop, List<ShopProductResponse>> shopProductMap = shops.stream()
                 .collect(Collectors.toMap(
                         shop -> shop,
@@ -57,21 +57,23 @@ public class ShopQueryService {
     }
 
     // 매장 상세 조회
-    public GetShopResponse readShop(Long id, Long memberId){
-        Shop shop = shopRepository.findById(id)
+    public GetShopResponse readShop(Long shopId, Long memberId){
+        Shop shop = shopRepository.findById(shopId)
                 .orElseThrow(()-> new CustomException(ErrorCode.NOT_EXISTS_SHOP));
 
         // 좋아요 여부 확인
         Boolean isLiked = (memberId != null) &&
-                likeService.isShopLiked(id, memberId) ? true: false;
+                likeService.isShopLiked(shopId, memberId) ? true: false;
 
+        Integer instrumentCount = productRepository.countProductsByShopId(shopId);
 
-        List<ProductResponse> products = productQueryService.getProductsByShop(id, memberId);
+        List<ProductResponse> products = productQueryService.getProductsByShop(shopId, memberId);
 
         return GetShopResponse.from(
                 shop,
                 memberId!=null ? isLiked: null, // 로그인한 유저만 필드 포함
-                products);
+                products,
+                instrumentCount);
 
     }
 
