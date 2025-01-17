@@ -84,6 +84,7 @@ public class ProductQueryService {
         return SortBy.getAllSortOptions();
     }
 
+
     // 상품 상세 조회
     public GetProductResponse getProductResponse(Long id, Long memberId) {
         Product product = productRepository.findById(id)
@@ -92,8 +93,10 @@ public class ProductQueryService {
         List<ProductImageDto> productImages = productImageQueryService.getProductImages(id);
 
         // 로그인하지 않은 유저 처리
-        Boolean isLiked = (memberId != null) &&
-            likeService.isProductLiked(id, memberId) ? true: false;
+        Boolean isLiked = null;
+        if(memberId!=null){
+            isLiked = likeService.isProductLiked(id, memberId);
+        }
 
         return GetProductResponse.of(product, productImages, isLiked);
     }

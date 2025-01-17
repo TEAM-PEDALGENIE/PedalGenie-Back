@@ -36,6 +36,8 @@ public class RentResponse { // 예약 생성 이후 조회
     private Double fee;
     private Double totalPrice;
 
+    private Long availableDateTimeId;
+
 
     public static RentResponse from(final Rent rent){
 
@@ -55,6 +57,7 @@ public class RentResponse { // 예약 생성 이후 조회
                 .price(rent.getProduct().getPrice())
                 .fee(fee)
                 .totalPrice(totalPrice)
+                .availableDateTimeId(rent.getAvailableDateTime().getId())
                 .build();
     }
 }
