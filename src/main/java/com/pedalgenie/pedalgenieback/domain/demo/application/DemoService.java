@@ -211,6 +211,13 @@ public class DemoService {
             throw new CustomException(ErrorCode.NOT_AVAILABLE_TIME);
         }
 
+        // 요청 시간이 점심 시간이 아닌지 확인
+        if (shopHours.getBreakStartTime() != null && shopHours.getBreakEndTime() != null) {
+            if (!requestedTime.isBefore(shopHours.getBreakStartTime()) && !requestedTime.isAfter(shopHours.getBreakEndTime())) {
+                throw new CustomException(ErrorCode.NOT_AVAILABLE_TIME);
+            }
+        }
+
         // SCHEDULED 상태 예약 수량 확인
         long bookedCount = demoRepository.countByShopIdAndDemoDateAndDemoStatus(shop.getId(), requestDto.getDemoDate(), DemoStatus.SCHEDULED);
         if (bookedCount >= demoQuantityPerDay) {
