@@ -1,6 +1,7 @@
 package com.pedalgenie.pedalgenieback.domain.available.application;
 
-import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableTimeResponse;
+import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableDatePriceResponse;
+import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableDateResponse;
 import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableTimeSlotResponse;
 import com.pedalgenie.pedalgenieback.domain.available.entity.AvailableDateTime;
 import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
@@ -16,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -144,12 +146,13 @@ public class AvailableTimeService {
     }
 
     // 상품의 대여 가능 날짜 조회
-    public List<AvailableTimeResponse> findAvailableDatesWithStatus(Long productId) {
+    public AvailableDatePriceResponse findAvailableDatesWithStatus(Long productId) {
 
         List<AvailableDateTime> availableTimes = availableTimeRepository.findByProductId(productId);
 
+        BigDecimal rentalPrice = getProduct(productId).getPrice();
 
-        return availableTimes.stream()
+        List<AvailableDateResponse> availableDates = availableTimes.stream()
                 .collect(Collectors.groupingBy(
                         AvailableDateTime::getLocalDate,
                         TreeMap::new, // 날짜를 오름차순으로 정렬
@@ -167,13 +170,15 @@ public class AvailableTimeService {
                     String dateStatus = allDeleted ? DELETED.name()
                             : (hasOpen ? OPEN.name() : USED.name());
 
-                    return AvailableTimeResponse.builder()
+                    return AvailableDateResponse.builder()
                             .productId(productId)
                             .localDate(date)
                             .rentStatus(dateStatus)
                             .build();
                 })
                 .toList();
+
+        return new AvailableDatePriceResponse(availableDates, rentalPrice);
     }
 
 

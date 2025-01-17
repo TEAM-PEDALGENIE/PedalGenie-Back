@@ -9,15 +9,15 @@ import java.util.List;
 
 @Getter
 @Builder
-public class AvailableTimeResponse { // 대여 가능 날짜 응답 dto
+public class AvailableDateResponse { // 대여 가능 날짜 응답 dto
     private Long productId;
     private LocalDate localDate;
     private String rentStatus;
 
 
-    public static List<AvailableTimeResponse> from(List<AvailableDateTime> availableDateTimes) {
+    public static List<AvailableDateResponse> from(List<AvailableDateTime> availableDateTimes) {
         return availableDateTimes.stream()
-                .map(availableTime -> AvailableTimeResponse.builder()
+                .map(availableTime -> AvailableDateResponse.builder()
                         .productId(availableTime.getProductId())
                         .localDate(availableTime.getLocalDate())
                         .rentStatus(availableTime.getRentStatus().name())

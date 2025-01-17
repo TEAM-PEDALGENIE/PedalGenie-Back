@@ -2,12 +2,14 @@ package com.pedalgenie.pedalgenieback.domain.product.dto.response;
 
 import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 
+import java.math.BigDecimal;
+
 public record ProductCreateResponse(
         Long id,
         String name,
         Double rentPricePerDay,
         Integer rentQuantityPerDay,
-        Double price,
+        BigDecimal price,
         Boolean isRentable,
         Boolean isPurchasable,
         Boolean isDemoable,

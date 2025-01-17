@@ -1,6 +1,5 @@
 package com.pedalgenie.pedalgenieback.domain.available.repository;
 
-import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableTimeResponse;
 import com.pedalgenie.pedalgenieback.domain.available.entity.AvailableDateTime;
 import com.pedalgenie.pedalgenieback.domain.available.entity.AvailableStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
