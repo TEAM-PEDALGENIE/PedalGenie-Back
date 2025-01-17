@@ -15,7 +15,7 @@ public class AvailableSchedulerService {
     private final AvailableTimeService availableTimeService;
 
 //    @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul") // 매일 자정 실행
-    @Scheduled(cron = "0 54 19 * * *", zone = "Asia/Seoul") // 테스트
+    @Scheduled(cron = "0 58 22 * * *", zone = "Asia/Seoul") // 테스트
     public void resetAndGenerateAvailableTimes() {
         log.info("Scheduled task is running");
         availableTimeService.refreshAvailableTimes();
