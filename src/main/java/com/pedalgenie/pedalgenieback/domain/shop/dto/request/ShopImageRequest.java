@@ -22,7 +22,7 @@ public class ShopImageRequest{
         private String detailAddress;
         private String description;
         private Integer instrumentCount;
-        List<ShopHoursDto> shopHour;
+        private List<ShopHoursDto> shopHour;
 
     // ShopCreateRequest로 변환
     public ShopCreateRequest toCreateRequest() {

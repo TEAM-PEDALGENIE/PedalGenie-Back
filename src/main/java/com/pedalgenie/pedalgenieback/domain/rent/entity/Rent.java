@@ -26,8 +26,8 @@ public class Rent {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "available_date_time_id", unique = true)
+    @ManyToOne(fetch = FetchType.LAZY) // 변경
+    @JoinColumn(name = "available_date_time_id", nullable = false)
     private AvailableDateTime availableDateTime;
 
     @Column(nullable = false)

@@ -1,5 +1,6 @@
 package com.pedalgenie.pedalgenieback.domain.rent.application;
 
+import com.pedalgenie.pedalgenieback.domain.productImage.application.ProductImageQueryService;
 import com.pedalgenie.pedalgenieback.domain.rent.dto.response.RentDetailResponse;
 import com.pedalgenie.pedalgenieback.domain.rent.dto.response.RentListResponse;
 import com.pedalgenie.pedalgenieback.domain.rent.entity.Rent;
@@ -19,24 +20,18 @@ import java.util.List;
 public class RentQueryService {
 
     private final RentRepository rentRepository;
+    private final ProductImageQueryService productImageQueryService;
 
 
     // 대여 상세 조회
     public RentDetailResponse getRentDetail(Long rentId){
         Rent rent = getRent(rentId);
 
-        return new RentDetailResponse(
-                rent.getId(),
-                rent.getRentStartTime(),
-                rent.getRentEndTime(),
-                rent.getProduct().getPrice(),
-                rent.getMember().getNickname(),
-                LocalDate.now(),
-                rent.getRentStatusType().name(),
-                rent.getProduct().getName(),
-                rent.getProduct().getShop().getShopname()
-        );
+        String productImageUrl = productImageQueryService.getFirstProductImage(rent.getProduct().getId()).imageUrl();
+
+        return RentDetailResponse.from(rent, productImageUrl);
     }
+
     // 대여 목록 조회
     public List<RentListResponse> getRentList(Long memberId) {
 
@@ -44,7 +39,11 @@ public class RentQueryService {
 
 
         return rents.stream()
-                .map(RentListResponse::from)
+                .map(rent -> {
+                    // 상품 이미지 URL 가져오기
+                    String productImageUrl = productImageQueryService.getFirstProductImage(rent.getProduct().getId()).imageUrl();
+                    return RentListResponse.from(rent, productImageUrl);
+                })
                 .toList();
     }
 
@@ -55,17 +54,9 @@ public class RentQueryService {
         rent.updateToPickUp();
         rentRepository.save(rent);
 
-        return new RentDetailResponse(
-                rent.getId(),
-                rent.getRentStartTime(),
-                rent.getRentEndTime(),
-                rent.getProduct().getPrice(),
-                rent.getMember().getNickname(),
-                LocalDate.now(),
-                rent.getRentStatusType().name(),
-                rent.getProduct().getName(),
-                rent.getProduct().getShop().getShopname()
-        );
+        String productImageUrl = productImageQueryService.getFirstProductImage(rent.getProduct().getId()).imageUrl();
+
+        return RentDetailResponse.from(rent, productImageUrl);
     }
 
     // 직원 확인용, 사용 중으로 변경
@@ -75,17 +66,9 @@ public class RentQueryService {
         rent.updateToRent();
         rentRepository.save(rent);
 
-        return new RentDetailResponse(
-                rent.getId(),
-                rent.getRentStartTime(),
-                rent.getRentEndTime(),
-                rent.getProduct().getPrice(),
-                rent.getMember().getNickname(),
-                LocalDate.now(),
-                rent.getRentStatusType().name(),
-                rent.getProduct().getName(),
-                rent.getProduct().getShop().getShopname()
-        );
+        String productImageUrl = productImageQueryService.getFirstProductImage(rent.getProduct().getId()).imageUrl();
+
+        return RentDetailResponse.from(rent, productImageUrl);
     }
 
     // 직원 확인용, 반납 완료로 변경
@@ -95,17 +78,9 @@ public class RentQueryService {
         rent.updateToRETURND();
         rentRepository.save(rent);
 
-        return new RentDetailResponse(
-                rent.getId(),
-                rent.getRentStartTime(),
-                rent.getRentEndTime(),
-                rent.getProduct().getPrice(),
-                rent.getMember().getNickname(),
-                LocalDate.now(),
-                rent.getRentStatusType().name(),
-                rent.getProduct().getName(),
-                rent.getProduct().getShop().getShopname()
-        );
+        String productImageUrl = productImageQueryService.getFirstProductImage(rent.getProduct().getId()).imageUrl();
+
+        return RentDetailResponse.from(rent, productImageUrl);
     }
 
     // 어드민용, 취소로 변경
@@ -115,17 +90,9 @@ public class RentQueryService {
         rent.cancel();
         rentRepository.save(rent);
 
-        return new RentDetailResponse(
-                rent.getId(),
-                rent.getRentStartTime(),
-                rent.getRentEndTime(),
-                rent.getProduct().getPrice(),
-                rent.getMember().getNickname(),
-                LocalDate.now(),
-                rent.getRentStatusType().name(),
-                rent.getProduct().getName(),
-                rent.getProduct().getShop().getShopname()
-        );
+        String productImageUrl = productImageQueryService.getFirstProductImage(rent.getProduct().getId()).imageUrl();
+
+        return RentDetailResponse.from(rent, productImageUrl);
     }
 
     private Rent getRent(final Long rentId){

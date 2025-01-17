@@ -38,19 +38,8 @@ public class ShopCreateRequest {
                 .instrumentCount(instrumentCount)
                 .build();
 
-        List<ShopHours> shopHoursList = shopHours.stream()
-                .map(dto -> ShopHoursDto.toEntity(dto, shop))
-                .toList();
-
-        shop.addShopHours(shopHoursList);
-
         return shop;
 
     }
 
-    public List<ShopHours> toShopHoursEntities(Shop shop) {
-        return shopHours.stream()
-                .map(dto -> ShopHoursDto.toEntity(dto, shop))
-                .toList();
-    }
 }

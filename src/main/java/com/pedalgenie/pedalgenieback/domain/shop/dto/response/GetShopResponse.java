@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.pedalgenie.pedalgenieback.domain.product.dto.response.ProductResponse;
 import com.pedalgenie.pedalgenieback.domain.shop.entity.Shop;
 import com.pedalgenie.pedalgenieback.domain.shop.entity.ShopHours;
-import software.amazon.awssdk.services.s3.endpoints.internal.Value;
 
 import java.util.List;
 
@@ -14,26 +13,33 @@ import java.util.List;
 public record GetShopResponse (
         Long shopId,
         String shopname,
-        String address,
+        String description,
+        List<ShopHours> shopHours,
         String contactNumber,
+        String address,
         Integer instrumentCount, // 보유 상품 개수 추가
-        String imageUrl,
+        String shopImageUrl,
         Boolean isLiked,
-        List<ProductResponse> products,
-        List<ShopHours> shopHours
+        List<ProductResponse> products
 ) {
-    public static GetShopResponse from(Shop shop, Boolean isLiked, List<ProductResponse> products){
+    public static GetShopResponse from(
+            Shop shop,
+            Boolean isLiked,
+            List<ProductResponse> products,
+            Integer instrumentCount){
+
 
         return new GetShopResponse(
                 shop.getId(),
                 shop.getShopname(),
-                shop.getAddress(),
+                shop.getDescription(),
+                shop.getShopHours(),
                 shop.getContactNumber(),
-                shop.getInstrumentCount(),
+                shop.getAddress(),
+                instrumentCount,
                 shop.getImageUrl(),
                 isLiked != null ? isLiked : null,
-                products,
-                shop.getShopHours()
+                products
         );
     }
 }

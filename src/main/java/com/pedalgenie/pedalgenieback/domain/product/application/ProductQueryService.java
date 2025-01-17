@@ -93,7 +93,7 @@ public class ProductQueryService {
 
         // 로그인하지 않은 유저 처리
         Boolean isLiked = (memberId != null) &&
-            likeService.isProductLiked(id, memberId) ? true: null;
+            likeService.isProductLiked(id, memberId) ? true: false;
 
         return GetProductResponse.of(product, productImages, isLiked);
     }

@@ -16,9 +16,11 @@ public record RentListResponse(
         Long productId,
         String productName,
         String shopName,
-        String shopDetailAddress
+        String shopDetailAddress,
+        String productImageUrl
+
 ){
-    public static RentListResponse from(Rent rent) {
+    public static RentListResponse from(Rent rent, String productImageUrl) {
         return new RentListResponse(
                 rent.getId(),
                 rent.getRentStatusType().name(),
@@ -28,7 +30,8 @@ public record RentListResponse(
                 rent.getProduct().getId(),
                 rent.getProduct().getName(),
                 rent.getProduct().getShop().getShopname(),
-                rent.getProduct().getShop().getDetailAddress()
+                rent.getProduct().getShop().getDetailAddress(),
+                productImageUrl
         );
     }
 }

@@ -19,11 +19,14 @@ public interface AvailableTimeRepository extends JpaRepository<AvailableDateTime
 
     // 특정 상품과 날짜에 대한 예약 가능한 시간 조회
     @Query("SELECT a FROM AvailableDateTime a WHERE a.productId = :productId AND a.localDate = :targetDate AND a.rentStatus != :status")
-    List<AvailableDateTime> findByProductIdAndLocalDate(@Param("productId") Long productId,
+    List<AvailableDateTime> findByProductIdAndLocalDateAndStatus(@Param("productId") Long productId,
                                                         @Param("targetDate") LocalDate targetDate,
                                                         @Param("status") AvailableStatus status);
 
-
+    // 특정 상품과 날짜에 대한 예약 가능한 시간 조회
+    @Query("SELECT a FROM AvailableDateTime a WHERE a.productId = :productId AND a.localDate = :targetDate")
+    List<AvailableDateTime> findByProductIdAndLocalDate(@Param("productId") Long productId,
+                                                        @Param("targetDate") LocalDate targetDate);
 
 
 

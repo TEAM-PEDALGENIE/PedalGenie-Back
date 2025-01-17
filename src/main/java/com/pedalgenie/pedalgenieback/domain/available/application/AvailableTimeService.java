@@ -12,7 +12,9 @@ import com.pedalgenie.pedalgenieback.global.exception.CustomException;
 import com.pedalgenie.pedalgenieback.global.exception.ErrorCode;
 import com.pedalgenie.pedalgenieback.global.time.application.TimeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -26,6 +28,8 @@ import static com.pedalgenie.pedalgenieback.domain.available.entity.AvailableSta
 
 @Service
 @RequiredArgsConstructor
+@Transactional
+@Slf4j
 public class AvailableTimeService {
 
     private final ProductRepository productRepository;
@@ -83,7 +87,7 @@ public class AvailableTimeService {
                 List<AvailableDateTime> existingSlotsForDate = existingAvailableTimes.stream()
                         .filter(slot -> slot.getLocalDate().equals(targetDate)
                                 && slot.getRentStatus() != DELETED)
-                                .toList();
+                        .toList();
 
                 // 타임 슬롯
                 availableTimes.addAll(generateAvailableTimeSlots(
@@ -96,7 +100,10 @@ public class AvailableTimeService {
                 ));
             }
         }
+        log.info("Saving available times: {}", availableTimes.size());
         availableTimeRepository.saveAll(availableTimes);
+        log.info("Saved available times successfully");
+
 
     }
 
@@ -174,9 +181,12 @@ public class AvailableTimeService {
     // 픽업 가능한 시간대 조회
     public List<AvailableTimeSlotResponse> findAvailableTimesForDate(Long productId, LocalDate targetDate) {
 
-        // DELETED 상태를 제외하고 조회
+//        // DELETED 상태를 제외하고 조회
+//        List<AvailableDateTime> availableTimes =
+//                availableTimeRepository.findByProductIdAndLocalDateAndStatus(productId, targetDate, DELETED);
+
         List<AvailableDateTime> availableTimes =
-                availableTimeRepository.findByProductIdAndLocalDate(productId, targetDate, DELETED);
+                availableTimeRepository.findByProductIdAndLocalDate(productId,targetDate);
 
         return availableTimes.stream()
                 .map(slot ->AvailableTimeSlotResponse.builder()
