@@ -10,11 +10,13 @@ public record GetShopsResponses(
         List<ShopResponse> shops
 ) {
     public static GetShopsResponses from(List<Shop> shops, Map<Shop, List<ShopProductResponse>> shopProductMap,
-                                         List<Long> likedShopIds){
+                                         List<Long> likedShopIds, Boolean isLoggedIn){
         List<ShopResponse> shopResponses = shops.stream()
                 .map(shop -> {
-                    Boolean isLiked = likedShopIds.contains(shop.getId())
-                            ? true: null;
+                    Boolean isLiked = null;
+                    if (isLoggedIn) { // 로그인한 경우
+                        isLiked = likedShopIds.contains(shop.getId());
+                    }
                     List<ShopProductResponse> products = shopProductMap.get(shop); // 매장에 해당하는 상품 리스트 가져오기
                     return ShopResponse.from(shop, isLiked, products); //상품 리스트와 함께 ShopResponse 생성
                 })
