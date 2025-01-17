@@ -2,6 +2,7 @@ package com.pedalgenie.pedalgenieback.domain.available.application;
 
 import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableDatePriceResponse;
 import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableDateResponse;
+import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableTimeSlotPriceResponse;
 import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableTimeSlotResponse;
 import com.pedalgenie.pedalgenieback.domain.available.entity.AvailableDateTime;
 import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
@@ -184,18 +185,21 @@ public class AvailableTimeService {
 
 
     // 픽업 가능한 시간대 조회
-    public List<AvailableTimeSlotResponse> findAvailableTimesForDate(Long productId, LocalDate targetDate) {
+    public AvailableTimeSlotPriceResponse findAvailableTimesForDate(Long productId, LocalDate targetDate) {
 
         List<AvailableDateTime> availableTimes =
                 availableTimeRepository.findByProductIdAndLocalDate(productId,targetDate);
 
-        return availableTimes.stream()
+        BigDecimal rentalPrice = getProduct(productId).getPrice();
+
+        List<AvailableTimeSlotResponse> availableTimeSlots= availableTimes.stream()
                 .map(slot ->AvailableTimeSlotResponse.builder()
                         .time(slot.getLocalTime())
                         .status(slot.getRentStatus().name())
                         .availableDateTimeId(slot.getId())
                         .build())
                 .toList();
+        return new AvailableTimeSlotPriceResponse(availableTimeSlots,rentalPrice);
     }
 
     private Product getProduct(final Long productId){
