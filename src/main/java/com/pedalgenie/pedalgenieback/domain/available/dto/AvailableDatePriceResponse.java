@@ -10,18 +10,20 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class AvailableDatePriceResponse {
+public class AvailableDatePriceResponse { // 날짜들과 가격 정보
 
-    private List<AvailableDateResponse> availableDates;
     private BigDecimal price;
     private BigDecimal fee; // 수수료
     private BigDecimal totalPrice; // 총금액
+    private List<AvailableDateResponse> availableDates;
+
 
     public AvailableDatePriceResponse(List<AvailableDateResponse> availableDates, BigDecimal price) {
-        this.availableDates = availableDates;
         this.price = price;
         this.fee = price.multiply(BigDecimal.valueOf(0.1));
         this.totalPrice = price.add(fee);
+        this.availableDates = availableDates;
+
     }
 }
 
