@@ -106,13 +106,11 @@ public class GenreService {
                 : productQueryService.getLikedProductIds(memberId, products.stream().map(Product::getId).toList());
 
         return products.stream()
-                .map(product -> {
-                    return ProductResponse.from(
-                            product,
-                            productImageQueryService.getFirstProductImage(product.getId()),
-                            likedProductIds.contains(product.getId()) ? true: null
-                    );
-                })
+                .map(product -> ProductResponse.from(
+                        product,
+                        productImageQueryService.getFirstProductImage(product.getId()),
+                        memberId == null ? null : likedProductIds.contains(product.getId()) // 로그인 여부에 따라 null 또는 true/false
+                ))
                 .toList();
     }
 }

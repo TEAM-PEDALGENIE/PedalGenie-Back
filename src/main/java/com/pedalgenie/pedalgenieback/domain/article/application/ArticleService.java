@@ -122,11 +122,17 @@ public class ArticleService {
 
         // ArticleProductResponseDto로 변환
         List<ArticleProductResponseDto> productResponses = products.stream()
-                .map(product -> ArticleProductResponseDto.from(
-                        product,
-                        productImageQueryService.getFirstProductImage(product.getId()).imageUrl(),
-                        likedProductIds.contains(product.getId()) ? true: null
-                ))
+                .map(product -> {
+                    Boolean likedState = null;
+                    if (memberId != null) { // 로그인한 경우만 t/f로 반환
+                        likedState = likedProductIds.contains(product.getId());
+                    }
+                    return ArticleProductResponseDto.from(
+                            product,
+                            productImageQueryService.getFirstProductImage(product.getId()).imageUrl(),
+                            likedState
+                    );
+                })
                 .toList();
 
         // 해시태그 변환

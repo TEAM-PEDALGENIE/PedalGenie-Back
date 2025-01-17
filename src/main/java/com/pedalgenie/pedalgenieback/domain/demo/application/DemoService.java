@@ -44,6 +44,12 @@ public class DemoService {
         // 시연하려는 상품과 소속 상점 조회
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
+
+        // 시연 가능하지 않은 상품 예외처리
+        if (!product.getIsDemoable()) {
+            throw new CustomException(ErrorCode.PRODUCT_NOT_AVAILABLE_FOR_DEMO);
+        }
+
         Long shopId = product.getShop().getId();
         int demoQuantityPerDay = product.getShop().getDemoQuantityPerDay();
 
@@ -97,6 +103,14 @@ public class DemoService {
 
     // 특정 일자의 시연 가능 시간 조회 메서드
     public List<TimeSlotDto> generateDemoAvailableSlots(Long productId, LocalDate date) {
+        // 시연하려는 상품 조회
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
+
+        // 시연 가능하지 않은 상품 예외처리
+        if (!product.getIsDemoable()) {
+            throw new CustomException(ErrorCode.PRODUCT_NOT_AVAILABLE_FOR_DEMO);
+        }
         List<TimeSlotDto> availableSlots = new ArrayList<>();
         LocalDateTime currentDateTime = LocalDateTime.now();
 
@@ -105,9 +119,7 @@ public class DemoService {
             return availableSlots;
         }
 
-        // 시연하려는 상품과 소속 상점 정보 조회
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_PRODUCT));
+        // 시연하려는 상품의 가게 조회
         Shop shop = product.getShop();
         Long shopId = shop.getId();
         int demoQuantityPerDay = shop.getDemoQuantityPerDay();
@@ -197,6 +209,13 @@ public class DemoService {
         LocalTime requestedTime = requestDto.getDemoDate().toLocalTime();
         if (requestedTime.isBefore(shopHours.getOpenTime()) || requestedTime.isAfter(shopHours.getCloseTime())) {
             throw new CustomException(ErrorCode.NOT_AVAILABLE_TIME);
+        }
+
+        // 요청 시간이 점심 시간이 아닌지 확인
+        if (shopHours.getBreakStartTime() != null && shopHours.getBreakEndTime() != null) {
+            if (!requestedTime.isBefore(shopHours.getBreakStartTime()) && !requestedTime.isAfter(shopHours.getBreakEndTime())) {
+                throw new CustomException(ErrorCode.NOT_AVAILABLE_TIME);
+            }
         }
 
         // SCHEDULED 상태 예약 수량 확인
