@@ -59,7 +59,7 @@ public class ShopQueryService {
                             return products.stream()
                                     .map(product -> {
                                         ProductImageDto productImage = productImageQueryService.getFirstProductImage(product.getId());
-                                        Boolean isProductLiked = likedProductIds.contains(product.getId()); // 좋아요 여부 확인
+                                        Boolean isProductLiked = isLoggedIn ? likedProductIds.contains(product.getId()) : null;
                                         return ShopProductResponse.from(product, productImage, isProductLiked);
                                     })
                                     .toList();
