@@ -5,6 +5,7 @@ import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 import com.pedalgenie.pedalgenieback.domain.productImage.application.dto.ProductImageDto;
 import com.pedalgenie.pedalgenieback.domain.shop.entity.ShopHours;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 // 상품 상세 조회 dto
@@ -13,7 +14,7 @@ public record GetProductResponse(
         String name,
         Long shopId,
         String shopName,
-        Double price,
+        BigDecimal price,
         Double rentPricePerDay,
         Boolean isRentable,
         Boolean isPurchasable,

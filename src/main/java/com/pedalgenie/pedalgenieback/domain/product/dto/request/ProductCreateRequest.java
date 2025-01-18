@@ -3,12 +3,14 @@ package com.pedalgenie.pedalgenieback.domain.product.dto.request;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ProductCreateRequest(
         String name,
         Double rentPricePerDay,
         Integer rentQuantity,
-        Double price,
+        BigDecimal price,
         Boolean isRentable,
         Boolean isPurchasable,
         Boolean isDemoable,
@@ -20,7 +22,7 @@ public record ProductCreateRequest(
             String name,
             Double rentPricePerDay,
             Integer rentQuantity,
-            Double price,
+            BigDecimal price,
             Boolean isRentable,
             Boolean isPurchasable,
             Boolean isDemoable,

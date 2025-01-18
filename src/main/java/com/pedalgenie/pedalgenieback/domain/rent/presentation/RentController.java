@@ -85,14 +85,24 @@ public class RentController {
         return ResponseTemplate.createTemplate(HttpStatus.OK, true, "반납 완료로 상태 변경 성공", response);
     }
 
-    // 어드민용, 취소로 변경
-    @PutMapping("/rents/{rentId}/cancel")
-    @Operation(summary = "대여 취소 ")
-    public ResponseEntity<ResponseTemplate<RentDetailResponse>> cancelRent(
+    // 어드민용, 취소 접수로 변경
+    @PutMapping("/rents/{rentId}/cancel-request")
+    @Operation(summary = "대여 취소 접수  ")
+    public ResponseEntity<ResponseTemplate<RentDetailResponse>> cancelRequestRent(
             @PathVariable Long rentId) {
-        RentDetailResponse response = rentQueryService.cancelRent(rentId);
+        RentDetailResponse response = rentQueryService.cancelRequestRent(rentId);
 
-        return ResponseTemplate.createTemplate(HttpStatus.OK, true, "대여 취소 성공", response);
+        return ResponseTemplate.createTemplate(HttpStatus.OK, true, "대여 취소 접수 성공", response);
+    }
+
+    //  어드민용, 취소 완료로 변경
+    @PutMapping("/rents/{rentId}/cancel-completed")
+    @Operation(summary = "대여 취소 ")
+    public ResponseEntity<ResponseTemplate<RentDetailResponse>> cancelCompletedlRent(
+            @PathVariable Long rentId) {
+        RentDetailResponse response = rentQueryService.cancelCompletedRent(rentId);
+
+        return ResponseTemplate.createTemplate(HttpStatus.OK, true, "대여 취소 완료 성공", response);
     }
 
 

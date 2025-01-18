@@ -1,6 +1,8 @@
 package com.pedalgenie.pedalgenieback.domain.available.application;
 
-import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableTimeResponse;
+import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableDatePriceResponse;
+import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableDateResponse;
+import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableTimeSlotPriceResponse;
 import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableTimeSlotResponse;
 import com.pedalgenie.pedalgenieback.domain.available.entity.AvailableDateTime;
 import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
@@ -16,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -144,12 +147,13 @@ public class AvailableTimeService {
     }
 
     // 상품의 대여 가능 날짜 조회
-    public List<AvailableTimeResponse> findAvailableDatesWithStatus(Long productId) {
+    public AvailableDatePriceResponse findAvailableDatesWithStatus(Long productId) {
 
         List<AvailableDateTime> availableTimes = availableTimeRepository.findByProductId(productId);
 
+        BigDecimal rentalPrice = getProduct(productId).getPrice();
 
-        return availableTimes.stream()
+        List<AvailableDateResponse> availableDates = availableTimes.stream()
                 .collect(Collectors.groupingBy(
                         AvailableDateTime::getLocalDate,
                         TreeMap::new, // 날짜를 오름차순으로 정렬
@@ -167,34 +171,35 @@ public class AvailableTimeService {
                     String dateStatus = allDeleted ? DELETED.name()
                             : (hasOpen ? OPEN.name() : USED.name());
 
-                    return AvailableTimeResponse.builder()
+                    return AvailableDateResponse.builder()
                             .productId(productId)
                             .localDate(date)
                             .rentStatus(dateStatus)
                             .build();
                 })
                 .toList();
+
+        return new AvailableDatePriceResponse(availableDates, rentalPrice);
     }
 
 
 
     // 픽업 가능한 시간대 조회
-    public List<AvailableTimeSlotResponse> findAvailableTimesForDate(Long productId, LocalDate targetDate) {
-
-//        // DELETED 상태를 제외하고 조회
-//        List<AvailableDateTime> availableTimes =
-//                availableTimeRepository.findByProductIdAndLocalDateAndStatus(productId, targetDate, DELETED);
+    public AvailableTimeSlotPriceResponse findAvailableTimesForDate(Long productId, LocalDate targetDate) {
 
         List<AvailableDateTime> availableTimes =
                 availableTimeRepository.findByProductIdAndLocalDate(productId,targetDate);
 
-        return availableTimes.stream()
+        BigDecimal rentalPrice = getProduct(productId).getPrice();
+
+        List<AvailableTimeSlotResponse> availableTimeSlots= availableTimes.stream()
                 .map(slot ->AvailableTimeSlotResponse.builder()
                         .time(slot.getLocalTime())
                         .status(slot.getRentStatus().name())
                         .availableDateTimeId(slot.getId())
                         .build())
                 .toList();
+        return new AvailableTimeSlotPriceResponse(availableTimeSlots,rentalPrice);
     }
 
     private Product getProduct(final Long productId){

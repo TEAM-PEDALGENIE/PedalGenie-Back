@@ -2,6 +2,7 @@ package com.pedalgenie.pedalgenieback.domain.rent.dto.response;
 
 import com.pedalgenie.pedalgenieback.domain.rent.entity.Rent;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -16,7 +17,7 @@ public record RentDetailResponse(
         LocalDate rentStartDate,
         LocalDate rentEndDate,
         Long rentDuration,
-        Double price,
+        BigDecimal price,
         LocalDateTime rentStartDateTime, // 픽업시간
         String memberName,
         LocalDate paymentDate

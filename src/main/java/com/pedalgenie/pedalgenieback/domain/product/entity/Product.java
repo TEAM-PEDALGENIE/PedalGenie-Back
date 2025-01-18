@@ -10,6 +10,7 @@ import com.pedalgenie.pedalgenieback.global.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static jakarta.persistence.CascadeType.REMOVE;
@@ -37,7 +38,7 @@ public class Product extends BaseTimeEntity {
     private Integer rentQuantity;
 
     @Column(nullable = false)
-    private Double price;
+    private BigDecimal price;
 
     @Column(nullable = false)
     private Boolean isRentable;
@@ -68,7 +69,7 @@ public class Product extends BaseTimeEntity {
 
     @Builder
     public Product(String name, Double rentPricePerDay,
-                   Integer rentQuantity, Double price, Shop shop, SubCategory subCategory,
+                   Integer rentQuantity, BigDecimal price, Shop shop, SubCategory subCategory,
                    Boolean isRentable, Boolean isPurchasable, Boolean isDemoable, String descriptionUrl
                    ){
 
