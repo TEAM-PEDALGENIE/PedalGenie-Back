@@ -8,7 +8,7 @@ import java.util.List;
 public record ShopResponse(
         Long shopId, // shopId 추가
         String shopname,
-        String ShopImageUrl,
+        String shopImageUrl,
 
         Boolean isLiked,
         // 해당 매장이 보유한 상품 리스트
