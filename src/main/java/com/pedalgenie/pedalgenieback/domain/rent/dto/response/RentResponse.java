@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -32,18 +33,18 @@ public class RentResponse { // 예약 생성 이후 조회
     // 추가
     private Long productId;
     private String productName;
-    private Double price;
-    private Double fee;
-    private Double totalPrice;
+    private BigDecimal price;
+    private BigDecimal fee;
+    private BigDecimal totalPrice;
 
     private Long availableDateTimeId;
 
 
     public static RentResponse from(final Rent rent){
 
-        Double price = rent.getProduct().getPrice();
-        Double fee = price * 0.1; // 수수료 계산
-        Double totalPrice = price + fee; // 총 금액 계산
+        BigDecimal price = rent.getProduct().getPrice();
+        BigDecimal fee = price.multiply(BigDecimal.valueOf(0.1)); // 수수료 계산
+        BigDecimal totalPrice = price.add(fee); // 총 금액 계산
 
 
         return RentResponse.builder()
@@ -54,7 +55,7 @@ public class RentResponse { // 예약 생성 이후 조회
                 .pickUpTime(rent.getAvailableDateTime().getLocalTime())
                 .productId(rent.getProduct().getId())
                 .productName(rent.getProduct().getName())
-                .price(rent.getProduct().getPrice())
+                .price(price)
                 .fee(fee)
                 .totalPrice(totalPrice)
                 .availableDateTimeId(rent.getAvailableDateTime().getId())

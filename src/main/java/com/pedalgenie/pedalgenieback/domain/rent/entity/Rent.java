@@ -158,16 +158,17 @@ public class Rent {
 
     }
 
-    // 대여 취소 메서드
-    public void cancel() {
-        validateCancelable(); // 취소 가능 여부 검증
-        this.rentStatusType = RentStatusType.CANCELED; // 상태를 취소로 변경
+    // 대여 취소 접수
+    public void cancelRequested() {
+
+        validateCancelRequest(); // 취소 가능 여부 검증
+        this.rentStatusType = RentStatusType.CANCEL_REQUESTED; // 취소 접수
 
         product.increaseStock(1); // 대여 가능 수량 증가
     }
 
     // 취소 가능 여부 검증
-    private void validateCancelable() {
+    private void validateCancelRequest() {
         LocalDateTime currentTime = LocalDateTime.now();
 
         // 대여 시작일 하루 전까지 취소 가능
@@ -175,10 +176,16 @@ public class Rent {
             throw new CustomException(ErrorCode.RENT_CANCELLATION_DEADLINE_EXCEEDED);
         }
 
-        // 이미 취소된 대여는 다시 취소 불가
-        if (this.rentStatusType == RentStatusType.CANCELED) {
+    }
+    // 대여 취소 완료
+    public void cancelCompleted(){
+
+        // 이미 취소되었을 때
+        if (this.rentStatusType == RentStatusType.CANCEL_COMPLETED) {
             throw new CustomException(ErrorCode.RENT_ALREADY_CANCELED);
         }
+        this.rentStatusType = RentStatusType.CANCEL_COMPLETED;
+
     }
 
 

@@ -1,7 +1,9 @@
 package com.pedalgenie.pedalgenieback.domain.available.presentation;
 
 import com.pedalgenie.pedalgenieback.domain.available.application.AvailableTimeService;
-import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableTimeResponse;
+import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableDatePriceResponse;
+import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableDateResponse;
+import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableTimeSlotPriceResponse;
 import com.pedalgenie.pedalgenieback.domain.available.dto.AvailableTimeSlotResponse;
 import com.pedalgenie.pedalgenieback.domain.available.repository.AvailableTimeRepository;
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
@@ -22,18 +24,18 @@ public class AvailableTimeController {
     private final AvailableTimeRepository availableTimeRepository;
 
     @GetMapping("/dates/{productId}")
-    public ResponseEntity<ResponseTemplate<List<AvailableTimeResponse>>> getAvailableDates(@PathVariable Long productId) {
-        List<AvailableTimeResponse> availableDate = availableTimeService.findAvailableDatesWithStatus(productId);
+    public ResponseEntity<ResponseTemplate<AvailableDatePriceResponse>> getAvailableDates(@PathVariable Long productId) {
+        AvailableDatePriceResponse availableDate = availableTimeService.findAvailableDatesWithStatus(productId);
 
         return ResponseTemplate.createTemplate(HttpStatus.CREATED,true,"대여 가능 날짜 조회 성공", availableDate);
     }
 
     @GetMapping("/times/{productId}")
-    public ResponseEntity<ResponseTemplate<List<AvailableTimeSlotResponse>>> getAvailableTimes(
+    public ResponseEntity<ResponseTemplate<AvailableTimeSlotPriceResponse>> getAvailableTimes(
             @PathVariable Long productId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate targetDate) {
 
-        List<AvailableTimeSlotResponse> availableTimes =
+        AvailableTimeSlotPriceResponse availableTimes =
                 availableTimeService.findAvailableTimesForDate(productId, targetDate);
 
         return ResponseTemplate.createTemplate(HttpStatus.CREATED,true,"대여 가능 시간 조회 성공",availableTimes);
