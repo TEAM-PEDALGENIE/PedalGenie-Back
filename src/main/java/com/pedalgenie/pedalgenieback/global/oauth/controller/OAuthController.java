@@ -27,7 +27,7 @@ public class OAuthController {
 
     // 카카오 로그인
     @Operation(summary="카카오 로그인")
-    @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*", allowCredentials = "true")
+//    @CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*", allowCredentials = "true")
     @GetMapping("/kakao/callback")
     public ResponseEntity<ResponseTemplate<Object>> loginKakao(@RequestParam("code") String authorizationCode, HttpServletResponse response) {
         // 카카오 로그인
