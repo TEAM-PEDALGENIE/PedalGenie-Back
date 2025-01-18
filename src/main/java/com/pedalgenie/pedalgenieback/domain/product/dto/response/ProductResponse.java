@@ -15,7 +15,10 @@ public record ProductResponse(
         Boolean isRentable,
         Boolean isPurchasable,
         Boolean isDemoable,
-        String thumbnailImage, // 여기 추가
+//        String thumbnailImage, // 여기 추가
+
+        String imageUrl,
+
         Boolean isLiked
 ) {
 

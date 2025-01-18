@@ -10,7 +10,7 @@ public record ArticleProductResponseDto(
         Long shopId,
         String shopName,
         Double rentPricePerDay,
-        String thumbnailImage,
+        String imageUrl,
         Boolean isLiked
 ) {
     public static ArticleProductResponseDto from(final Product product, String thumbnailImage, Boolean isLiked) {
