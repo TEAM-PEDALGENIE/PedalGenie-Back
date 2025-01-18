@@ -61,6 +61,6 @@ public record GetShopResponse (
                 ? "\n" + shopHours.getBreakStartTime() + "-" + shopHours.getBreakEndTime()
                 : "";
 
-        return dayType + ": " + timeRange + breakTime;
+        return dayType + " " + timeRange + breakTime;
     }
 }
