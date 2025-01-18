@@ -8,8 +8,9 @@ import com.pedalgenie.pedalgenieback.domain.productImage.application.dto.Product
 @JsonInclude(JsonInclude.Include.NON_NULL) // null인 필드 제외
 public record ProductResponse(
         Long id,
-        String shopName,
         String name,
+        Long shopId,
+        String shopName,
         Double rentPricePerDay,
         Boolean isRentable,
         Boolean isPurchasable,
@@ -21,8 +22,9 @@ public record ProductResponse(
     public static ProductResponse from(final Product product, ProductImageDto productImage, Boolean isLiked){
         return new ProductResponse(
                 product.getId(),
-                product.getShop().getShopname(),
                 product.getName(),
+                product.getShop().getId(),
+                product.getShop().getShopname(),
                 product.getRentPricePerDay(),
                 product.getIsRentable(),
                 product.getIsPurchasable(),
