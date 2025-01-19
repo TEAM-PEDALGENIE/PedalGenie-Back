@@ -11,7 +11,7 @@ public record FilterRequest(
         Boolean isDemoable,
         SortBy sortBy,
         @Size(max = 10, message = "카테고리는 최대 10개까지 선택할 수 있습니다.")
-        List<Long> subCategoryIds
+        List<String> subCategoryNames
 ) {
 
 
@@ -20,8 +20,8 @@ public record FilterRequest(
             Boolean isPurchasable,
             Boolean isDemoable,
             SortBy sortBy,
-            List<Long> subCategoryIds
+            List<String> subCategoryNames
     ){
-        return new FilterRequest(isRentable,isPurchasable,isDemoable, sortBy, subCategoryIds);
+        return new FilterRequest(isRentable,isPurchasable,isDemoable, sortBy, subCategoryNames);
     }
 }

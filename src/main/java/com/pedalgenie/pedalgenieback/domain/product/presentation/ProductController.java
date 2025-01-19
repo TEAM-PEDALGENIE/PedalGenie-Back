@@ -42,7 +42,7 @@ public class ProductController {
             @RequestParam(required = false) Boolean isPurchasable,
             @RequestParam(required = false) Boolean isDemoable,
             @RequestParam(required = false) SortBy sortBy,
-            @RequestParam(required = false) List<Long> subCategoryIds,
+            @RequestParam(required = false) List<String> subCategoryNames,
             @RequestHeader(value = "Authorization", required = false) String authorizationHeader,
             Pageable pageable
 
@@ -53,7 +53,7 @@ public class ProductController {
                 isPurchasable,
                 isDemoable,
                 sortBy,
-                subCategoryIds);
+                subCategoryNames);
 
         Long memberId = null;
 

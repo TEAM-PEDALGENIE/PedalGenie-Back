@@ -5,6 +5,8 @@ import com.pedalgenie.pedalgenieback.domain.product.dto.request.FilterRequest;
 import com.pedalgenie.pedalgenieback.domain.product.dto.response.GetProductQueryResponse;
 import com.pedalgenie.pedalgenieback.domain.product.dto.response.QGetProductQueryResponse;
 import com.pedalgenie.pedalgenieback.domain.product.application.SortBy;
+import com.pedalgenie.pedalgenieback.domain.subcategory.entity.SubCategory;
+import com.pedalgenie.pedalgenieback.domain.subcategory.repository.SubcategoryRepository;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -27,6 +29,7 @@ import static com.pedalgenie.pedalgenieback.domain.productImage.QProductImage.pr
 public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;
+    private final SubcategoryRepository subcategoryRepository;
 
     @Override
     public Page<GetProductQueryResponse> findPagingProducts(
@@ -38,7 +41,11 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
         Boolean isRentable = request.isRentable();
         Boolean isPurchasable = request.isPurchasable();
         Boolean isDemoable = request.isDemoable();
-        List<Long> subCategoryIds = request.subCategoryIds();
+        List<String> subCategoryNames = request.subCategoryNames();
+
+        // 서브카테고리 이름으로 id 조회
+        List<Long> subCategoryIds = getSubCategoryIdsByNames(category, subCategoryNames);
+
 
         // memberId 가 null 일 때 처리
         BooleanBuilder likeCondition = new BooleanBuilder();
@@ -160,6 +167,17 @@ public class ProductQueryRepositoryImpl implements ProductQueryRepositoryCustom{
         }
 
         return product.id.desc();// 기본 정렬 최신순
+    }
+    // SubCategoryName을 사용하여 SubCategory ID 조회
+    private List<Long> getSubCategoryIdsByNames(Category category, List<String> subCategoryNames) {
+        if (subCategoryNames == null || subCategoryNames.isEmpty()) {
+            return List.of();
+        }
+        List<SubCategory> subCategories = subcategoryRepository.findByCategory(category);
+        return subCategories.stream()
+                .filter(subCategory -> subCategoryNames.contains(subCategory.getName()))
+                .map(SubCategory::getId) // 이름과 매칭되는 id 추출
+                .toList();
     }
 
 

@@ -43,8 +43,10 @@ public class ProductQueryService {
             Long memberId,
             Pageable pageable) {
 
+
         Page<GetProductQueryResponse> products =productQueryRepository
                 .findPagingProducts(category, request, memberId, pageable);
+
 
         return products.stream()
                 .map(product -> {
