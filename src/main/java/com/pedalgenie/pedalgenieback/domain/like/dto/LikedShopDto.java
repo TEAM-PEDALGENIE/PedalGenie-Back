@@ -9,4 +9,5 @@ public class LikedShopDto {
     private Long shopId;
     private String shopName;
     private String thumbNailUrl;
+    private Boolean isLiked;
 }
