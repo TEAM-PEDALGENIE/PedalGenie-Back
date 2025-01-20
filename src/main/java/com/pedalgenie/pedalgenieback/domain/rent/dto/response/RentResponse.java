@@ -30,12 +30,12 @@ public class RentResponse { // 예약 생성 이후 조회
 
     private LocalTime pickUpTime;
 
-    // 추가
+
     private Long productId;
     private String productName;
-    private BigDecimal price;
-    private BigDecimal fee;
-    private BigDecimal totalPrice;
+    private Long price;
+    private Long fee;
+    private Long totalPrice;
 
     private Long availableDateTimeId;
 
@@ -46,6 +46,11 @@ public class RentResponse { // 예약 생성 이후 조회
         BigDecimal fee = price.multiply(BigDecimal.valueOf(0.1)); // 수수료 계산
         BigDecimal totalPrice = price.add(fee); // 총 금액 계산
 
+        Long priceLong = price.longValue();
+        Long feeLong = fee.longValue();
+        Long totalPriceLong = totalPrice.longValue();
+
+
 
         return RentResponse.builder()
                 .rentId(rent.getId())
@@ -55,9 +60,9 @@ public class RentResponse { // 예약 생성 이후 조회
                 .pickUpTime(rent.getAvailableDateTime().getLocalTime())
                 .productId(rent.getProduct().getId())
                 .productName(rent.getProduct().getName())
-                .price(price)
-                .fee(fee)
-                .totalPrice(totalPrice)
+                .price(priceLong)
+                .fee(feeLong)
+                .totalPrice(totalPriceLong)
                 .availableDateTimeId(rent.getAvailableDateTime().getId())
                 .build();
     }
