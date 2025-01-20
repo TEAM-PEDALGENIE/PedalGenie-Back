@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-import static com.pedalgenie.pedalgenieback.domain.rent.entity.RentStatusType.ORDER_PENDING;
+import static com.pedalgenie.pedalgenieback.domain.rent.entity.RentStatusType.주문_확인_중;
 
 @Getter
 @Entity
@@ -68,7 +68,7 @@ public class Rent {
                 final LocalDateTime rentEndTime,
                 final Product product,
                 final Member member) {
-        this(null, availableDateTime, rentStartTime, rentEndTime, product, member, ORDER_PENDING);
+        this(null, availableDateTime, rentStartTime, rentEndTime, product, member, 주문_확인_중);
     }
 
 
@@ -127,33 +127,33 @@ public class Rent {
     public void updateToPickUp(){
 
         // 주문 확인 중 상태인지 확인
-        if(!getRentStatusType().equals(RentStatusType.ORDER_PENDING)){
+        if(!getRentStatusType().equals(RentStatusType.주문_확인_중)){
             throw new CustomException(ErrorCode.INVALID_ORDER_PENDING_STATE);
         }
 
-        this.rentStatusType=RentStatusType.PICKUP_SCHEDULED;
+        this.rentStatusType=RentStatusType.픽업_예정;
     }
 
     // 렌트 상태 사용 중으로 변경
     public void updateToRent(){
 
         // 픽업 예정 상태인지 확인
-        if(!getRentStatusType().equals(RentStatusType.PICKUP_SCHEDULED)){
+        if(!getRentStatusType().equals(RentStatusType.픽업_예정)){
             throw new CustomException(ErrorCode.INVALID_PICKUP_STATE);
         }
 
-        this.rentStatusType=RentStatusType.RENTED;
+        this.rentStatusType=RentStatusType.사용_중;
     }
 
     // 렌트 상태 반납완료로 변경
     public void updateToRETURND(){
 
         // 사용 중 상태인지 확인
-        if(!getRentStatusType().equals(RentStatusType.RENTED)){
+        if(!getRentStatusType().equals(RentStatusType.사용_중)){
             throw new CustomException(ErrorCode.INVALID_RENTED_STATE);
         }
 
-        this.rentStatusType=RentStatusType.RETURNED;
+        this.rentStatusType=RentStatusType.반납_완료;
         product.increaseStock(1); // 대여 가능 수량 증가
 
     }
@@ -162,7 +162,7 @@ public class Rent {
     public void cancelRequested() {
 
         validateCancelRequest(); // 취소 가능 여부 검증
-        this.rentStatusType = RentStatusType.CANCEL_REQUESTED; // 취소 접수
+        this.rentStatusType = RentStatusType.취소_접수; // 취소 접수
 
         product.increaseStock(1); // 대여 가능 수량 증가
     }
@@ -181,10 +181,10 @@ public class Rent {
     public void cancelCompleted(){
 
         // 이미 취소되었을 때
-        if (this.rentStatusType == RentStatusType.CANCEL_COMPLETED) {
+        if (this.rentStatusType == RentStatusType.취소_완료) {
             throw new CustomException(ErrorCode.RENT_ALREADY_CANCELED);
         }
-        this.rentStatusType = RentStatusType.CANCEL_COMPLETED;
+        this.rentStatusType = RentStatusType.취소_완료;
 
     }
 
