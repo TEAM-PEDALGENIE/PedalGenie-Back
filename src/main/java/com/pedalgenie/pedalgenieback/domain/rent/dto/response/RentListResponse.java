@@ -9,7 +9,7 @@ import java.time.LocalTime;
 public record RentListResponse(
 
         Long rentId,
-        String status,
+        String rentStatus,
         LocalDateTime rentStartTime,
         LocalDateTime rentEndTime,
         LocalTime pickUpTime,
