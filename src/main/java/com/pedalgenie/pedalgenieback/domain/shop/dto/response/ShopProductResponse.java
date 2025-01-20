@@ -10,7 +10,7 @@ public record ShopProductResponse(
         Long id,
         String name,
         Double rentPricePerDay,
-        String thumbnailImage,
+        String imageUrl,
         Boolean isLiked
 
 ) {
