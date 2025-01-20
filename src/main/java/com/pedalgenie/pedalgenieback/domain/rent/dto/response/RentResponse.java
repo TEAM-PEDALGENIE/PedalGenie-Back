@@ -20,7 +20,7 @@ import java.time.LocalTime;
 public class RentResponse { // 예약 생성 이후 조회
 
     private Long rentId;
-    private RentStatusType status;
+    private RentStatusType rentStatus;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
     private LocalDateTime rentStartTime;
@@ -54,7 +54,7 @@ public class RentResponse { // 예약 생성 이후 조회
 
         return RentResponse.builder()
                 .rentId(rent.getId())
-                .status(rent.getRentStatusType())
+                .rentStatus(rent.getRentStatusType())
                 .rentStartTime(rent.getAvailableDateTime().getLocalDate().atTime(rent.getAvailableDateTime().getLocalTime()))
                 .rentEndTime(rent.getRentEndTime())
                 .pickUpTime(rent.getAvailableDateTime().getLocalTime())
