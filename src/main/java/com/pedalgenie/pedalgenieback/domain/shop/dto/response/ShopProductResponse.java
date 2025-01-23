@@ -11,7 +11,8 @@ public record ShopProductResponse(
         String name,
         Double rentPricePerDay,
         String imageUrl,
-        Boolean isLiked
+        Boolean isLiked,
+        Long shopId
 
 ) {
 
@@ -21,7 +22,8 @@ public record ShopProductResponse(
                 product.getName(),
                 product.getRentPricePerDay(),
                 productImage != null ? productImage.imageUrl() : null,
-                isLiked
+                isLiked,
+                product.getShop().getId()
         );
     }
 }
