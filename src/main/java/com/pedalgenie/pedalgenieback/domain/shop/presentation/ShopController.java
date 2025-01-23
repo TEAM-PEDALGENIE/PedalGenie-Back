@@ -11,6 +11,7 @@ import com.pedalgenie.pedalgenieback.domain.shop.dto.response.ShopCreateResponse
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
 import com.pedalgenie.pedalgenieback.global.jwt.TokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,14 +29,15 @@ public class ShopController {
 
     @Operation(summary = "매장 목록 조회")
     @GetMapping("/shops")
-    public ResponseEntity<ResponseTemplate<GetShopsResponses>> getShops(@RequestHeader(value = "Authorization", required = false) String authorizationHeader){
-
+    public ResponseEntity<ResponseTemplate<GetShopsResponses>> getShops(HttpServletRequest request){
         Long memberId = null;
+        // 쿠키에서 리프레시 토큰 추출 및 유효성 검증
+        String refreshToken = tokenProvider.getRefreshTokenFromRequest(request);
+        Boolean isValid = tokenProvider.isVaildRefreshToken(refreshToken);
 
-        // 토큰이 있는 경우 memberId 추출
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring(7);
-            memberId = tokenProvider.getMemberIdFromToken(token);
+        // 리프레시 토큰이 유효할 때 memberId 추출
+        if(isValid) {
+            memberId = tokenProvider.getMemberIdFromToken(refreshToken);
         }
         GetShopsResponses getShopsResponses = shopQueryService.readShops(memberId);
         return ResponseTemplate.createTemplate(HttpStatus.OK,true,"매장 목록 조회 성공", getShopsResponses);
@@ -43,17 +45,16 @@ public class ShopController {
     }
     @Operation(summary = "매장 상세 조회")
     @GetMapping("/shops/{id}")
-    public ResponseEntity<ResponseTemplate<GetShopResponse>> getShopDetails(@PathVariable Long id,
-                                                                            @RequestHeader(value = "Authorization", required = false) String authorizationHeader){
-
+    public ResponseEntity<ResponseTemplate<GetShopResponse>> getShopDetails(@PathVariable Long id, HttpServletRequest request){
         Long memberId = null;
+        // 쿠키에서 리프레시 토큰 추출 및 유효성 검증
+        String refreshToken = tokenProvider.getRefreshTokenFromRequest(request);
+        Boolean isValid = tokenProvider.isVaildRefreshToken(refreshToken);
 
-        // 토큰이 있는 경우 memberId 추출
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring(7);
-            memberId = tokenProvider.getMemberIdFromToken(token);
+        // 리프레시 토큰이 유효할 때 memberId 추출
+        if(isValid) {
+            memberId = tokenProvider.getMemberIdFromToken(refreshToken);
         }
-
         GetShopResponse response = shopQueryService.readShop(id, memberId);
         return ResponseTemplate.createTemplate(HttpStatus.OK, true, "매장 상세 조회 성공", response);
 

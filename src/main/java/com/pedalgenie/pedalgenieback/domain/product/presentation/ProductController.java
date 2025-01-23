@@ -14,6 +14,7 @@ import com.pedalgenie.pedalgenieback.domain.subcategory.dto.FilterSubCategoryRes
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
 import com.pedalgenie.pedalgenieback.global.jwt.TokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -43,7 +44,7 @@ public class ProductController {
             @RequestParam(required = false) Boolean isDemoable,
             @RequestParam(required = false) SortBy sortBy,
             @RequestParam(required = false) List<String> subCategoryNames,
-            @RequestHeader(value = "Authorization", required = false) String authorizationHeader,
+            HttpServletRequest httpRequest,
             Pageable pageable
 
     ){
@@ -56,11 +57,13 @@ public class ProductController {
                 subCategoryNames);
 
         Long memberId = null;
+        // 쿠키에서 리프레시 토큰 추출 및 유효성 검증
+        String refreshToken = tokenProvider.getRefreshTokenFromRequest(httpRequest);
+        Boolean isValid = tokenProvider.isVaildRefreshToken(refreshToken);
 
-        // 토큰이 있는 경우 memberId 추출
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring(7);
-            memberId = tokenProvider.getMemberIdFromToken(token);
+        // 리프레시 토큰이 유효할 때 memberId 추출
+        if(isValid) {
+            memberId = tokenProvider.getMemberIdFromToken(refreshToken);
         }
 
         List<GetProductQueryResponse> response = productQueryService
@@ -101,14 +104,16 @@ public class ProductController {
     @Operation(summary = "상품 상세 조회")
     @GetMapping("/products/{id}")
     public ResponseEntity<ResponseTemplate<GetProductResponse>> getProduct(@PathVariable Long id,
-                                                                           @RequestHeader(value = "Authorization", required = false) String authorizationHeader){
+                                                                           HttpServletRequest request){
 
         Long memberId = null;
+        // 쿠키에서 리프레시 토큰 추출 및 유효성 검증
+        String refreshToken = tokenProvider.getRefreshTokenFromRequest(request);
+        Boolean isValid = tokenProvider.isVaildRefreshToken(refreshToken);
 
-        // 토큰이 있는 경우 memberId 추출
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring(7);
-            memberId = tokenProvider.getMemberIdFromToken(token);
+        // 리프레시 토큰이 유효할 때 memberId 추출
+        if(isValid) {
+            memberId = tokenProvider.getMemberIdFromToken(refreshToken);
         }
 
         GetProductResponse getProductResponse = productQueryService.getProductResponse(id, memberId);
