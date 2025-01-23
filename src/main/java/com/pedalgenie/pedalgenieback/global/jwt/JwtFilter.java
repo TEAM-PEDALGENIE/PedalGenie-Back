@@ -58,7 +58,7 @@ public class JwtFilter extends OncePerRequestFilter {
         } catch (CustomException e) {
             // 엑세스 토큰 만료시 리프레시 토큰으로 엑세스토큰 재발급
             if (e.getErrorCode() == ErrorCode.TOKEN_EXPIRED) {
-                String refreshToken = getRefreshTokenFromRequest(request);
+                String refreshToken = tokenProvider.getRefreshTokenFromRequest(request);
                 
                 // 리프레시 토큰이 없는 경우 예외 처리
                 if (refreshToken == null || refreshToken.trim().isEmpty()) {
@@ -126,8 +126,7 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
 
-
-    // 요청 헤더에서 엑세스 을 추출하는 메서드
+    // 요청 헤더에서 엑세스 토큰을 추출하는 메서드
     private String getTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
@@ -136,16 +135,4 @@ public class JwtFilter extends OncePerRequestFilter {
         return null;
     }
 
-    // 쿠키에서 리프레시 토큰 추출하는 메서드
-    private String getRefreshTokenFromRequest(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("refreshToken".equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
-    }
 }

@@ -7,6 +7,8 @@ import com.pedalgenie.pedalgenieback.global.jwt.refresh.RefreshTokenRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -99,6 +101,9 @@ public class TokenProvider {
 
     // 토큰에서 memberId 추출 메서드
     public Long getMemberIdFromToken(String token) {
+        if(token == null || token.trim().isEmpty()) {
+            return null; // 토큰이 없는 경우 null 반환
+        }
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
@@ -106,6 +111,34 @@ public class TokenProvider {
                 .getBody();
 
         return Long.valueOf(claims.getSubject());
+    }
+
+
+    // 쿠키에서 리프레시 토큰 추출하는 메서드
+    public String getRefreshTokenFromRequest(HttpServletRequest request) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("refreshToken".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
+    }
+
+    // 리프레시 토큰 유효성 검증 메서드
+    public Boolean isVaildRefreshToken(String refreshToken){
+        // redis에 저장된 리프레시 토큰과 비교
+        Long memberId = getMemberIdFromToken(refreshToken);
+        String redisKey = "refreshToken:" + memberId;
+        Object savedRefreshToken = redisTemplate.opsForValue().get(redisKey);
+        System.out.println("savedRefreshToken = " + savedRefreshToken);
+
+        if (savedRefreshToken == null || !refreshToken.equals(savedRefreshToken)) {
+            return false;
+        }
+        return true;
     }
 
 }
