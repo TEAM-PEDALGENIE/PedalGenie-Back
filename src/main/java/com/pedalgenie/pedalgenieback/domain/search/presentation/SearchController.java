@@ -5,6 +5,7 @@ import com.pedalgenie.pedalgenieback.domain.search.application.SearchService;
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
 import com.pedalgenie.pedalgenieback.global.jwt.TokenProvider;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,21 +25,17 @@ public class SearchController {
 
     @Operation(summary = "상품 또는 매장 검색 성공")
     @GetMapping
-    public ResponseEntity<ResponseTemplate<SearchResponse>> search(
-            @RequestParam String keyword,
-            @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+    public ResponseEntity<ResponseTemplate<SearchResponse>> search(@RequestParam String keyword,HttpServletRequest request) {
+        Long memberId = null;
+        // 쿠키에서 리프레시 토큰 추출 및 유효성 검증
+        String refreshToken = tokenProvider.getRefreshTokenFromRequest(request);
+        Boolean isValid = tokenProvider.isVaildRefreshToken(refreshToken);
 
-        {
-            Long memberId = null;
-
-            // 토큰이 있는 경우 memberId 추출
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                String token = authorizationHeader.substring(7);
-                memberId = tokenProvider.getMemberIdFromToken(token);
-            }
-
-            SearchResponse searchResponse = searchService.search(keyword, memberId);
-            return ResponseTemplate.createTemplate(HttpStatus.OK, true, "상품 또는 매장 검색 성공", searchResponse);
+        // 리프레시 토큰이 유효할 때 memberId 추출
+        if(isValid) {
+            memberId = tokenProvider.getMemberIdFromToken(refreshToken);
         }
+        SearchResponse searchResponse = searchService.search(keyword, memberId);
+        return ResponseTemplate.createTemplate(HttpStatus.OK, true, "상품 또는 매장 검색 성공", searchResponse);
     }
 }
