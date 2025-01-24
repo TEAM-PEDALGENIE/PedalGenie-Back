@@ -23,6 +23,7 @@ public class RentQueryService {
 
 
     // 대여 상세 조회
+    @Transactional(readOnly = true)
     public RentDetailResponse getRentDetail(Long rentId){
         Rent rent = getRent(rentId);
 
@@ -32,6 +33,7 @@ public class RentQueryService {
     }
 
     // 대여 목록 조회
+    @Transactional(readOnly = true)
     public List<RentListResponse> getRentList(Long memberId) {
 
         List<Rent> rents = rentRepository.findAllByMemberId(memberId);
