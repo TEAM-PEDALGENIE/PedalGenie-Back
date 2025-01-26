@@ -1,5 +1,6 @@
 package com.pedalgenie.pedalgenieback.domain.rent.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.pedalgenie.pedalgenieback.domain.rent.entity.Rent;
 
 import java.math.BigDecimal;
@@ -14,12 +15,16 @@ public record RentDetailResponse(
         String productImage,
         String shopName,
         String shopDetailAddress,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd")
         LocalDate rentStartDate,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd")
         LocalDate rentEndDate,
         Long rentDuration,
-        BigDecimal rentPricePerDay,
+        Long rentPricePerDay,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd'T'HH:mm")
         LocalDateTime rentStartDateTime, // 픽업시간
         String memberName,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd")
         LocalDate paymentDate
 
 ) {
@@ -32,6 +37,8 @@ public record RentDetailResponse(
                 rent.getRentEndTime()
         ).toDays(); // 대여 기간 계산
 
+        Long rentPricePerDayLong = rent.getProduct().getRentPricePerDay().longValue();
+
 
         return new RentDetailResponse(
                 rent.getId(),
@@ -40,10 +47,10 @@ public record RentDetailResponse(
                 productImageUrl,
                 rent.getProduct().getShop().getShopname(),
                 rent.getProduct().getShop().getDetailAddress(),
-                rent.getRentStartTime().toLocalDate(), // 날짜만 저장
-                rent.getRentEndTime().toLocalDate(),   // 날짜만 저장
+                rent.getRentStartTime().toLocalDate(),
+                rent.getRentEndTime().toLocalDate(),
                 rentDuration,
-                rent.getProduct().getRentPricePerDay(),
+                rentPricePerDayLong,
                 rent.getRentStartTime(),
                 rent.getMember().getNickname(),
                 LocalDate.now()
