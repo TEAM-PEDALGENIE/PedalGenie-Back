@@ -32,7 +32,7 @@ public class Product extends BaseTimeEntity {
     private String name;
 
     @Column(nullable = false)
-    private Double rentPricePerDay;
+    private BigDecimal rentPricePerDay;
 
     @Column(nullable = false)
     private Integer rentQuantity;
@@ -51,7 +51,7 @@ public class Product extends BaseTimeEntity {
 
     private String descriptionUrl; // 상품 설명 이미지
 
-    private Double deposit; // 보증금
+    private BigDecimal deposit; // 보증금
 
     @ManyToOne
     @JoinColumn(name = "shop_id")
@@ -68,7 +68,7 @@ public class Product extends BaseTimeEntity {
     private List<ProductLike> productLikes;
 
     @Builder
-    public Product(String name, Double rentPricePerDay,
+    public Product(String name, BigDecimal rentPricePerDay,
                    Integer rentQuantity, BigDecimal price, Shop shop, SubCategory subCategory,
                    Boolean isRentable, Boolean isPurchasable, Boolean isDemoable, String descriptionUrl
                    ){

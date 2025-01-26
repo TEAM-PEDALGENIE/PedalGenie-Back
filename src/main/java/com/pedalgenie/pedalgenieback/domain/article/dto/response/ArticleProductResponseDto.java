@@ -3,13 +3,15 @@ package com.pedalgenie.pedalgenieback.domain.article.dto.response;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 
+import java.math.BigDecimal;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ArticleProductResponseDto(
         Long id,
         String name,
         Long shopId,
         String shopName,
-        Double rentPricePerDay,
+        BigDecimal rentPricePerDay,
         String imageUrl,
         Boolean isLiked
 ) {

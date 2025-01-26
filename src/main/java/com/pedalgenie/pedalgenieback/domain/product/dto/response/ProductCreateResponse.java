@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 public record ProductCreateResponse(
         Long id,
         String name,
-        Double rentPricePerDay,
+        BigDecimal rentPricePerDay,
         Integer rentQuantityPerDay,
         BigDecimal price,
         Boolean isRentable,

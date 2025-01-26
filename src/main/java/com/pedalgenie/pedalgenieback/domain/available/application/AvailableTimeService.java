@@ -151,7 +151,7 @@ public class AvailableTimeService {
 
         List<AvailableDateTime> availableTimes = availableTimeRepository.findByProductId(productId);
 
-        BigDecimal rentalPrice = getProduct(productId).getPrice();
+        BigDecimal rentalPrice = getProduct(productId).getRentPricePerDay();
 
         List<AvailableDateResponse> availableDates = availableTimes.stream()
                 .collect(Collectors.groupingBy(
@@ -190,7 +190,7 @@ public class AvailableTimeService {
         List<AvailableDateTime> availableTimes =
                 availableTimeRepository.findByProductIdAndLocalDate(productId,targetDate);
 
-        BigDecimal rentalPrice = getProduct(productId).getPrice();
+        BigDecimal rentalPrice = getProduct(productId).getRentPricePerDay();
 
         List<AvailableTimeSlotResponse> availableTimeSlots= availableTimes.stream()
                 .map(slot ->AvailableTimeSlotResponse.builder()

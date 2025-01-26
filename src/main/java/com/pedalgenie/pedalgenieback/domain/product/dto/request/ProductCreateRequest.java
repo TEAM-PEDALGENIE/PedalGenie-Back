@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ProductCreateRequest(
         String name,
-        Double rentPricePerDay,
+        BigDecimal rentPricePerDay,
         Integer rentQuantity,
         BigDecimal price,
         Boolean isRentable,
@@ -20,7 +20,7 @@ public record ProductCreateRequest(
 ) {
     public static ProductCreateRequest of(
             String name,
-            Double rentPricePerDay,
+            BigDecimal rentPricePerDay,
             Integer rentQuantity,
             BigDecimal price,
             Boolean isRentable,

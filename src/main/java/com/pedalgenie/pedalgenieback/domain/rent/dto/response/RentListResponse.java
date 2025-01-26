@@ -1,6 +1,7 @@
 package com.pedalgenie.pedalgenieback.domain.rent.dto.response;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.pedalgenie.pedalgenieback.domain.rent.entity.Rent;
 
 import java.time.LocalDateTime;
@@ -10,7 +11,11 @@ public record RentListResponse(
 
         Long rentId,
         String rentStatus,
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd'T'HH:mm")
         LocalDateTime rentStartTime,
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy.MM.dd'T'HH:mm")
         LocalDateTime rentEndTime,
         LocalTime pickUpTime,
         Long productId,

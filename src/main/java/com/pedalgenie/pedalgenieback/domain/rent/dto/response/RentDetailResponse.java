@@ -17,7 +17,7 @@ public record RentDetailResponse(
         LocalDate rentStartDate,
         LocalDate rentEndDate,
         Long rentDuration,
-        BigDecimal price,
+        BigDecimal rentPricePerDay,
         LocalDateTime rentStartDateTime, // 픽업시간
         String memberName,
         LocalDate paymentDate
@@ -43,7 +43,7 @@ public record RentDetailResponse(
                 rent.getRentStartTime().toLocalDate(), // 날짜만 저장
                 rent.getRentEndTime().toLocalDate(),   // 날짜만 저장
                 rentDuration,
-                rent.getProduct().getPrice(),
+                rent.getProduct().getRentPricePerDay(),
                 rent.getRentStartTime(),
                 rent.getMember().getNickname(),
                 LocalDate.now()
