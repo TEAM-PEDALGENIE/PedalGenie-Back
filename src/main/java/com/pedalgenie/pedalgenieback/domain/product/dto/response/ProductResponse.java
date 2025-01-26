@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 import com.pedalgenie.pedalgenieback.domain.productImage.application.dto.ProductImageDto;
 
+import java.math.BigDecimal;
+
 // api 응답 전용
 @JsonInclude(JsonInclude.Include.NON_NULL) // null인 필드 제외
 public record ProductResponse(
@@ -11,14 +13,11 @@ public record ProductResponse(
         String name,
         Long shopId,
         String shopName,
-        Double rentPricePerDay,
+        BigDecimal rentPricePerDay,
         Boolean isRentable,
         Boolean isPurchasable,
         Boolean isDemoable,
-//        String thumbnailImage, // 여기 추가
-
         String imageUrl,
-
         Boolean isLiked
 ) {
 
