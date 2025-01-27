@@ -76,6 +76,9 @@ dependencies {
 	implementation 'software.amazon.awssdk:s3:2.20.121'
 	implementation 'software.amazon.awssdk:url-connection-client:2.20.121'
 
+	// Firebase Admin SDK
+	implementation 'com.google.firebase:firebase-admin:7.3.0'
+
 }
 
 tasks.named('test') {

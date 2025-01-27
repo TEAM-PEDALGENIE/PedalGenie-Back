@@ -5,7 +5,8 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableConfigurationProperties({
-        AwsS3Credentials.class
+        AwsS3Credentials.class,
+        FCMProperties.class
 })
 public class AdditionalConfig {
 }

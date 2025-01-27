@@ -55,3 +55,8 @@ holiday-api:
   uri: ${HOLIDAY_API_URI}
 
 domain: ${DOMAIN}
+
+#firebase 설정
+firebase:
+  config: ${FIREBASE_CONFIG_PATH}
+  scope: ${FIREBASE_SCOPE}

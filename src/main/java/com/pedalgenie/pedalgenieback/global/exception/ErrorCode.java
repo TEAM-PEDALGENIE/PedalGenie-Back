@@ -83,7 +83,10 @@ public enum ErrorCode {
     ALREADY_LIKED(HttpStatus.CONFLICT, 409, "이미 좋아요를 눌렀습니다."),
 
     // 500
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500, "서버 오류가 발생했습니다.");
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500, "서버 오류가 발생했습니다."),
+
+    // 501
+    FIREBASE_INITIALIZATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 501, "Firebase 초기화에 실패했습니다.");
 
     private final HttpStatus httpStatus;
     private final int code;
