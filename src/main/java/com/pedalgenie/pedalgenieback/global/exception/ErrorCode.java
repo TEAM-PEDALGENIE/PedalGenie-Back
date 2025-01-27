@@ -86,7 +86,10 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 500, "서버 오류가 발생했습니다."),
 
     // 501
-    FIREBASE_INITIALIZATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 501, "Firebase 초기화에 실패했습니다.");
+    FIREBASE_INITIALIZATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, 501, "Firebase 초기화에 실패했습니다."),
+
+    // 502
+    FAILED_SEND_MESSAGE(HttpStatus.BAD_GATEWAY,502, "FCM 메시지 전송 실패");
 
     private final HttpStatus httpStatus;
     private final int code;
