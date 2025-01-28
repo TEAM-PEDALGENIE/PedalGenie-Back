@@ -1,5 +1,7 @@
 package com.pedalgenie.pedalgenieback.domain.member.service;
 
+import com.pedalgenie.pedalgenieback.domain.demo.application.DemoService;
+import com.pedalgenie.pedalgenieback.domain.like.application.LikeService;
 import com.pedalgenie.pedalgenieback.domain.member.dto.MemberLoginRequestDto;
 import com.pedalgenie.pedalgenieback.domain.member.dto.MemberLoginResponseDto;
 import com.pedalgenie.pedalgenieback.domain.member.dto.MemberRegisterRequestDto;
@@ -7,6 +9,7 @@ import com.pedalgenie.pedalgenieback.domain.member.dto.MemberResponseDto;
 import com.pedalgenie.pedalgenieback.domain.member.entity.Member;
 import com.pedalgenie.pedalgenieback.domain.member.entity.MemberRole;
 import com.pedalgenie.pedalgenieback.domain.member.repository.MemberRepository;
+import com.pedalgenie.pedalgenieback.domain.rent.application.RentService;
 import com.pedalgenie.pedalgenieback.global.exception.CustomException;
 import com.pedalgenie.pedalgenieback.global.exception.ErrorCode;
 import com.pedalgenie.pedalgenieback.global.jwt.CustomUserDetails;
@@ -39,6 +42,10 @@ public class MemberService {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final OAuthService oAuthService;
+    private final LikeService likeService;
+    private final RentService rentService;
+    private final DemoService demoService;
+
 
     // 자체 회원가입 메서드
     @Transactional
@@ -166,7 +173,16 @@ public class MemberService {
             // 카카오 연동 끊기
             oAuthService.unlinkKakao(oauthId);
         }
-        // DB 변경 로직 추가 필요
+        // 연관 관계 데이터 hard delete
+        likeService.deleteProductLikesByMemberId(memberId);
+        likeService.deleteShopLikesByMemberId(memberId);
+
+        // 연관 관계 데이터 soft delete
+        demoService.cancelDemosByMemberId(memberId);
+//        rentService.deleteRentsByMemberId(memberId);
+
+        // 회원 비활성화 soft delete
+//        memberRepository.deleteById(memberId);
     }
 
     // 엑세스 토큰 재발급 메서드

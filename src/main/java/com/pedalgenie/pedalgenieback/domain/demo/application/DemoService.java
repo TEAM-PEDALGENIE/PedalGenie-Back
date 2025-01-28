@@ -402,5 +402,21 @@ public class DemoService {
                 .editedDate(editedDate)
                 .build();
     }
+
+    // 특정 유저의 시연 전체 취소 메서드
+    @Transactional
+    public void cancelDemosByMemberId(Long memberId) {
+        // memberId로 demo 리스트 조회
+        List<Demo> demos = demoRepository.findByMember_memberId(memberId);
+        if (demos.isEmpty()) {
+            return;
+        }
+        // 시연예정 상태 demo를 취소로 변경
+        for (Demo demo : demos) {
+            if (demo.getDemoStatus() == DemoStatus.SCHEDULED) {
+                demo.updateDemoStatus(DemoStatus.CANCELED);
+            }
+        }
+    }
 }
 

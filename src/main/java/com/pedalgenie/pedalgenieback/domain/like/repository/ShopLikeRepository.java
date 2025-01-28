@@ -4,6 +4,7 @@ import com.pedalgenie.pedalgenieback.domain.like.entity.ShopLike;
 import com.pedalgenie.pedalgenieback.domain.member.entity.Member;
 import com.pedalgenie.pedalgenieback.domain.shop.entity.Shop;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -26,5 +27,12 @@ public interface ShopLikeRepository extends JpaRepository<ShopLike, Long> {
     // memberId를 기준으로 상점 좋아요 Id 리스트 반환하는 메서드
     @Query("SELECT sl.shop.id FROM ShopLike sl WHERE sl.member.memberId = :memberId")
     List<Long> findLikedShopIdsByMemberId(@Param("memberId") Long memberId);
+
+    // memberId를 기준으로 상점 좋아요를 삭제하는 메서드
+    @Modifying
+    @Query("DELETE FROM ShopLike sl WHERE sl.member.memberId = :memberId")
+    void deleteByMemberId(@Param("memberId") Long memberId);
+
+
 }
 

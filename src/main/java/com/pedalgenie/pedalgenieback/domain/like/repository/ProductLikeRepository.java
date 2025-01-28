@@ -4,6 +4,7 @@ import com.pedalgenie.pedalgenieback.domain.like.entity.ProductLike;
 import com.pedalgenie.pedalgenieback.domain.member.entity.Member;
 import com.pedalgenie.pedalgenieback.domain.product.entity.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -26,5 +27,10 @@ public interface ProductLikeRepository extends JpaRepository<ProductLike, Long> 
     // memberId 기준으로 좋아요한 product 목록 조회 메서드
     @Query("SELECT l.product FROM ProductLike l WHERE l.member.memberId = :memberId")
     List<Product> findLikedProductsByMember(@Param("memberId") Long memberId);
+
+    // memberId 기준으로 좋아요 삭제하는 메서드
+    @Modifying
+    @Query("DELETE FROM ProductLike pl WHERE pl.member.memberId = :memberId")
+    void deleteByMemberId(@Param("memberId") Long memberId);
 }
 
