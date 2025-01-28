@@ -205,6 +205,16 @@ public class LikeService {
         return shopLikeRepository.countByShopId(shopId);
     }
 
+    // 특정 유저의 상품 좋아요 삭제
+    @Transactional
+    public void deleteProductLikesByMemberId(Long memberId) {
+        productLikeRepository.deleteByMemberId(memberId);
+    }
 
+    // 특정 유저의 상점 좋아요 삭제
+    @Transactional
+    public void deleteShopLikesByMemberId(Long memberId) {
+        shopLikeRepository.deleteByMemberId(memberId);
+    }
 
 }
