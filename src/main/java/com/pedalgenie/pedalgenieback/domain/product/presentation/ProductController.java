@@ -126,8 +126,11 @@ public class ProductController {
     public ResponseEntity<ResponseTemplate<ProductCreateResponse>> createProduct(
             @ModelAttribute ProductCreateRequest request
             ){
-        String url = imageService.save(request.descriptionFile(), ImageDirectoryUrl.PRODUCT_DIRECTORY);
 
+        String url = null;
+        if(request.descriptionFile() !=null) {
+           url = imageService.save(request.descriptionFile(), ImageDirectoryUrl.PRODUCT_DIRECTORY);
+        }
         Product product = productService.createProduct(request,url);
 
         ProductCreateResponse response = ProductCreateResponse.from(product);
