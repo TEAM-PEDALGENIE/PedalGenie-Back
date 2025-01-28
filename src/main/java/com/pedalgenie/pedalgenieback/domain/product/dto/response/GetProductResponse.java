@@ -15,7 +15,7 @@ public record GetProductResponse(
         Long shopId,
         String shopName,
         BigDecimal price,
-        Double rentPricePerDay,
+        BigDecimal rentPricePerDay,
         Boolean isRentable,
         Boolean isPurchasable,
         Boolean isDemoable,

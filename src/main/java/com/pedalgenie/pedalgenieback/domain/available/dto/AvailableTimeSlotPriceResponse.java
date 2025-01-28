@@ -12,18 +12,18 @@ import java.util.List;
 @AllArgsConstructor
 public class AvailableTimeSlotPriceResponse {
 
-    private Long price;
+    private Long rentPricePerDay;
     private Long fee;
     private Long totalPrice;
     private List<AvailableTimeSlotResponse> availableTimeSlots;
 
 
-    public AvailableTimeSlotPriceResponse(List<AvailableTimeSlotResponse> availableTimeSlots, BigDecimal price) {
+    public AvailableTimeSlotPriceResponse(List<AvailableTimeSlotResponse> availableTimeSlots, BigDecimal rentPricePerDay) {
 
-        BigDecimal feeAmount = price.multiply(BigDecimal.valueOf(0.1)); // 수수료 계산
-        BigDecimal totalAmount = price.add(feeAmount); // 총 금액 계산
+        BigDecimal feeAmount = rentPricePerDay.multiply(BigDecimal.valueOf(0.1)); // 수수료 계산
+        BigDecimal totalAmount = rentPricePerDay.add(feeAmount); // 총 금액 계산
 
-        this.price = price.longValue();
+        this.rentPricePerDay = rentPricePerDay.longValue();
         this.fee = feeAmount.longValue();
         this.totalPrice = totalAmount.longValue();
         this.availableTimeSlots = availableTimeSlots;
