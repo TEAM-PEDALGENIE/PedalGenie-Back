@@ -6,6 +6,7 @@ import com.pedalgenie.pedalgenieback.domain.rent.entity.Rent;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 // 대여 상세 조회
 public record RentDetailResponse(
@@ -32,10 +33,11 @@ public record RentDetailResponse(
     public static RentDetailResponse from(Rent rent, String productImageUrl) {
 
 
-        Long rentDuration = java.time.Duration.between(
-                rent.getRentStartTime(),
-                rent.getRentEndTime()
-        ).toDays(); // 대여 기간 계산
+        Long rentDuration = ChronoUnit.DAYS.between(
+                rent.getRentStartTime().toLocalDate(),
+                rent.getRentEndTime().toLocalDate()
+        ) +1; // 대여 기간 날짜 차이로 계산
+
 
         Long rentPricePerDayLong = rent.getProduct().getRentPricePerDay().longValue();
 
