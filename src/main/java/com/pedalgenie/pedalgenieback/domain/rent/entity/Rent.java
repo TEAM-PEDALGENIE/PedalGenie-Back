@@ -164,7 +164,6 @@ public class Rent {
         validateCancelRequest(); // 취소 가능 여부 검증
         this.rentStatusType = RentStatusType.취소접수; // 취소 접수
 
-        product.increaseStock(1); // 대여 가능 수량 증가
     }
 
     // 취소 가능 여부 검증
@@ -184,7 +183,10 @@ public class Rent {
         if (this.rentStatusType == RentStatusType.취소완료) {
             throw new CustomException(ErrorCode.RENT_ALREADY_CANCELED);
         }
+
         this.rentStatusType = RentStatusType.취소완료;
+
+        product.increaseStock(1); // 대여 가능 수량 증가
 
     }
 
