@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 import static com.pedalgenie.pedalgenieback.domain.rent.entity.RentStatusType.주문확인중;
 
@@ -107,13 +108,16 @@ public class Rent {
     // 대여 종료 시간을 시작 시간에서 3일 이상, 30일 이하로 설정
     private static void validateRentEndDate(final LocalDateTime rentStartTime, final LocalDateTime rentEndDateTime) {
 
+        // 날짜 차이 계산 (시간 무시하고 날짜 기준으로만)
+        long daysBetween = ChronoUnit.DAYS.between(rentStartTime.toLocalDate(), rentEndDateTime.toLocalDate());
+
         // 대여 종료 날짜가 최소 3일 후인지 확인
-        if (rentEndDateTime.isBefore(rentStartTime.plusDays(3))) {
+        if (daysBetween < 2) {
             throw new CustomException(ErrorCode.INVALID_RENT_END_DATE_TOO_SOON);
         }
 
         // 대여 종료 날짜가 최대 30일을 초과하는지 확인
-        if (rentEndDateTime.isAfter(rentStartTime.plusDays(30))) {
+        if (daysBetween > 29) {
             throw new CustomException(ErrorCode.INVALID_RENT_END_DATE_TOO_LATE);
         }
     }
