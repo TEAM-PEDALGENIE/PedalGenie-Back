@@ -190,10 +190,14 @@ public class MemberService {
 
         // 토큰에서 memberId 추출
         Long memberId = tokenProvider.getMemberIdFromToken(refreshToken);
+        System.out.println("memberId: " + memberId);
 
         // redis에 저장된 리프레시 토큰과 비교
         String redisKey = "refreshToken:" + memberId;
         String storedRefreshToken = redisTemplate.opsForValue().get(redisKey);
+
+        System.out.println("storedRefreshToken = " + storedRefreshToken);
+        System.out.println("refreshToken = " + refreshToken);
 
         // 저장된 토큰이 없거나 일치하지 않을 경우 예외 처리
         if (storedRefreshToken == null || !refreshToken.equals(storedRefreshToken)) {

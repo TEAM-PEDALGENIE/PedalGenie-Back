@@ -133,7 +133,7 @@ public class TokenProvider {
         Long memberId = getMemberIdFromToken(refreshToken);
         String redisKey = "refreshToken:" + memberId;
         Object savedRefreshToken = redisTemplate.opsForValue().get(redisKey);
-        System.out.println("savedRefreshToken = " + savedRefreshToken);
+//        System.out.println("savedRefreshToken = " + savedRefreshToken);
 
         if (savedRefreshToken == null || !refreshToken.equals(savedRefreshToken)) {
             return false;
