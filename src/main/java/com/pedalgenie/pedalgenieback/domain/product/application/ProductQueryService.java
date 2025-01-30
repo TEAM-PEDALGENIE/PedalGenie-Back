@@ -96,11 +96,16 @@ public class ProductQueryService {
 
         // 로그인하지 않은 유저 처리
         Boolean isLiked = null;
+        Boolean isShopLiked = null;
+        Long shopId = product.getShop().getId();
+
         if(memberId!=null){
             isLiked = likeService.isProductLiked(id, memberId);
+            isShopLiked = likeService.isShopLiked(shopId, memberId);
         }
 
-        return GetProductResponse.of(product, productImages, isLiked);
+
+        return GetProductResponse.of(product, productImages, isLiked, isShopLiked);
     }
 
     // 매장에 속한 상품 목록 조회
