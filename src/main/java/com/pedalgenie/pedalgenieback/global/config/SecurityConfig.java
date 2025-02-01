@@ -110,7 +110,6 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedOrigin("https://www.musai.pro");
-        config.addAllowedOrigin("https://www.musai-test.store");
         config.addAllowedOrigin("http://localhost:8080");
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
