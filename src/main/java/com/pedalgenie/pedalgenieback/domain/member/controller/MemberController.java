@@ -52,7 +52,7 @@ public class MemberController {
     }
     // 로그인
     @Operation(summary="자체 로그인")
-    @GetMapping("/auth/login")
+    @PostMapping("/auth/login")
     public ResponseEntity<ResponseTemplate<Object>> login(@Valid @RequestBody MemberLoginRequestDto requestDto,
                                                           BindingResult bindingResult, HttpServletResponse response) {
         // 필드 검증
