@@ -1,6 +1,7 @@
 package com.pedalgenie.pedalgenieback.global.exception;
 
 import com.pedalgenie.pedalgenieback.global.ResponseTemplate;
+import io.sentry.Sentry;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,6 +12,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<ResponseTemplate<Object>> handleCustomException(CustomException exception) {
         ErrorCode errorCode = exception.getErrorCode();
+
+        // sentry 에 예외 정보 전송
+        Sentry.captureException(exception);
 
         return ResponseTemplate.createTemplate(
                 errorCode.getHttpStatus(),
