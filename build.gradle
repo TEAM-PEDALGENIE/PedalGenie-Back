@@ -1,9 +1,11 @@
 
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.3.4'
 	id 'io.spring.dependency-management' version '1.1.6'
 }
+
 
 group = 'com.pedalgenie'
 version = '0.0.1-SNAPSHOT'
@@ -75,6 +77,11 @@ dependencies {
 
 	implementation 'software.amazon.awssdk:s3:2.20.121'
 	implementation 'software.amazon.awssdk:url-connection-client:2.20.121'
+
+	// sentry
+	// 아래 두 라이브러리는 버전을 통일해서 사용하길 권장
+	implementation 'io.sentry:sentry-spring-boot-starter-jakarta:7.20.0'
+	implementation 'io.sentry:sentry-jdbc:7.20.0'
 
 }
 
