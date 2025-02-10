@@ -55,3 +55,9 @@ holiday-api:
   uri: ${HOLIDAY_API_URI}
 
 domain: ${DOMAIN}
+
+sentry:
+  dsn: ${SENTRY_DSN}
+  # Set traces-sample-rate to 1.0 to capture 100% of transactions for tracing.
+  # We recommend adjusting this value in production.
+  traces-sample-rate: 1.0
