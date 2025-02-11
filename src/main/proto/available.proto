@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option java_package = "com.pedalgenie.pedalgenieback.domain.available.grpc";
+option java_outer_classname = "AvailableProto";
+
+
+service AvailableTimeService{
+    rpc StreamCreateMember (stream AvailableRequest) returns (stream AvailableResponse);
+}
+
+message AvailableRequest {
+    int64 id=1;
+}
+
+message AvailableResponse {
+    string rentStartDateTime =1;
+}
