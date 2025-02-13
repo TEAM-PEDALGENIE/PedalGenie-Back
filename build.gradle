@@ -133,22 +133,22 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-/*
- * queryDSL 설정 추가
- */
 
-def generated = 'build/generated'
+
+def generated = 'build/generated/querydsl'
+def grpcGenerated = 'build/generated/source/proto/main/grpc'
 
 tasks.withType(JavaCompile) {
 	options.generatedSourceOutputDirectory = file(generated)
 }
 
 sourceSets {
-	main.java.srcDirs += [generated]
+	main.java.srcDirs += [generated,grpcGenerated]
 }
 
 clean {
 	delete file(generated)
+	delete file(grpcGenerated)
 }
 
 

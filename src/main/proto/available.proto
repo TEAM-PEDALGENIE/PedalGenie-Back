@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 option java_package = "com.pedalgenie.pedalgenieback.domain.available.grpc";
-option java_outer_classname = "AvailableProto";
+option java_outer_classname = "AvailableTimeServiceProto";
 
 
 service AvailableTimeService{
