@@ -136,20 +136,28 @@ tasks.named('test') {
 
 
 def generated = 'build/generated/querydsl'
-def grpcGenerated = 'build/generated/source/proto/main/grpc'
+//def grpcGenerated = 'build/generated/source/proto/main/grpc'
+def protoGenerated = 'build/generated/source/proto/main/java'
 
 tasks.withType(JavaCompile) {
 	options.generatedSourceOutputDirectory = file(generated)
 }
 
+jar {
+	from('build/classes/java/main') {  // 컴파일된 클래스 파일 추가
+		include '**/*.class'
+	}
+}
+
 sourceSets {
-	main.java.srcDirs += [generated,grpcGenerated]
+	main.java.srcDirs += [generated, protoGenerated]  // protoGenerated 사용
 }
 
 clean {
 	delete file(generated)
-	delete file(grpcGenerated)
+	//delete file(grpcGenerated)  // grpcGenerated 삭제하지 않음
 }
+
 
 
 
