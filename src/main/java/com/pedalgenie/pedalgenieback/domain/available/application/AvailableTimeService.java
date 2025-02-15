@@ -43,7 +43,6 @@ public class AvailableTimeService {
     public void refreshAvailableTimes() {
         // 기존 데이터 삭제
         availableTimeRepository.deleteAll();
-        log.info("디비 삭제 후 남아있는 데이터 개수: {}", availableTimeRepository.count());
 
         // 대여 가능한 상품 조회
         List<Product> rentableProducts = productRepository.findAllByIsRentableTrue();
@@ -73,7 +72,6 @@ public class AvailableTimeService {
         Product product = getProduct(productId);
         Long shopId = product.getShop().getId();
         LocalDate today = LocalDate.now();
-        log.info("오늘 날짜: {}", today);
 
         // 기존 데이터 조회
         List<AvailableDateTime> existingAvailableTimes = availableTimeRepository.findByProductId(productId);
@@ -82,7 +80,6 @@ public class AvailableTimeService {
         // 28일간 예약 데이터 생성
         for (int i = 1; i <= 28; i++) {
             LocalDate targetDate = today.plusDays(i);
-            log.info("생성되는 예약 날짜: {}", targetDate);
 
             // ShopHours 조회
             ShopHours shopHours = timeService.determineShopHours(shopId, targetDate);
